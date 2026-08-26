@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
-const User = require('../models/User');
 const Contact = require('../models/Contact'); // ייבוא מודל ההודעות - חובה שיהיה כאן!
-=======
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
@@ -42,13 +39,7 @@ router.post('/register', async (req, res, next) => {
 });
 
 module.exports = router;
-<<<<<<< HEAD
-=======
 
-module.exports = router;
->>>>>>> 4c7322297a1ecf186da18fdf3bbd84ab2a90b328
-
->>>>>>> efc5cdf71ee483899b93a8f3fa62a61edf62f6ed
 // נתיב התחברות - POST /api/login
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
