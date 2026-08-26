@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botify - תשלום וסיום הזמנה</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/payment.css">
+</head>
+<body>
+
+  <!-- תפריט ניווט עליון -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">Botify</div>
+      <ul class="nav-links">
+        <li><a href="index.html">בית</a></li>
+        <li><a href="pricing.html">מחירון</a></li>
+        <li><a href="contact.html">עזרה</a></li>
+      </ul>
+      <div class="auth-buttons">
+        <a href="login.html" class="btn-secondary">התחברות</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="checkout-container">
+    <div class="checkout-grid">
+
+      <!-- צד ימין: טופס פרטי תשלום -->
+      <section class="payment-form-section">
+        <h2>פרטי תשלום וחיוב</h2>
+        <p class="subtitle">סליקה מאובטחת באמצעות כרטיס אשראי</p>
+
+        <form id="payment-form">
+          <div class="form-group">
+            <label for="fullName">שם מלא (כפי שמופיע על הכרטיס)</label>
+            <input type="text" id="fullName" placeholder="ישראל ישראלי" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">כתובת אימייל לקבלת חשבונית</label>
+            <input type="email" id="email" placeholder="name@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cardNumber">מספר כרטיס אשראי</label>
+            <input type="text" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expDate">תוקף (MM/YY)</label>
+              <input type="text" id="expDate" maxlength="5" placeholder="12/28" required>
+            </div>
+            <div class="form-group">
+              <label for="cvv">CVV (3 ספרות בגב הכרטיס)</label>
+              <input type="password" id="cvv" maxlength="3" placeholder="123" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-pay-now" id="submit-btn">
+            אישור תשלום והפעלת הבוט 🔒
+          </button>
+        </form>
+
+        <div id="payment-status" class="status-message"></div>
+      </section>
+
+      <!-- צד שמאל: סיכום ההזמנה -->
+      <aside class="order-summary-section">
+        <h3>סיכום הזמנה</h3>
+        
+        <div class="summary-card">
+          <div class="summary-row plan-name-row">
+            <span class="label">מסלול נבחר:</span>
+            <strong id="summary-plan-name">טוען מסלול...</strong>
+          </div>
+          
+          <div class="summary-row">
+            <span class="label">מחיר מנוי חודשי:</span>
+            <span id="summary-subtotal">₪0</span>
+          </div>
+
+          <div class="summary-row">
+            <span class="label">מע"מ (18%):</span>
+            <span id="summary-tax">₪0</span>
+          </div>
+
+          <hr class="divider">
+
+          <div class="summary-row total-row">
+            <span class="label">סה"כ לתשלום:</span>
+            <strong class="total-amount" id="summary-total">₪0</strong>
+          </div>
+        </div>
+
+        <div class="guarantee-box">
+          <p>✓ ביטול בכל עת ללא התחייבות</p>
+          <p>✓ הפעלת המנוי והבוטים באופן מיידי</p>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/payment.js"></script>
+</body>
+</html>
