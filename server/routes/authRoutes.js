@@ -1,53 +1,45 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< HEAD
-const User = require('../models/User');
-const Contact = require('../models/Contact'); // ייבוא מודל ההודעות - חובה שיהיה כאן!
-=======
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Contact = require('../models/Contact'); // ייבוא מודל ההודעות
 
 // נתיב (Route) להרשמת משתמשים חדשים בשיטת POST
 router.post('/register', async (req, res) => {
-  try {
-    // 1. שליפת הנתונים שנשלחו מגוף הבקשה (Request Body)
-    const { username, email, password, role } = req.body;
+    try {
+        // 1. שליפת הנתונים שנשלחו מגוף הבקשה (Request Body)
+        const { username, email, password, role } = req.body;
 
-    // 2. בדיקה האם האימייל כבר קיים במסד הנתונים
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ error: 'האימייל כבר רשום במערכת' });
+        // 2. בדיקה האם האימייל כבר קיים במסד הנתונים
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: 'האימייל כבר רשום במערכת' });
+        }
+
+        // 3. הצפנת הסיסמה (Hashing) אבטחתית בעזרת ספריית bcrypt
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // 4. יצירת אובייקט משתמש חדש עם הנתונים המוצפנים
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+            role: role || 'user' // ברירת מחדל לתפקיד היא 'user' אם לא צוין אחרת
+        });
+
+        // 5. שמירת המשתמש החדש במסד הנתונים
+        await newUser.save();
+        
+        // 6. החזרת תשובת הצלחה ללקוח
+        res.status(201).json({ message: 'ההרשמה בוצעה בהצלחה!' });
+        
+    } catch (err) {
+        // טיפול בשגיאות לא צפויות בשרת
+        console.error(err);
+        res.status(500).json({ error: 'שגיאה פנימית בשרת במהלך ההרשמה' });
     }
-
-    // 3. הצפנת הסיסמה (Hashing) אבטחתית בעזרת ספריית bcrypt
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    // 4. יצירת אובייקט משתמש חדש עם הנתונים המוצפנים
-    const newUser = new User({
-      username,
-      email,
-      password: hashedPassword,
-      role: role || 'user' // ברירת מחדל לתפקיד היא 'user' אם לא צוין אחרת
-    });
-
-    // 5. שמירת המשתמש החדש במסד הנתונים
-    await newUser.save();
-    
-    // 6. החזרת תשובת הצלחה ללקוח
-    res.status(201).json({ message: 'ההרשמה בוצעה בהצלחה!' });
-    
-  } catch (err) {
-    // טיפול בשגיאות לא צפויות בשרת
-    console.error(err);
-    res.status(500).json({ error: 'שגיאה פנימית בשרת במהלך ההרשמה' });
-  }
 });
-
-module.exports = router;
-
-module.exports = router;
->>>>>>> 4c7322297a1ecf186da18fdf3bbd84ab2a90b328
 
 // נתיב התחברות - POST /api/login
 router.post('/login', async (req, res) => {
@@ -117,11 +109,10 @@ router.post('/contact', async (req, res) => {
     }
 });
 
-// --- נתיב חדש לשמירת התגובות של המנהלת ---
+// --- נתיב לשמירת התגובות של המנהלת ---
 router.post('/reply', async (req, res) => {
     const { username, reply } = req.body;
     try {
-        // שומרים את התגובה במסד הנתונים תחת שם המנהלת או כהודעה חדשה במערכת
         const newReply = new Contact({
             username: `מנהלת (אל: ${username})`,
             message: reply
