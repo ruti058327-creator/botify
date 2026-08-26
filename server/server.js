@@ -5,19 +5,19 @@ const connectDB = require('./config/db'); // 1. ייבוא החיבור למסד
 const errorHandler = require('./middlewares/errorHandler'); // ייבוא מידלוור שגיאות
 const dns = require('dns');
 
-// הגדרת שרתי DNS למניעת בעיות חיבור
+// 1. הגדרת שרתי DNS למניעת בעיות חיבור מול MongoDB Atlas
 dns.setServers(['8.8.8.8', '8.8.4.4']);
+
+// 2. חיבור למסד הנתונים
+connectDB();
 
 const app = express();
 
-// 1. הפעלת החיבור ל-MongoDB
-connectDB();
-
-// 2. פענוח בקשות JSON והגשת קבצים סטטיים
+// 3. פענוח בקשות JSON והגשת קבצים סטטיים
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// 3. ייבוא וחיבור הנתיבים (Routes)
+// 4. ייבוא וחיבור הראוטים
 const authRoutes = require('./routes/authRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 
