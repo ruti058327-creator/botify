@@ -4,43 +4,38 @@ const bcrypt = require('bcrypt');
 const User = require('../models/User');
 
 // נתיב (Route) להרשמת משתמשים חדשים בשיטת POST
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
   try {
-    // 1. שליפת הנתונים שנשלחו מגוף הבקשה (Request Body)
     const { username, email, password, role } = req.body;
 
-    // 2. בדיקה האם האימייל כבר קיים במסד הנתונים
-    const existingUser = await User.findOne({ email });
+    // בדיקה האם המשתמש או האימייל כבר קיימים
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
-      return res.status(400).json({ error: 'האימייל כבר רשום במערכת' });
+      res.status(400);
+      throw new Error('השם משתמש או האימייל כבר רשומים במערכת');
     }
 
-    // 3. הצפנת הסיסמה (Hashing) אבטחתית בעזרת ספריית bcrypt
+    // הצפנת הסיסמה
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // 4. יצירת אובייקט משתמש חדש עם הנתונים המוצפנים
+    // יצירת משתמש חדש
     const newUser = new User({
       username,
       email,
       password: hashedPassword,
-      role: role || 'user' // ברירת מחדל לתפקיד היא 'user' אם לא צוין אחרת
+      role: role || 'user'
     });
 
-    // 5. שמירת המשתמש החדש במסד הנתונים
     await newUser.save();
     
-    // 6. החזרת תשובת הצלחה ללקוח
     res.status(201).json({ message: 'ההרשמה בוצעה בהצלחה!' });
     
   } catch (err) {
-    // טיפול בשגיאות לא צפויות בשרת
-    console.error(err);
-    res.status(500).json({ error: 'שגיאה פנימית בשרת במהלך ההרשמה' });
+    // העברת השגיאה למידלוור שגיאות המרכזי
+    next(err);
   }
 });
-
-module.exports = router;
 
 module.exports = router;
 
