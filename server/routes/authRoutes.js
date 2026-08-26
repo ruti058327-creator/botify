@@ -7,35 +7,27 @@ const Contact = require('../models/Contact'); // ייבוא מודל ההודע�
 // נתיב (Route) להרשמת משתמשים חדשים בשיטת POST
 router.post('/register', async (req, res) => {
     try {
-        // 1. שליפת הנתונים שנשלחו מגוף הבקשה (Request Body)
         const { username, email, password, role } = req.body;
 
-        // 2. בדיקה האם האימייל כבר קיים במסד הנתונים
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ error: 'האימייל כבר רשום במערכת' });
         }
 
-        // 3. הצפנת הסיסמה (Hashing) אבטחתית בעזרת ספריית bcrypt
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        // 4. יצירת אובייקט משתמש חדש עם הנתונים המוצפנים
         const newUser = new User({
             username,
             email,
             password: hashedPassword,
-            role: role || 'user' // ברירת מחדל לתפקיד היא 'user' אם לא צוין אחרת
+            role: role || 'user'
         });
 
-        // 5. שמירת המשתמש החדש במסד הנתונים
         await newUser.save();
-        
-        // 6. החזרת תשובת הצלחה ללקוח
         res.status(201).json({ message: 'ההרשמה בוצעה בהצלחה!' });
         
     } catch (err) {
-        // טיפול בשגיאות לא צפויות בשרת
         console.error(err);
         res.status(500).json({ error: 'שגיאה פנימית בשרת במהלך ההרשמה' });
     }
@@ -46,7 +38,8 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        if (username === 'NOAR' && password === '57863') {
+        // בדיקת מנהל קשיחה
+        if (username && username.trim().toUpperCase() === 'NOAR' && password === '57863') {
             return res.json({ 
                 success: true, 
                 role: 'admin', 
@@ -54,10 +47,31 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        return res.status(404).json({ 
-            success: false, 
-            message: 'קוד משתמש אינו נכון או אינו קיים במערכת', 
-            redirectUrl: 'register.html' 
+        // בדיקה רגילה מול מסד הנתונים
+        const user = await User.findOne({ 
+            $or: [{ username: username }, { email: username }] 
+        });
+
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'שם משתמש או סיסמה שגויים', 
+                redirectUrl: 'register.html' 
+            });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'שם משתמש או סיסמה שגויים' 
+            });
+        }
+
+        res.json({
+            success: true,
+            role: user.role,
+            redirectUrl: user.role === 'admin' ? 'admin.html' : 'index.html'
         });
 
     } catch (error) {
@@ -87,7 +101,6 @@ router.get('/users', async (req, res) => {
 
 // --- נתיבים עבור תיבת ההודעות (צור קשר) ---
 
-// קבלת כל ההודעות הנכנסות לפאנל הניהול - GET /api/messages
 router.get('/messages', async (req, res) => {
     try {
         const messages = await Contact.find().sort({ createdAt: -1 });
@@ -97,7 +110,6 @@ router.get('/messages', async (req, res) => {
     }
 });
 
-// שליחת הודעה חדשה מטופס צור קשר (לפי שם משתמש) - POST /api/contact
 router.post('/contact', async (req, res) => {
     const { username, message } = req.body;
     try {
@@ -109,7 +121,6 @@ router.post('/contact', async (req, res) => {
     }
 });
 
-// --- נתיב לשמירת התגובות של המנהלת ---
 router.post('/reply', async (req, res) => {
     const { username, reply } = req.body;
     try {

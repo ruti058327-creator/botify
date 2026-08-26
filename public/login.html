@@ -14,7 +14,6 @@
       align-items: center;
       padding: 30px 20px;
     }
-
     .login-card {
       background: #ffffff;
       border: 1px solid #e2e8f0;
@@ -25,19 +24,16 @@
       max-width: 420px;
       text-align: center;
     }
-
     .login-card h2 {
       font-size: 1.8rem;
       font-weight: 800;
       color: #0f172a;
       margin-bottom: 25px;
     }
-
     .form-group {
       margin-bottom: 18px;
       text-align: right;
     }
-
     .form-group input {
       width: 100%;
       padding: 12px 14px;
@@ -47,12 +43,10 @@
       outline: none;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
-
     .form-group input:focus {
       border-color: #2563eb;
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
     }
-
     .btn-submit {
       width: 100%;
       padding: 12px;
@@ -60,7 +54,6 @@
       margin-top: 10px;
       margin-bottom: 20px;
     }
-
     .login-links {
       display: flex;
       flex-direction: column;
@@ -69,18 +62,15 @@
       border-top: 1px solid #f1f5f9;
       padding-top: 18px;
     }
-
     .login-links a {
       color: #2563eb;
       text-decoration: none;
       font-weight: 600;
     }
-
     .back-home-link {
       color: #64748b !important;
       font-weight: 500 !important;
     }
-
     .error-msg {
       color: #ef4444;
       font-size: 0.9rem;
@@ -91,13 +81,11 @@
 </head>
 <body>
 
-  <!-- סרגל ניווט עליון -->
   <header>
     <nav class="navbar">
       <a href="index.html" class="logo" title="חזרה לדף הבית">
-        <img src="תמונות/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
+        <img src="תמונות/תמונה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
-
       <ul class="nav-links">
         <li><a href="index.html">בית</a></li>
         <li><a href="about.html">אודות</a></li>
@@ -105,14 +93,12 @@
         <li><a href="demo.html">דמו</a></li>
         <li><a href="contact.html">צור קשר</a></li>
       </ul>
-
       <div class="auth-buttons">
         <a href="register.html" class="btn-primary">הרשמה</a>
       </div>
     </nav>
   </header>
 
-  <!-- כרטיס התחברות -->
   <main class="login-wrapper">
     <div class="login-card">
       <h2>התחברות ל-Botify</h2>
@@ -138,20 +124,17 @@
     </div>
   </main>
 
-  <!-- פוטר -->
   <footer>
     <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
   <script src="js/config.js"></script>
   
-  <!-- לוגיקת ההתחברות וההפניה החוזרת -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const redirectPage = urlParams.get('redirect'); // למשל: contact.html
+      const redirectPage = urlParams.get('redirect');
 
-      // שמירת יעד ההפניה גם לקישור ההרשמה אם המשתמש יבחר להירשם
       if (redirectPage) {
         document.getElementById('register-link').href = `register.html?redirect=${encodeURIComponent(redirectPage)}`;
       }
@@ -179,16 +162,14 @@
 
           const data = await response.json();
 
-          if (response.ok && data.token) {
-            // שמירת פרטי ההתחברות
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user || { username: username }));
+          if (response.ok && data.success) {
+            localStorage.setItem('user', JSON.stringify({ username: username }));
 
-            // הפניה חזרה לעמוד שממנו הגיע (צור קשר) או לדף הבית כברירת מחדל
+            // אם הוגדר redirect מראש (כמו צור קשר) נשתמש בו, אחרת נשתמש ב־redirectUrl שהחזיר השרת (כמו admin.html)
             if (redirectPage) {
               window.location.href = redirectPage;
             } else {
-              window.location.href = 'index.html';
+              window.location.href = data.redirectUrl || 'index.html';
             }
           } else {
             errorDiv.textContent = data.message || 'שם משתמש או סיסמה שגויים';
@@ -196,16 +177,8 @@
           }
         } catch (err) {
           console.error('Login error:', err);
-          
-          // שמירה זמנית לטובת בדיקות צד לקוח
-          localStorage.setItem('token', 'sample_token_123');
-          localStorage.setItem('user', JSON.stringify({ username: username, email: `${username}@example.com` }));
-          
-          if (redirectPage) {
-            window.location.href = redirectPage;
-          } else {
-            window.location.href = 'index.html';
-          }
+          errorDiv.textContent = 'שגיאת תקשורת מול השרת';
+          errorDiv.style.display = 'block';
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'התחבר';
