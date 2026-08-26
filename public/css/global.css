@@ -198,13 +198,13 @@ header {
   width: 100%;
   height: auto;
   object-fit: contain;
-  animation: floatRobot 3.5s ease-in-out infinite;
+  animation: floatRobot 1.8s ease-in-out infinite; /* עודכן ל-1.8 שניות */
   filter: drop-shadow(0 15px 20px rgba(37, 99, 235, 0.1));
 }
 
 @keyframes floatRobot {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  50% { transform: translateY(-18px); } /* עודכן לטווח תנועה של 18px */
 }
 
 /* ==========================================
@@ -235,7 +235,6 @@ header {
   color: var(--text-muted);
 }
 
-/* סידור 4 הכרטיסים ב-Grid מסודר */
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -263,7 +262,6 @@ header {
   border-color: var(--primary-color);
 }
 
-/* כרטיס פופולרי מודגש */
 .pricing-card.popular {
   border: 2px solid var(--primary-color);
   box-shadow: 0 15px 35px rgba(37, 99, 235, 0.12);
@@ -295,7 +293,6 @@ header {
   min-height: 40px;
 }
 
-/* תצוגת מחיר */
 .card-header .price {
   margin: 18px 0 20px 0;
   display: flex;
@@ -320,7 +317,6 @@ header {
   color: var(--text-muted);
 }
 
-/* רשימת המאפיינים */
 .features-list {
   list-style: none;
   margin: 0 0 25px 0;
@@ -335,7 +331,6 @@ header {
   border-bottom: 1px dashed #f1f5f9;
 }
 
-/* כפתורי בחירת מסלול בתחתית הכרטיס */
 .btn-select-plan {
   width: 100%;
   padding: 12px;

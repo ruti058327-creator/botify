@@ -4,7 +4,8 @@ const path = require('path');
 const connectDB = require('./config/db');
 
 const app = express();
-
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 // 1. חיבור למסד הנתונים
 connectDB();
 
