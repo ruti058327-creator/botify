@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botify - הרשמה</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+    <header>
+    <nav class="navbar">
+      <a href="index.html" class="logo" title="חזרה לדף הבית">
+        <img src="תמונות/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="index.html">בית</a></li>
+        <li><a href="about.html">אודות</a></li>
+        <li><a href="pricing.html">מחירון</a></li>
+        <li><a href="demo.html">דמו</a></li>
+        <li><a href="contact.html">צור קשר</a></li>
+      </ul>
+
+      <div class="auth-buttons">
+        <a href="login.html" class="btn-primary">התחברות</a>
+      </div>
+    </nav>
+  </header>
+
+    <main class="login-wrapper">
+        <div class="login-card">
+            <h2>יצירת חשבון ל-Botify</h2>
+            
+            <div id="message" class="error-msg"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="שם משתמש" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="אימייל" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="סיסמה" required>
+                </div>
+                <button type="submit" class="btn-primary btn-submit">הירשם</button>
+            </form>
+
+            <div class="login-links">
+                <p style="margin: 0;">כבר יש לך חשבון? <a href="login.html">התחבר כאן</a></p>
+                <a href="index.html" class="back-home-link">← חזרה לדף הבית</a>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/register.js"></script>
+</body>
+</html>
