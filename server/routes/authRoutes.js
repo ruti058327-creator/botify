@@ -5,6 +5,7 @@ const User = require('../models/User');
 const Contact = require('../models/Contact'); // ייבוא מודל ההודעות
 
 // נתיב (Route) להרשמת משתמשים חדשים בשיטת POST
+
 router.post('/register', async (req, res) => {
     try {
         const { username, email, password, role } = req.body;
@@ -33,6 +34,49 @@ router.post('/register', async (req, res) => {
     }
 });
 
+=======
+router.post('/register', async (req, res, next) => {
+  try {
+    const { username, email, password, role } = req.body;
+
+    // בדיקה האם המשתמש או האימייל כבר קיימים
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      res.status(400);
+      throw new Error('השם משתמש או האימייל כבר רשומים במערכת');
+    }
+
+    // הצפנת הסיסמה
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // יצירת משתמש חדש
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role: role || 'user'
+    });
+
+    await newUser.save();
+    
+    res.status(201).json({ message: 'ההרשמה בוצעה בהצלחה!' });
+    
+  } catch (err) {
+    // העברת השגיאה למידלוור שגיאות המרכזי
+    next(err);
+  }
+});
+
+module.exports = router;
+<<<<<<< HEAD
+=======
+
+module.exports = router;
+>>>>>>> 4c7322297a1ecf186da18fdf3bbd84ab2a90b328
+
+>>>>>>> efc5cdf71ee483899b93a8f3fa62a61edf62f6ed
+>>>>>>> f97a9fc2bd75c090d66b600a05a154ca5c56d458
 // נתיב התחברות - POST /api/login
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
