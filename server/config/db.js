@@ -4,17 +4,18 @@ require('dotenv').config();
 // 2. ייבוא ספריית מונגוס
 const mongoose = require('mongoose');
 
-// 3. שליפת הקישור מתוך קובץ ה-.env
-const dbURI = process.env.MONGO_URI;
+// 3. הגדרת פונקציית ההתחברות למסד הנתונים
+const connectDB = async () => {
+  const dbURI = process.env.MONGO_URI;
 
-// 4. ניסיון התחברות למסד הנתונים
-mongoose.connect(dbURI)
-  .then(() => {
-    // אם ההתחברות הצליחה, נדפיס הודעת הצלחה
+  try {
+    await mongoose.connect(dbURI);
     console.log("Connected to MongoDB successfully! 🎉");
-  })
-  .catch((error) => {
-    // אם קרתה שגיאה, נדפיס אותה כדי שנוכל לדבג
+  } catch (error) {
     console.log("Error connecting to MongoDB: ", error.message);
-  });
-  
+    process.exit(1);
+  }
+};
+
+// 4. ייצוא הפונקציה כדי ש-server.js יוכל להריץ אותה
+module.exports = connectDB;
