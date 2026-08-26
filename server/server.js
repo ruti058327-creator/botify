@@ -22,3 +22,10 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+// חיבור ראוטים
+const authRoutes = require('./routes/authRoutes');
+app.use('/api', authRoutes);
+
+// הוספת הנתיב לתשלומים
+const paymentRoutes = require('./routes/paymentRoutes');
+app.use('/api/payments', paymentRoutes);
