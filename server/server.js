@@ -1,19 +1,19 @@
-// 1. פתיחת הכספת של משתני הסביבה
 require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const app = express();
 
-// 2. ייבוא ספריית מונגוס
-const mongoose = require('mongoose');
+// פענוח בקשות JSON
+app.use(express.json());
 
-// 3. שליפת הקישור מתוך קובץ ה-.env
-const dbURI = process.env.MONGO_URI;
+// הגשת הקבצים הסטטיים מתיקיית public (שנמצאת תיקייה אחת למעלה)
+app.use(express.static(path.join(__dirname, '../public')));
 
-// 4. ניסיון התחברות למסד הנתונים
-mongoose.connect(dbURI)
-  .then(() => {
-    // אם ההתחברות הצליחה, נדפיס הודעת הצלחה
-    console.log("Connected to MongoDB successfully! 🎉");
-  })
-  .catch((error) => {
-    // אם קרתה שגיאה, נדפיס אותה כדי שנוכל לדבג
-    console.log("Error connecting to MongoDB: ", error.message);
-  });
+// חיבור ראוטים מתוך תיקיית routes שנמצאת בתוך server
+const authRoutes = require('./routes/authRoutes');
+app.use('/api', authRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});

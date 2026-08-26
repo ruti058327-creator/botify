@@ -1,6 +1,5 @@
 {
-  "dependencies": {
-    "dotenv": "^17.4.2",
-    "mongoose": "^9.9.4"
-  }
+    "name": "botify",
+    "version": "1.0.0",
+    "private": true
 }
