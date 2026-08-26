@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const connectDB = require('./config/db'); // 1. ייבוא החיבור למסד הנתונים
+const errorHandler = require('./middlewares/errorHandler'); // ייבוא מידלוור שגיאות
 
 const app = express();
 
@@ -18,13 +19,13 @@ app.use(express.static(path.join(__dirname, '../public')));
 const authRoutes = require('./routes/authRoutes');
 app.use('/api', authRoutes);
 
+// הוספת מידלוור שגיאות
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-// חיבור ראוטים
-const authRoutes = require('./routes/authRoutes');
-app.use('/api', authRoutes);
 
 // הוספת הנתיב לתשלומים
 const paymentRoutes = require('./routes/paymentRoutes');

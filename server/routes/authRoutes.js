@@ -38,7 +38,6 @@ router.post('/register', async (req, res, next) => {
 });
 
 module.exports = router;
-
 // נתיב התחברות - POST /api/login
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
