@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Botify - דף הבית</title>
-    <!-- קישור לקובץ העיצוב הכללי -->
     <link rel="stylesheet" href="css/global.css">
 </head>
 <body>
 
-    <!-- תפריט ניווט עליון -->
     <header>
         <nav class="navbar">
-            <div class="logo">Botify</div>
+            <a href="index.html" class="logo" title="Botify - חזרה לדף הבית">
+                <img src="תמונות/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
+            </a>
+
             <ul class="nav-links">
                 <li><a href="index.html">בית</a></li>
                 <li><a href="about.html">אודות</a></li>
@@ -20,6 +21,7 @@
                 <li><a href="demo.html">דמו</a></li>
                 <li><a href="contact.html">צור קשר</a></li>
             </ul>
+
             <div class="auth-buttons">
                 <a href="login.html" class="btn-secondary">התחברות</a>
                 <a href="register.html" class="btn-primary">הרשמה</a>
@@ -27,24 +29,29 @@
         </nav>
     </header>
 
-    <!-- אזור מרכזי (Hero) -->
     <main>
         <section class="hero">
-            <h1>ברוכים הבאים ל-Botify</h1>
-            <p>הפלטפורמה ליצירה וניהול בוטים חכמים לעסק</p>
-            <div class="cta-group">
-                <a href="register.html" class="btn-primary">הרשמה מהירה</a>
-                <a href="demo.html" class="btn-secondary">צפה בדמו</a>
+            <div class="hero-container">
+                <div class="hero-text">
+                    <h1>ברוכים הבאים ל-Botify</h1>
+                    <p>הפלטפורמה ליצירה וניהול בוטים חכמים לעסק</p>
+                    <div class="cta-group">
+                        <a href="register.html" class="btn-primary">הרשמה מהירה</a>
+                        <a href="demo.html" class="btn-secondary">צפה בדמו</a>
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <img src="תמונות/תמונה 1.png" alt="בוט של Botify">
+                </div>
             </div>
         </section>
     </main>
 
-    <!-- פוטר -->
     <footer>
         <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
     </footer>
 
-    <!-- קישור לקובץ ההגדרות וה-JS -->
     <script src="js/config.js"></script>
 </body>
 </html>

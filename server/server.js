@@ -2,26 +2,29 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const connectDB = require('./config/db');
+const dns = require('dns');
 
-// ייבוא הנתיבים
-const authRoutes = require('./routes/authRoutes');
-const paymentRoutes = require('./routes/paymentRoutes');
+// הגדרת שרתי DNS למניעת בעיות חיבור
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const app = express();
 
-// הפעלת החיבור ל-MongoDB
+// 1. הפעלת החיבור ל-MongoDB
 connectDB();
 
-// פענוח בקשות JSON והגשת קבצים סטטיים
+// 2. פענוח בקשות JSON והגשת קבצים סטטיים
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// חיבור הראוטים לשרת
+// 3. ייבוא וחיבור הנתיבים (Routes)
+const authRoutes = require('./routes/authRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+
 app.use('/api', authRoutes);
 app.use('/api/payments', paymentRoutes);
 
-// הפעלת השרת
+// 4. הפעלת השרת
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
