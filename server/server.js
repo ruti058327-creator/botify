@@ -1,31 +1,27 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
-const connectDB = require('./config/db'); // 1. ייבוא החיבור למסד הנתונים
+const connectDB = require('./config/db');
+
+// ייבוא הנתיבים
+const authRoutes = require('./routes/authRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
-// 2. הפעלת החיבור ל-MongoDB
+// הפעלת החיבור ל-MongoDB
 connectDB();
 
-// פענוח בקשות JSON
+// פענוח בקשות JSON והגשת קבצים סטטיים
 app.use(express.json());
-
-// הגשת הקבצים הסטטיים מתיקיית public
 app.use(express.static(path.join(__dirname, '../public')));
 
-// חיבור ראוטים מתוך תיקיית routes
-const authRoutes = require('./routes/authRoutes');
+// חיבור הראוטים לשרת
 app.use('/api', authRoutes);
+app.use('/api/payments', paymentRoutes);
 
+// הפעלת השרת (תמיד בסוף הקובץ)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-// חיבור ראוטים
-const authRoutes = require('./routes/authRoutes');
-app.use('/api', authRoutes);
-
-// הוספת הנתיב לתשלומים
-const paymentRoutes = require('./routes/paymentRoutes');
-app.use('/api/payments', paymentRoutes);

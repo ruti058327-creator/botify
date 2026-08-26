@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botify - פאנל ניהול</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; display: flex; height: 100vh; }
+        
+        /* סרגל צדי - אינדיקטור מנהל */
+        .sidebar {
+            width: 240px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .sidebar .badge {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .sidebar h2 { font-size: 20px; margin-bottom: 10px; }
+        .sidebar p { font-size: 14px; color: #bdc3c7; }
+
+        /* תוכן מרכזי - טבלת נתונים */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        th, td { padding: 12px 15px; text-align: right; border-bottom: 1px solid #ddd; }
+        th { background-color: #3498db; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        
+        .plan-tag {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            background-color: #e8f8f5;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- סרגל צדי -->
+    <div class="sidebar">
+        <div>
+            <h2>Botify Admin</h2>
+            <span class="badge">פרופיל ניהול פעיל</span>
+            <p style="margin-top: 15px;">מנהלת מחוברת: <strong>NOAR</strong></p>
+        </div>
+        <div>
+            <a href="/login.html" style="color: #ecf0f1; text-decoration: none;">התנתקות</a>
+        </div>
+    </div>
+
+    <!-- תוכן מרכזי -->
+    <div class="main-content">
+        <div class="header">
+            <h1>רשימת לקוחות ומשתמשים רשומים</h1>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>שם משתמש</th>
+                    <th>אימייל</th>
+                    <th>סוג מנוי</th>
+                    <th>תאריך הרשמה</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <tr><td colspan="5" style="text-align:center;">טוען נתונים...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // טעינת המשתמשים באופן אוטומטי בעת כניסה לדף
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+
+                const tableBody = document.getElementById('usersTableBody');
+                tableBody.innerHTML = '';
+
+                if (data.success && data.users.length > 0) {
+                    data.users.forEach((user, index) => {
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${user.username || 'ללא שם'}</td>
+                                <td>${user.email || 'לא עודכן'}</td>
+                                <td><span class="plan-tag">${user.plan || 'בסיסי'}</span></td>
+                                <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString('he-IL') : 'חדש'}</td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                } else {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">אין משתמשים רשומים כרגע במערכת</td></tr>';
+                }
+            } catch (err) {
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">שגיאה שטעינת הנתונים מהשרת</td></tr>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+</html>

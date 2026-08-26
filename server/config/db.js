@@ -1,8 +1,12 @@
 // 1. פתיחת הכספת של משתני הסביבה
 require('dotenv').config();
 
-// 2. ייבוא ספריית מונגוס
+// 2. ייבוא ספריית מונגוס וספריית DNS
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// כפיית שימוש בשרתי ה-DNS של גוגל לפתרון שגיאת ECONNREFUSED
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 // 3. הגדרת פונקציית ההתחברות למסד הנתונים
 const connectDB = async () => {

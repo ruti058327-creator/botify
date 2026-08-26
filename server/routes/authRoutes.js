@@ -7,11 +7,11 @@ router.post('/login', async (req, res) => {
 
     try {
         // בדיקת התחברות מנהל
-        if (username === 'admin' && password === 'admin123') {
+        if (username === 'NOAR' && password === '57863') {
             return res.json({ 
                 success: true, 
                 role: 'admin', 
-                redirectUrl: '/admin.html' 
+                redirectUrl: 'admin.html' 
             });
         }
 
@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
         return res.status(404).json({ 
             success: false, 
             message: 'קוד משתמש אינו נכון או אינו קיים במערכת', 
-            redirectUrl: '/register.html' 
+            redirectUrl: 'register.html' 
         });
 
     } catch (error) {
@@ -28,3 +28,15 @@ router.post('/login', async (req, res) => {
 });
 
 module.exports = router;
+// ייבוא מודל המשתמש (וודאי שהנתיב תואם למודל שנבנה בפרויקט)
+const User = require('../models/User'); 
+
+// נתיב לקבלת כל המשתמשים - GET /api/users
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find({}, '-password').sort({ createdAt: -1 });
+        res.json({ success: true, users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'שגיאה בשליפת המשתמשים', error: error.message });
+    }
+});
