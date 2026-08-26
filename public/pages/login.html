@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Botify - התחברות</title>
-  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="../css/global.css">
   
   <style>
     .login-wrapper {
@@ -94,12 +94,12 @@
   <!-- סרגל ניווט עליון -->
   <header>
     <nav class="navbar">
-      <a href="index.html" class="logo" title="חזרה לדף הבית">
-        <img src="תמונות/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
+      <a href="../index.html" class="logo" title="חזרה לדף הבית">
+        <img src="../images/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
 
       <ul class="nav-links">
-        <li><a href="index.html">בית</a></li>
+        <li><a href="../index.html">בית</a></li>
         <li><a href="about.html">אודות</a></li>
         <li><a href="pricing.html">מחירון</a></li>
         <li><a href="demo.html">דמו</a></li>
@@ -133,7 +133,7 @@
 
       <div class="login-links">
         <span>עדיין אין לך חשבון? <a href="register.html" id="register-link">הרשמה מהירה</a></span>
-        <a href="index.html" class="back-home-link">➔ חזרה לדף הבית</a>
+        <a href="../index.html" class="back-home-link">➔ חזרה לדף הבית</a>
       </div>
     </div>
   </main>
@@ -143,7 +143,7 @@
     <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
-  <script src="js/config.js"></script>
+  <script src="../js/config.js"></script>
   
   <!-- לוגיקת ההתחברות וההפניה החוזרת -->
   <script>
@@ -188,7 +188,7 @@
             if (redirectPage) {
               window.location.href = redirectPage;
             } else {
-              window.location.href = 'index.html';
+              window.location.href = '../index.html';
             }
           } else {
             errorDiv.textContent = data.message || 'שם משתמש או סיסמה שגויים';
@@ -204,7 +204,7 @@
           if (redirectPage) {
             window.location.href = redirectPage;
           } else {
-            window.location.href = 'index.html';
+              window.location.href = '../index.html';
           }
         } finally {
           submitBtn.disabled = false;
