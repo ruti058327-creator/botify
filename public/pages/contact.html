@@ -4,177 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Botify - צור קשר ותמיכה</title>
+  <link rel="icon" type="image/png" href="../images/pic.png">
   <link rel="stylesheet" href="../css/global.css">
-  
-  <style>
-    /* עיצוב ייעודי לעמוד צור קשר */
-    .contact-wrapper {
-      min-height: calc(100vh - 160px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-    }
-
-    .contact-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 24px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
-      padding: 45px 40px;
-      width: 100%;
-      max-width: 600px;
-      text-align: right;
-    }
-
-    .contact-card h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 8px;
-    }
-
-    .contact-card .subtitle {
-      color: #64748b;
-      font-size: 1.05rem;
-      margin-bottom: 25px;
-    }
-
-    /* תג סטטוס משתמש מחובר */
-    .user-info-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      padding: 12px 16px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      color: #1e40af;
-      font-size: 0.95rem;
-    }
-
-    .user-info-badge span {
-      font-weight: 700;
-    }
-
-    /* התראת משתמש לא מחובר */
-    .auth-alert {
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      padding: 25px;
-      border-radius: 16px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .auth-alert h3 {
-      color: #c2410c;
-      font-size: 1.25rem;
-      margin-bottom: 8px;
-    }
-
-    .auth-alert p {
-      color: #9a3412;
-      font-size: 0.95rem;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #334155;
-      margin-bottom: 8px;
-    }
-
-    .form-group select,
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 1px solid #cbd5e1;
-      font-size: 1rem;
-      font-family: inherit;
-      outline: none;
-      transition: all 0.2s ease;
-      background: #f8fafc;
-    }
-
-    .form-group select:focus,
-    .form-group input:focus,
-    .form-group textarea:focus {
-      background: #ffffff;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
-
-    .form-group textarea {
-      resize: vertical;
-      min-height: 140px;
-      line-height: 1.5;
-    }
-
-    /* סרגל מונה מילים מתחת לתיבת הטקסט */
-    .word-counter-wrapper {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-
-    .word-count.limit-reached {
-      color: #ef4444;
-      font-weight: 700;
-    }
-
-    .btn-send {
-      width: 100%;
-      padding: 14px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-top: 10px;
-    }
-
-    /* הודעת משוב לאחר שליחה */
-    .feedback-message {
-      padding: 14px;
-      border-radius: 12px;
-      margin-top: 20px;
-      font-size: 0.95rem;
-      text-align: center;
-      display: none;
-    }
-
-    .feedback-success {
-      background: #ecfdf5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-    }
-
-    .feedback-error {
-      background: #fef2f2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-  </style>
+  <link rel="stylesheet" href="../css/contact.css">
 </head>
 <body>
 
   <header>
     <nav class="navbar">
-
       <a href="../index.html" class="logo" title="חזרה לדף הבית">
-        <img src="/images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
-  
-
+        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
 
       <ul class="nav-links">
@@ -204,7 +43,6 @@
       </div>
 
       <form id="contact-form" style="display: none;">
-        
         <div class="user-info-badge">
           <span>שולח הפנייה:</span> <span id="current-user-display">טוען...</span>
         </div>
@@ -237,7 +75,6 @@
 
         <div id="feedback-msg" class="feedback-message"></div>
       </form>
-
     </div>
   </main>
 
@@ -248,9 +85,4 @@
   <script src="../js/config.js"></script>
   <script src="../js/contact.js"></script>
 </body>
-<div id="unauth-box" class="auth-alert" style="display: none;">
-  <h3>נדרשת התחברות למערכת</h3>
-  <p>כדי לשלוח פנייה ולקבל מענה אישי ישירות למייל שלכם, יש להתחבר תחילה לחשבון.</p>
-  <a href="login.html?redirect=contact.html" class="btn-primary" style="padding: 10px 24px;">מעבר להתחברות</a>
-</div>
 </html>

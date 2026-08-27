@@ -1,36 +1,45 @@
-require('dotenv').config();
-const express = require('express');
 const path = require('path');
-const dns = require('dns');
+// טעינת קובץ .env מתיקיית השורש של הפרויקט (רמה אחת למעלה מ-server)
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
-// 1. הגדרת שרתי DNS למניעת בעיות חיבור מול MongoDB Atlas
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+const express = require('express');
+const mongoose = require('mongoose');
 
-// 2. חיבור למסד הנתונים
-const connectDB = require('./config/db');
+// 1. הגדרת מחרוזת חיבור עם גיבוי קשיח
+const dbURI = process.env.MONGO_URI || 'mongodb://localhost:27017/botify';
+
+// 2. חיבור יחיד למסד הנתונים
+const connectDB = async () => {
+  try {
+    await mongoose.connect(dbURI);
+    console.log('🍃 Connected to MongoDB successfully! 🎉');
+  } catch (err) {
+    console.error('🔥 Error connecting to MongoDB:', err.message);
+  }
+};
 connectDB();
 
 const app = express();
 
-// 3. הגשת קבצים סטטיים ופענוח JSON
+// 3. מידלוורים וקבצים סטטיים
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 
-// 4. חיבור הראוטים
+// 4. ראוטים
 const authRoutes = require('./routes/authRoutes');
 app.use('/api', authRoutes);
 
-// 5. שכבת טיפול בשגיאות
+// 5. טיפול בשגיאות
 app.use((err, req, res, next) => {
   console.error('🔥 Server Route Error:', err.message);
   res.status(500).json({ 
     success: false, 
-     message: 'שגיאה פנימית בשרת' 
+    message: 'שגיאה פנימית בשרת' 
   });
 });
 
 // 6. הפעלת השרת
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
