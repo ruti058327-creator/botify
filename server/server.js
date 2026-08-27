@@ -15,12 +15,13 @@ const app = express();
 // 3. הגשת קבצים סטטיים ופענוח JSON
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public/pages')));
 
 // 4. חיבור הראוטים
 const authRoutes = require('./routes/authRoutes');
 app.use('/api', authRoutes);
 
-// 5. שכבת טיפול בשגיאות (מונעת תלות בקובץ חיצוני)
+// 5. שכבת טיפול בשגיאות
 app.use((err, req, res, next) => {
   console.error('🔥 Server Route Error:', err.message);
   res.status(500).json({ 
