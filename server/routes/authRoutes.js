@@ -1,4 +1,4 @@
- const express = require('express');
+const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 
@@ -108,12 +108,12 @@ router.post('/contact', async (req, res) => {
   }
 });
 
-// נתיב לשמירת תגובות מנהל - POST /api/reply
+// נתיב לשמירת תגובות מנהל - POST /api/reply (תוקן עם גרשים הפוכים)
 router.post('/reply', async (req, res) => {
   const { username, reply } = req.body;
   try {
     const newReply = new Contact({
-      username: מנהלת (אל: ${username}),
+      username: `מנהלת (אל: ${username})`,
       message: reply
     });
     await newReply.save();

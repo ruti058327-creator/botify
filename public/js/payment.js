@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + tax;
 
-  // 3. הצגת נתונים בסיכום
+  // 3. הצגת נתונים בסיכום (תוקן לגרשים הפוכים)
   document.getElementById('summary-plan-name').textContent = selectedPlan.name;
   document.getElementById('summary-subtotal').textContent = `₪${subtotal}`;
   document.getElementById('summary-tax').textContent = `₪${tax}`;
@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1500);
 
     } catch (error) {
+      // תוקן לגרשים הפוכים
       statusMsg.textContent = `❌ ${error.message}`;
       statusMsg.className = 'status-message error';
       statusMsg.style.display = 'block';

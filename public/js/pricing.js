@@ -15,9 +15,9 @@ function choosePlan(planId, price, planName) {
 
   if (token) {
     // אם המשתמש כבר מחובר - מעבירים אותו ישירות לדף התשלום
-    window.location.href = `payment.html?plan=${planId}&price=${price}`;
+    window.location.href = payment.html?plan=${planId}&price=${price};
   } else {
     // אם המשתמש חדש - מעבירים אותו להרשמה שתוביל ישירות לתשלום
-    window.location.href = `register.html?plan=${planId}&price=${price}`;
+    window.location.href = register.html?plan=${planId}&price=${price};
   }
 }
