@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Botify - התחברות</title>
-  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="../css/global.css">
   
   <style>
     .login-wrapper {
@@ -94,12 +94,12 @@
   <!-- סרגל ניווט עליון -->
   <header>
     <nav class="navbar">
-      <a href="index.html" class="logo" title="חזרה לדף הבית">
-        <img src="תמונות/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
+      <a href="../index.html" class="logo" title="חזרה לדף הבית">
+        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
 
       <ul class="nav-links">
-        <li><a href="index.html">בית</a></li>
+        <li><a href="../index.html">בית</a></li>
         <li><a href="about.html">אודות</a></li>
         <li><a href="pricing.html">מחירון</a></li>
         <li><a href="demo.html">דמו</a></li>
@@ -133,7 +133,7 @@
 
       <div class="login-links">
         <span>עדיין אין לך חשבון? <a href="register.html" id="register-link">הרשמה מהירה</a></span>
-        <a href="index.html" class="back-home-link">➔ חזרה לדף הבית</a>
+        <a href="../index.html" class="back-home-link">➔ חזרה לדף הבית</a>
       </div>
     </div>
   </main>
@@ -143,15 +143,14 @@
     <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
-  <script src="js/config.js"></script>
+  <script src="../js/config.js"></script>
   
   <!-- לוגיקת ההתחברות וההפניה החוזרת -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
-      const redirectPage = urlParams.get('redirect'); // למשל: contact.html
+      const redirectPage = urlParams.get('redirect');
 
-      // שמירת יעד ההפניה גם לקישור ההרשמה אם המשתמש יבחר להירשם (תוקן עם גרשים הפוכים)
       if (redirectPage) {
         document.getElementById('register-link').href = `register.html?redirect=${encodeURIComponent(redirectPage)}`;
       }
@@ -180,15 +179,13 @@
           const data = await response.json();
 
           if (response.ok && data.token) {
-            // שמירת פרטי ההתחברות
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user || { username: username }));
 
-            // הפניה חזרה לעמוד שממנו הגיע (צור קשר) או לדף הבית כברירת מחדל
             if (redirectPage) {
               window.location.href = redirectPage;
             } else {
-              window.location.href = 'index.html';
+              window.location.href = data.redirectUrl || '../index.html';
             }
           } else {
             errorDiv.textContent = data.message || 'שם משתמש או סיסמה שגויים';
@@ -196,16 +193,8 @@
           }
         } catch (err) {
           console.error('Login error:', err);
-          
-          // שמירה זמנית לטובת בדיקות צד לקוח (תוקן עם גרשים הפוכים)
-          localStorage.setItem('token', 'sample_token_123');
-          localStorage.setItem('user', JSON.stringify({ username: username, email: `${username}@example.com` }));
-          
-          if (redirectPage) {
-            window.location.href = redirectPage;
-          } else {
-            window.location.href = 'index.html';
-          }
+          errorDiv.textContent = 'שגיאת תקשורת מול השרת';
+          errorDiv.style.display = 'block';
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'התחבר';
