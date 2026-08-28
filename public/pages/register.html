@@ -16,7 +16,6 @@
     <header>
         <nav class="navbar">
             <a href="../index.html" class="logo" title="חזרה לדף הבית">
-                <!-- התמונה הראשית של הלוגו -->
                 <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
             </a>
 
@@ -36,27 +35,96 @@
 
     <main class="login-wrapper">
         <div class="login-card">
-            <h2>יצירת חשבון ל-Botify</h2>
-            
-            <div id="message" class="error-msg"></div>
 
-            <form id="registerForm">
-                <div class="form-group">
-                    <input type="text" id="username" placeholder="שם משתמש" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" placeholder="אימייל" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="password" placeholder="סיסמה" required>
-                </div>
-                <button type="submit" class="btn-primary btn-submit">הירשם</button>
-            </form>
+            <!-- אזור הודעות סטטוס -->
+            <div id="statusMessage" style="display: none; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; font-size: 0.95rem; text-align: center;"></div>
 
-            <div class="login-links">
-                <p style="margin: 0;">כבר יש לך חשבון? <a href="login.html" id="login-bottom-link">התחבר כאן</a></p>
-                <a href="../index.html" class="back-home-link">← חזרה לדף הבית</a>
+            <!-- שלב 1: מילוי פרטים -->
+            <div id="step1Container">
+                <h2>יצירת חשבון עסקי</h2>
+
+                <div class="form-group">
+                    <label for="fullName">שם מלא:</label>
+                    <input type="text" id="fullName" placeholder="ישראל ישראלי">
+                </div>
+
+                <div class="form-group">
+                    <label for="idNumber">מספר תעודת זהות:</label>
+                    <input type="text" id="idNumber" placeholder="9 ספרות" maxlength="9">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">כתובת אימייל (לקבלת קוד אימות):</label>
+                    <input type="email" id="email" placeholder="name@business.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">מספר טלפון נייד:</label>
+                    <input type="text" id="phone" placeholder="050-0000000">
+                </div>
+
+                <div class="form-group">
+                    <label for="businessName">שם העסק / החברה:</label>
+                    <input type="text" id="businessName" placeholder="שם העסק">
+                </div>
+
+                <div class="form-group">
+                    <label for="username">שם משתמש לכניסה:</label>
+                    <input type="text" id="username" placeholder="באנגלית / ספרות בלבד">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">סיסמה:</label>
+                    <input type="password" id="password" placeholder="לפחות 6 תווים">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">אימות סיסמה:</label>
+                    <input type="password" id="confirmPassword" placeholder="הזן את הסיסמה שוב">
+                </div>
+
+                <div class="form-group terms-group">
+                    <label>
+                        <input type="checkbox" id="terms">
+                        קראתי ואני מאשר/ת את <a href="#" target="_blank">תנאי השימוש והמדיניות</a>
+                    </label>
+                </div>
+
+                <button type="button" id="sendOtpBtn" onclick="handleSendOtp()" class="btn-primary btn-submit">המשך לקבלת קוד אימות ←</button>
+
+                <div class="login-links">
+                    <p style="margin: 0;">כבר יש לך חשבון? <a href="login.html" id="login-bottom-link">התחבר כאן</a></p>
+                    <a href="../index.html" class="back-home-link">← חזרה לדף הבית</a>
+                </div>
             </div>
+
+            <!-- שלב 2: הזנת קוד אימות -->
+            <div id="step2Container" style="display: none;">
+                <h2>אימות כתובת מייל</h2>
+
+                <p style="color: #475569; font-size: 0.95rem; margin-bottom: 12px; text-align: center;">
+                    שלחנו קוד אימות בן 6 ספרות לכתובת:<br>
+                    <strong id="displayEmail" style="color: #2563eb; font-size: 1.05rem;"></strong>
+                </p>
+
+                <!-- ספירה לאחור ל-5 דקות -->
+                <div id="timerDisplay" style="color: #dc2626; font-weight: bold; margin-bottom: 15px; font-size: 0.95rem; text-align: center;">
+                    זמן שנותר להזנת הקוד: 05:00
+                </div>
+
+                <div class="form-group">
+                    <label for="otpCode">הזן קוד אימות (6 ספרות):</label>
+                    <input type="text" id="otpCode" placeholder="------" maxlength="6" style="text-align: center; letter-spacing: 6px; font-size: 1.3rem; font-weight: bold;">
+                </div>
+
+                <button type="button" id="verifyBtn" onclick="handleVerifyAndRegister()" class="btn-primary btn-submit">אמת קוד והשלם הרשמה</button>
+
+                <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px; text-align: center;">
+                    <button type="button" id="resendBtn" onclick="handleResendCode()" class="btn-secondary-link" style="background: none; border: none; color: #2563eb; cursor: pointer; font-weight: 600;">🔄 שלח לי קוד חדש למייל</button>
+                    <button type="button" onclick="handleBackToEdit()" class="btn-secondary-link" style="background: none; border: none; color: #64748b; cursor: pointer;">✏️ חזרה לעריכת הפרטים</button>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -72,10 +140,184 @@
 
             if (redirectPage) {
                 const loginUrl = `login.html?redirect=${encodeURIComponent(redirectPage)}`;
-                document.getElementById('login-link').href = loginUrl;
-                document.getElementById('login-bottom-link').href = loginUrl;
+                const loginLinkElem = document.getElementById('login-link');
+                const loginBottomElem = document.getElementById('login-bottom-link');
+                if (loginLinkElem) loginLinkElem.href = loginUrl;
+                if (loginBottomElem) loginBottomElem.href = loginUrl;
             }
         });
+
+        let cachedUserData = null;
+        let countdownTimer = null;
+        let timeLeft = 5 * 60;
+
+        const statusMessage = document.getElementById('statusMessage');
+        const step1Container = document.getElementById('step1Container');
+        const step2Container = document.getElementById('step2Container');
+        const timerDisplay = document.getElementById('timerDisplay');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const verifyBtn = document.getElementById('verifyBtn');
+
+        function showStatus(text, isError = true) {
+            statusMessage.style.display = 'block';
+            statusMessage.textContent = text;
+            statusMessage.style.backgroundColor = isError ? '#fee2e2' : '#dcfce7';
+            statusMessage.style.color = isError ? '#dc2626' : '#15803d';
+            statusMessage.style.border = isError ? '1px solid #f87171' : '1px solid #86efac';
+        }
+
+        function clearStatus() {
+            statusMessage.style.display = 'none';
+            statusMessage.textContent = '';
+        }
+
+        function startTimer() {
+            clearInterval(countdownTimer);
+            timeLeft = 5 * 60;
+            verifyBtn.disabled = false;
+
+            countdownTimer = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerDisplay.textContent = `זמן שנותר להזנת הקוד: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    timerDisplay.textContent = 'פג תוקף הקוד! לחץ על שליחת קוד חדש.';
+                    verifyBtn.disabled = true;
+                    showStatus('פג תוקף קוד האימות. לחץ על "שלח לי קוד חדש למייל".', true);
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        async function handleSendOtp() {
+            clearStatus();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const idNumber = document.getElementById('idNumber').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const businessName = document.getElementById('businessName').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+
+            if (!fullName) return showStatus('נא להזין שם מלא');
+            if (!idNumber) return showStatus('נא להזין מספר תעודת זהות');
+            if (!email || !email.includes('@')) return showStatus('נא להזין כתובת אימייל תקינה');
+            if (!phone) return showStatus('נא להזין מספר טלפון');
+            if (!businessName) return showStatus('נא להזין שם עסק');
+            if (!username) return showStatus('נא להזין שם משתמש');
+            if (password.length < 6) return showStatus('הסיסמה חייבת להכיל לפחות 6 תווים');
+            if (password !== confirmPassword) return showStatus('הסיסמאות אינן תואמות');
+            if (!terms) return showStatus('יש לאשר את תנאי השימוש');
+
+            cachedUserData = { fullName, idNumber, email, phone, businessName, username, password };
+
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.textContent = '⏳ שולח קוד אימות למייל...';
+
+            try {
+                const response = await fetch((window.API_BASE_URL || '') + '/api/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: cachedUserData.email, username: cachedUserData.username })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'שגיאה בשליחת קוד האימות.');
+                }
+
+                document.getElementById('displayEmail').textContent = email;
+                step1Container.style.display = 'none';
+                step2Container.style.display = 'block';
+
+                startTimer();
+                showStatus('✉️ קוד אימות נשלח לתיבת המייל שלך!', false);
+
+            } catch (err) {
+                showStatus(err.message, true);
+            } finally {
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.textContent = 'המשך לקבלת קוד אימות ←';
+            }
+        }
+
+        async function handleVerifyAndRegister() {
+            clearStatus();
+            const otpCode = document.getElementById('otpCode').value.trim();
+
+            if (!otpCode || otpCode.length !== 6) {
+                return showStatus('נא להזין קוד אימות מלא בן 6 ספרות');
+            }
+
+            verifyBtn.disabled = true;
+            verifyBtn.textContent = 'מאמת ויוצר חשבון...';
+
+            try {
+                const response = await fetch((window.API_BASE_URL || '') + '/api/register-verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...cachedUserData, otpCode })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'קוד אימות שגוי');
+                }
+
+                clearInterval(countdownTimer);
+                showStatus('🎉 נרשמת בהצלחה! מעביר אותך לדף ההתחברות...', false);
+
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 1500);
+
+            } catch (err) {
+                showStatus(`❌ ${err.message}`, true);
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = 'אמת קוד והשלם הרשמה';
+            }
+        }
+
+        async function handleResendCode() {
+            clearStatus();
+            const resendBtn = document.getElementById('resendBtn');
+            resendBtn.disabled = true;
+            resendBtn.textContent = 'שולח קוד חדש...';
+
+            try {
+                const response = await fetch((window.API_BASE_URL || '') + '/api/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: cachedUserData.email, username: cachedUserData.username })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.message || 'שגיאה בשליחה');
+
+                document.getElementById('otpCode').value = '';
+                startTimer();
+                showStatus('✉️ קוד אימות חדש נשלח למייל!', false);
+            } catch (err) {
+                showStatus(err.message, true);
+            } finally {
+                resendBtn.disabled = false;
+                resendBtn.textContent = '🔄 שלח לי קוד חדש למייל';
+            }
+        }
+
+        function handleBackToEdit() {
+            clearStatus();
+            clearInterval(countdownTimer);
+            step2Container.style.display = 'none';
+            step1Container.style.display = 'block';
+        }
     </script>
 </body>
 </html>

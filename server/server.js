@@ -24,12 +24,13 @@ const app = express();
 // 3. מידלוורים וקבצים סטטיים
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../public/pages')));
 
 // 4. ראוטים
 const authRoutes = require('./routes/authRoutes');
 app.use('/api', authRoutes);
 
-// 5. טיפול בשגיאות
+// 5. שכבת טיפול בשגיאות
 app.use((err, req, res, next) => {
   console.error('🔥 Server Route Error:', err.message);
   res.status(500).json({ 

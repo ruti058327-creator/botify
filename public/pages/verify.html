@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botify - אימות קוד הרשמה</title>
+    <link rel="icon" type="image/png" href="/images/pic.png">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="/index.html" class="logo" title="חזרה לדף הבית">
+                <img src="/images/תמו נה 1.png" alt="Botify - בינה שמבינה" class="logo-img">
+            </a>
+            <ul class="nav-links">
+                <li><a href="/index.html">בית</a></li>
+                <li><a href="/about.html">אודות</a></li>
+                <li><a href="/pricing.html">מחירון</a></li>
+                <li><a href="/demo.html">דמו</a></li>
+                <li><a href="/contact.html">צור קשר</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="login-wrapper">
+        <div class="login-card">
+            <h2>אימות כתובת מייל</h2>
+            
+            <p class="otp-instruction">
+                שלחנו קוד אימות בן 6 ספרות לכתובת:<br>
+                <strong id="sentEmailDisplay" style="color: #2563eb; font-size: 1.05rem;">טוען...</strong>
+            </p>
+
+            <!-- ספירה לאחור חיה ל-5 דקות -->
+            <div id="timerDisplay" style="color: #dc2626; font-weight: bold; margin-bottom: 15px; font-size: 0.95rem;">
+                זמן שנותר להזנת הקוד: 05:00
+            </div>
+
+            <!-- אזור הודעות שגיאה / הצלחה -->
+            <div id="message" class="error-msg" style="display: none;"></div>
+
+            <!-- טופס אימות קוד -->
+            <form id="verifyForm">
+                <div class="form-group">
+                    <label for="otpCode">הזן קוד אימות (6 ספרות):</label>
+                    <input type="text" id="otpCode" class="otp-input" placeholder="------" maxlength="6" required autocomplete="one-time-code" autofocus>
+                </div>
+
+                <button type="submit" id="verifyBtn" class="btn-primary btn-submit">אמת קוד והשלם הרשמה</button>
+            </form>
+
+            <!-- פעולות במקרה של תקלה או תפוגה -->
+            <div id="actionButtons" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                <button type="button" id="resendCodeBtn" class="btn-secondary-link">🔄 שלח לי קוד חדש למייל</button>
+                <button type="button" id="editDetailsBtn" class="btn-secondary-link">✏️ חזרה לתיקון או עריכת הפרטים</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/verify.js"></script>
+</body>
+</html>

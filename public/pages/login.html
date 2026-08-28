@@ -7,6 +7,78 @@
   <link rel="icon" type="image/png" href="../images/pic.png">
   <link rel="stylesheet" href="../css/global.css">
   <link rel="stylesheet" href="../css/login.css">
+  <style>
+    .login-wrapper {
+      min-height: calc(100vh - 160px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 20px;
+    }
+    .login-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 40px 35px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .login-card h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 25px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+      text-align: right;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-group input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(0, 4, 13, 0.12);
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.05rem;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+    .login-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 0.9rem;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 18px;
+    }
+    .login-links a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .back-home-link {
+      color: #64748b !important;
+      font-weight: 500 !important;
+    }
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -95,14 +167,17 @@
 
           const data = await response.json();
 
-          if (response.ok && data.token) {
-            localStorage.setItem('token', data.token);
+          if (response.ok && data.success) {
+            // שמירת נתוני המשתמש המלאים והטוקן המקומי עבור האזור האישי
             localStorage.setItem('user', JSON.stringify(data.user || { username: username }));
+            if (data.token) {
+              localStorage.setItem('token', data.token);
+            }
 
             if (redirectPage) {
               window.location.href = redirectPage;
             } else {
-              window.location.href = data.redirectUrl || '../index.html';
+              window.location.href = data.redirectUrl || 'dashboard.html';
             }
           } else {
             errorDiv.textContent = data.message || 'שם משתמש או סיסמה שגויים';
