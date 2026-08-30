@@ -1,6 +1,6 @@
 const path = require('path');
-// טעינת קובץ .env מתיקיית השורש של הפרויקט (רמה אחת למעלה מ-server)
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
+// טעינת קובץ ה-.env מאותה תיקייה שבה נמצא קובץ השרת
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -23,6 +23,7 @@ const app = express();
 
 // 3. מידלוורים וקבצים סטטיים
 app.use(express.json());
+// שימי לב: בהתאם למבנה התיקיות, אם תיקיית ה-public נמצאת רמה אחת למעלה מתיקיית השרת:
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../public/pages')));
 
