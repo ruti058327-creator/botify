@@ -411,16 +411,27 @@ router.post('/contact', async (req, res) => {
   }
 });
 
-// שמירת תגובת מנהל - POST /api/reply
+// שמירת תגובת מנהל - POST /api/reply (תוקן לביצוע עדכון במקום יצירה מחדש)
 router.post('/reply', async (req, res) => {
-  const { username, reply } = req.body;
+  const { username, messageId, reply } = req.body;
+  
   try {
-    const newReply = new Contact({
-      username: `מנהלת (אל: ${username})`,
-      message: reply
-    });
-    await newReply.save();
-    res.json({ success: true, message: 'התגובה נשמרה בהצלחה' });
+    if (!messageId) {
+      return res.status(400).json({ success: false, message: 'מזהה ההודעה (messageId) חסר בבקשה' });
+    }
+
+    // חיפוש ההודעה המקורית במסד הנתונים לפי ה-ID שלה ועדכון שדה ה-reply
+    const updatedMessage = await Contact.findByIdAndUpdate(
+      messageId, 
+      { reply: reply }, 
+      { new: true } // מחזיר לנו את המסמך לאחר העדכון
+    );
+
+    if (!updatedMessage) {
+      return res.status(404).json({ success: false, message: 'ההודעה המקורית לא נמצאה במסד הנתונים' });
+    }
+
+    res.json({ success: true, message: 'התגובה עודכנה ונשמרה בהצלחה בתוך פניית הלקוח' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'שגיאה בשמירת התגובה', error: error.message });
   }

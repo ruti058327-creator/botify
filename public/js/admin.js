@@ -105,18 +105,23 @@ async function sendReply(username, messageId) {
     }
 
     try {
+        const token = localStorage.getItem('token');
         const response = await fetch('/api/reply', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, reply: replyText })
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            // הוספנו כאן את ה-messageId
+            body: JSON.stringify({ username, messageId, reply: replyText }) 
         });
 
         const data = await response.json();
-        if (data.success) {
+        if (data.success || response.ok) {
             alert('התגובה נשלחה ונשמרה בהצלחה!');
             replyInput.value = '';
         } else {
-            alert('שגיאה בשליחת התגובה: ' + data.message);
+            alert('שגיאה בשליחת התגובה: ' + (data.message || 'לא סופקה סיבה'));
         }
     } catch (err) {
         console.error('Error:', err);

@@ -71,8 +71,15 @@ async function loadUserMessages(username) {
     if (!container) return;
 
     try {
-        const response = await fetch(`/api/user-messages?username=${username}`);
-        if (!response.ok) throw new Error('שגיאה בשליפת ההודעות');
+        // הוספנו את משיכת הטוקן ושליחתו בהדרים כדי שהשרת יאשר את הבקשה
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/user-messages?username=${username}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('שגיאה בשליפת ההודעות מהשרת');
 
         const data = await response.json();
         const messages = data.messages || [];
@@ -92,6 +99,7 @@ async function loadUserMessages(username) {
         }
     } catch (err) {
         console.error('Error loading user messages:', err);
-        container.innerHTML = '<p class="status-msg" style="color: #666; background: #fff; padding: 15px; border-radius: 8px;">האזור האישי פועל ומעודכן!</p>';
+        // תיקון הודעת השגיאה
+        container.innerHTML = '<p class="status-msg" style="color: #d9534f; background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #d9534f;">שגיאה בטעינת ההודעות. ייתכן והשרת דורש התחברות מחדש.</p>';
     }
 }
