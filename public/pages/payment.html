@@ -13,13 +13,16 @@
   <!-- תפריט ניווט עליון -->
   <header>
     <nav class="navbar">
-      <div class="logo">Botify</div>
+      <a href="../index.html" class="logo" title="Botify - חזרה לדף הבית">
+        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+      </a>
       <ul class="nav-links">
         <li><a href="../index.html">בית</a></li>
         <li><a href="pricing.html">מחירון</a></li>
         <li><a href="contact.html">עזרה</a></li>
       </ul>
-      <div class="auth-buttons">
+      <!-- הוספנו את ה-id החסר -->
+      <div class="auth-buttons" id="nav-auth-container">
         <a href="login.html" class="btn-secondary">התחברות</a>
       </div>
     </nav>
@@ -111,5 +114,6 @@
 
   <script src="../js/config.js"></script>
   <script src="../js/payment.js"></script>
+  <script src="../js/navbar-auth.js"></script>
 </body>
 </html>
