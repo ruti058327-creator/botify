@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Botify - אזור אישי</title>
   <link rel="icon" type="image/png" href="../images/pic.png">
-  <!-- טעינת העיצוב הכללי של האתר (לסרגל הניווט, פוטר ובסיס) -->
+  <!-- טעינת העיצוב הכללי של האתר -->
   <link rel="stylesheet" href="../css/global.css">
-  <!-- טעינת העיצוב הייעודי לעמוד ה-Dashboard -->
+  <!-- טעינת העיצוב המקורי של ה-Dashboard -->
   <link rel="stylesheet" href="../css/dashboard.css">
+  <script src="../js/session-manager.js"></script>
 </head>
 <body>
 
@@ -32,12 +33,74 @@
     </nav>
   </header>
 
-  <!-- תוכן העמוד -->
+  <!-- תוכן העמוד הראשי -->
   <main class="dashboard-hero">
+    
+    <!-- כרטיסיית ברכה עליונה -->
     <div class="welcome-card">
-      <h1 id="welcome-title">שלום רב!</h1>
-      <p>ברוך הבא לאזור האישי שלך ב-Botify. מכאן תוכל לנהל את הבוטים שלך, לעקוב אחר שימוש וליהנות מכל שירותי המערכת.</p>
+      <h1 id="userNameDisplay">שלום רב!</h1>
+      <p>ברוך הבא לאזור האישי שלך ב-Botify. מכאן תוכל לנהל את הבוטים שלך, לשדרג חבילות וליהנות מכל שירותי המערכת.</p>
     </div>
+
+    <!-- כרטיסיות מידע אישי - מסודרות בתוך קופסאות (ריבועים) -->
+    <div class="stats-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px;">
+      
+      <div class="welcome-card" style="margin-bottom: 0; text-align: center; padding: 20px;">
+        <h3 style="font-size: 15px; color: #666; margin-bottom: 8px;">סוג מנוי</h3>
+        <div class="number" id="userPlanDisplay" style="font-size: 20px; font-weight: bold; color: #0056b3;">בסיסי</div>
+      </div>
+
+      <div class="welcome-card" style="margin-bottom: 0; text-align: center; padding: 20px;">
+        <h3 style="font-size: 15px; color: #666; margin-bottom: 8px;">תאריך הצטרפות</h3>
+        <div class="number" id="userDateDisplay" style="font-size: 16px; font-weight: bold; color: #333;">פעיל במערכת</div>
+      </div>
+
+      <div class="welcome-card" style="margin-bottom: 0; text-align: center; padding: 20px;">
+        <h3 style="font-size: 15px; color: #666; margin-bottom: 8px;">סטטוס חשבון</h3>
+        <div class="number" style="font-size: 16px; font-weight: bold; color: #2e7d32;">פעיל 🟢</div>
+      </div>
+
+    </div>
+
+    <!-- אזור הבוטים והשדרוג -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px;">
+      
+      <!-- רשימת הבוטים -->
+      <div class="welcome-card" style="margin-bottom: 0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h2 style="font-size: 18px; margin: 0; color: #333;">הבוטים הפעילים שלי</h2>
+          <button onclick="alert('פונקציית הוספת בוט תפתח בקרוב!')" style="background: #0056b3; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">+ הוסף בוט</button>
+        </div>
+        <div id="botsListContainer">
+          <div style="padding: 12px; background: #f8f9fa; border: 1px solid #eee; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong style="font-size: 14px; color: #333;">בוט שירות לקוחות ראשי</strong>
+              <p style="margin: 3px 0 0 0; font-size: 12px; color: #666;">סטטוס: פעיל | פלטפורמה: WhatsApp</p>
+            </div>
+            <span style="background: #e1f5fe; color: #0288d1; padding: 4px 10px; border-radius: 15px; font-size: 11px; font-weight: bold;">פעיל</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- כרטיסיית שדרוג מהירה -->
+      <div class="welcome-card" style="margin-bottom: 0; background: linear-gradient(135deg, #0056b3, #003d82); color: white; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <h2 style="font-size: 18px; margin-top: 0; margin-bottom: 8px; color: white;">שדרוג פרימיום 🚀</h2>
+          <p style="font-size: 13px; opacity: 0.9; margin-bottom: 15px;">קבל גישה לבוטים ללא הגבלה ותמיכה מהירה.</p>
+        </div>
+        <button onclick="window.location.href='pricing.html'" style="background: #ffcc00; color: #333; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; font-size: 14px;">שדרג עכשיו</button>
+      </div>
+
+    </div>
+
+    <!-- אזור פניות ותגובות מהמנהל -->
+    <div class="welcome-card" style="margin-bottom: 0;">
+      <h2 style="font-size: 18px; margin-top: 0; margin-bottom: 15px; color: #333;">הפניות וההודעות שלי</h2>
+      <div class="messages-container" id="userMessagesList">
+        <p class="status-msg" style="color: #666;">טוען את ההודעות שלך...</p>
+      </div>
+    </div>
+
   </main>
 
   <!-- פוטר -->
@@ -45,7 +108,6 @@
     <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
-  <!-- טעינת קובץ הלוגיקה החיצוני -->
   <script src="../js/dashboard.js"></script>
 </body>
 </html>

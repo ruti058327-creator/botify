@@ -1,7 +1,5 @@
-// משתנה גלובלי זמני לשמירת המייל בתהליך ההתחברות
 let pendingLoginEmail = '';
 
-// הגדרת המנהלות המורשות והסיסמה האחידה שלהן (57862)
 const ADMIN_CREDENTIALS = {
     "NOA": "578621",
     "RUTY": "578621",
@@ -14,15 +12,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     const messageEl = document.getElementById('message');
     if (messageEl) messageEl.textContent = '';
 
-    // בדיקה האם אנחנו כרגע בשלב ב' (הזנת קוד OTP) או בשלב א' (שם משתמש וסיסמה)
     const otpInput = document.getElementById('otpCode');
     const isOtpStep = otpInput && otpInput.style.display !== 'none';
 
     try {
         if (isOtpStep) {
-            // ==========================================
-            // שלב ב': שליחת קוד ה-OTP לאימות סופי
-            // ==========================================
             const otpCode = otpInput.value.trim();
 
             if (!otpCode) {
@@ -43,12 +37,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 return;
             }
 
-            // שמירת נתוני המשתמש בזיכרון המקומי
             if (data.user) {
                 localStorage.setItem('user', JSON.stringify(data.user));
             }
+            localStorage.setItem('token', data.token || 'botify_session_active');
 
-            // הצלחה - ניתוב לפי הרשאות
             const loggedUser = data.user ? (data.user.username || data.user.fullName) : '';
             
             if (data.redirectUrl) {
@@ -60,14 +53,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             }
 
         } else {
-            // ==========================================
-            // שלב א': שליחת שם משתמש וסיסמה
-            // ==========================================
             const usernameInput = document.getElementById('username').value.trim();
             const passwordInput = document.getElementById('password').value.trim();
             const upperUsername = usernameInput.toUpperCase();
 
-            // 1. בדיקה מיידית האם זו אחת ממנהלות המערכת המוגדרות מראש
+            // מנהלות
             if (ADMIN_CREDENTIALS[upperUsername]) {
                 if (ADMIN_CREDENTIALS[upperUsername] === passwordInput) {
                     const adminUser = {
@@ -75,8 +65,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                         role: 'admin'
                     };
                     localStorage.setItem('user', JSON.stringify(adminUser));
-                    
-                    // מעבר ישיר לדף הניהול
+                    localStorage.setItem('token', 'botify_admin_session_active');
                     window.location.href = 'admin.html';
                     return;
                 } else {
@@ -88,7 +77,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 }
             }
 
-            // 2. עבור משתמשים רגילים - שליחה לשרת
+            // משתמשים רגילים
             const response = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -97,39 +86,34 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
             const data = await response.json();
 
-            // משתמש לא קיים במערכת -> הפניה להרשמה
             if (response.status === 404) {
                 alert('שם המשתמש אינו קיים במערכת. מועבר לדף ההרשמה.');
                 window.location.href = 'register.html';
                 return;
             }
 
-            // שגיאת סיסמה או שגיאה כללית
             if (!response.ok) {
                 if (messageEl) messageEl.textContent = data.message || 'פרטי התחברות שגויים';
                 return;
             }
 
-            // שמירת נתוני המשתמש בזיכרון המקומי עבור המשך העבודה באתר
             if (data.user) {
                 localStorage.setItem('user', JSON.stringify(data.user));
             }
+            localStorage.setItem('token', data.token || 'botify_session_active');
 
-            // במידה ומדובר בכניסה ישירה בלי OTP
             if (data.redirectUrl && !data.requireOtp) {
                 window.location.href = data.redirectUrl;
                 return;
             }
 
-            // אם השרת דורש אימות OTP
             if (data.requireOtp) {
-                pendingLoginEmail = data.email; // שמירת המייל לשלב הבא
+                pendingLoginEmail = data.email;
                 if (messageEl) {
                     messageEl.style.color = 'green';
                     messageEl.textContent = data.message || 'קוד אימות נשלח למייל שלך';
                 }
 
-                // יצירה או הצגה של שדה קוד האימות בטופס
                 let container = document.getElementById('otpContainer');
                 if (!container) {
                     container = document.createElement('div');
@@ -147,7 +131,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                     document.getElementById('otpCode').value = '';
                 }
 
-                // הסתרת שדות השם משתמש והסיסמה המקוריים לנוחות המשתמש
                 const userField = document.getElementById('username');
                 if (userField && userField.closest('.input-group, div')) {
                     userField.closest('.input-group, div').style.display = 'none';
@@ -155,7 +138,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 const passGroup = document.getElementById('password').closest('.input-group, div');
                 if (passGroup) passGroup.style.display = 'none';
             } else {
-                // התחברות רגילה ללא OTP
                 if (data.role === 'admin') {
                     window.location.href = 'admin.html';
                 } else {
