@@ -193,20 +193,26 @@ router.post('/register', async (req, res, next) => {
 });
 
 // ==========================================
-// 2. נתיב התחברות - POST /api/login
+// 2. נתיבי התחברות ואימות התחברות (Login & OTP Verification)
 // ==========================================
+
+// שלב א' התחברות: בדיקת סיסמה ושליחת קוד אימות למייל של המשתמש - POST /api/login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // בדיקת מנהל קשיחה
-    if (username && username.trim().toUpperCase() === 'NOAR' && password === '57863') {
+    const cleanUsername = username ? username.trim().toUpperCase() : '';
+    const adminUsernames = ['NOA', 'RUTI', 'MIRYAM'];
+    const adminPassword = '578621';
+
+    // בדיקת מנהלת מול השמות המוגדרים והקוד 578621
+    if (adminUsernames.includes(cleanUsername) && password === adminPassword) {
       return res.json({ 
         success: true, 
         role: 'admin',
         user: { 
-          fullName: 'מנהלת מערכת', 
-          username: 'NOAR', 
+          fullName: `מנהלת מערכת - ${cleanUsername}`, 
+          username: cleanUsername, 
           businessName: 'הנהלת Botify',
           role: 'admin' 
         },
@@ -214,7 +220,7 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // בדיקת משתמש מול מסד הנתונים
+    // חיפוש המשתמש במסד הנתונים לפי שם משתמש או אימייל
     const user = await User.findOne({ 
       $or: [{ username: username ? username.trim() : '' }, { email: username ? username.trim() : '' }] 
     });
@@ -234,6 +240,86 @@ router.post('/login', async (req, res) => {
         success: false, 
         message: 'שם משתמש או סיסמה שגויים' 
       });
+    }
+
+    // יצירת קוד אימות חדש ושמירתו לפי המייל של המשתמש
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = Date.now() + 5 * 60 * 1000;
+    otpStore.set(user.email, { otpCode, expires });
+
+    const mailOptions = {
+      from: `"Botify Security" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'קוד אימות התחברות - Botify',
+      html: `
+        <div dir="rtl" style="font-family: Arial, sans-serif; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 500px; margin: auto; background-color: #ffffff;">
+          <h2 style="color: #2563eb; text-align: center;">אימות התחברות ל-Botify</h2>
+          <p style="color: #334155;">שלום <strong>${user.username}</strong>,</p>
+          <p style="color: #334155;">קוד האימות שלך לכניסה למערכת הוא:</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <span style="font-size: 32px; font-weight: bold; letter-spacing: 6px; background: #eff6ff; color: #1d4ed8; padding: 12px 28px; border-radius: 8px; border: 2px dashed #3b82f6; display: inline-block;">
+              ${otpCode}
+            </span>
+          </div>
+          <p style="color: #dc2626; font-weight: bold; text-align: center; font-size: 14px;">⚠️ הקוד בתוקף ל-5 דקות בלבד!</p>
+        </div>
+      `
+    };
+
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      await transporter.sendMail(mailOptions);
+    }
+
+    res.json({ 
+      success: true, 
+      requireOtp: true, 
+      email: user.email,
+      message: 'קוד אימות נשלח לכתובת המייל המקושרת לחשבון' 
+    });
+
+  } catch (error) {
+    return res.status(500).json({ 
+      success: false, 
+      message: 'שגיאת שרת פנימית', 
+      error: error.message 
+    });
+  }
+});
+
+// שלב ב' התחברות: אימות סופי של קוד ה-OTP והחזרת פרופיל המשתמש - POST /api/login-verify
+router.post('/login-verify', async (req, res) => {
+  try {
+    const { email, otpCode } = req.body;
+    const storedData = otpStore.get(email);
+
+    if (!storedData) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'לא נמצא קוד אימות בתוקף. נא להתחבר מחדש.' 
+      });
+    }
+
+    if (Date.now() > storedData.expires) {
+      otpStore.delete(email);
+      return res.status(400).json({ 
+        success: false, 
+        message: 'פג תוקף קוד האימות. נא להתחבר מחדש.' 
+      });
+    }
+
+    if (storedData.otpCode !== otpCode) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'קוד האימות שגוי.' 
+      });
+    }
+
+    otpStore.delete(email);
+
+    // שליפת המשתמש המלא מהמסד
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'המשתמש לא נמצא' });
     }
 
     // בניית אובייקט הנתונים שמוחזר ללקוח עבור האזור האישי
@@ -270,12 +356,8 @@ router.post('/login', async (req, res) => {
       redirectUrl: user.role === 'admin' ? '/admin.html' : '/pages/dashboard.html'
     });
 
-  } catch (error) {
-    return res.status(500).json({ 
-      success: false, 
-      message: 'שגיאת שרת פנימית', 
-      error: error.message 
-    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'שגיאה באימות קוד ההתחברות', error: err.message });
   }
 });
 

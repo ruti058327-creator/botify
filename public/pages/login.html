@@ -111,12 +111,17 @@
       <div id="login-error" class="error-msg"></div>
 
       <form id="login-form">
-        <div class="form-group">
-          <input type="text" id="username" placeholder="שם משתמש / אימייל" required>
+        <div class="form-group" id="group-username">
+          <input type="text" id="username" placeholder="שם משתמש / אימייל">
         </div>
 
-        <div class="form-group">
-          <input type="password" id="password" placeholder="סיסמה" required>
+        <div class="form-group" id="group-password">
+          <input type="password" id="password" placeholder="סיסמה">
+        </div>
+
+        <!-- שדה קוד אימות שיופיע אוטומטית בשלב השני -->
+        <div class="form-group" id="group-otp" style="display: none;">
+          <input type="text" id="otpCode" placeholder="הכנס קוד אימות בן 6 ספרות" maxlength="6" style="text-align: center; font-size: 18px; letter-spacing: 4px;">
         </div>
 
         <button type="submit" class="btn-primary btn-submit" id="btn-login">התחבר</button>
@@ -148,48 +153,125 @@
       const errorDiv = document.getElementById('login-error');
       const submitBtn = document.getElementById('btn-login');
 
+      let isOtpStep = false;
+      let pendingEmail = '';
+
       loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'מתחבר...';
         errorDiv.style.display = 'none';
 
         try {
-          const response = await fetch((window.API_BASE_URL || '') + '/api/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-          });
+          if (isOtpStep) {
+            // ==========================================
+            // שלב ב': שליחת קוד ה-OTP לאימות סופי
+            // ==========================================
+            const otpCode = document.getElementById('otpCode').value.trim();
 
-          const data = await response.json();
-
-          if (response.ok && data.success) {
-            // שמירת נתוני המשתמש המלאים והטוקן המקומי עבור האזור האישי
-            localStorage.setItem('user', JSON.stringify(data.user || { username: username }));
-            if (data.token) {
-              localStorage.setItem('token', data.token);
+            if (!otpCode) {
+              errorDiv.textContent = 'נא להזין את קוד האימות';
+              errorDiv.style.display = 'block';
+              return;
             }
 
-            if (redirectPage) {
-              window.location.href = redirectPage;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'מאמת קוד...';
+
+            const response = await fetch((window.API_BASE_URL || '') + '/api/login-verify', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: pendingEmail, otpCode })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+              if (data.token) {
+                localStorage.setItem('token', data.token);
+              }
+
+              if (redirectPage) {
+                window.location.href = redirectPage;
+              } else {
+                window.location.href = data.redirectUrl || 'dashboard.html';
+              }
             } else {
-              window.location.href = data.redirectUrl || 'dashboard.html';
+              errorDiv.textContent = data.message || 'קוד האימות שגוי';
+              errorDiv.style.display = 'block';
             }
+
           } else {
-            errorDiv.textContent = data.message || 'שם משתמש או סיסמה שגויים';
-            errorDiv.style.display = 'block';
+            // ==========================================
+            // שלב א': שליחת שם משתמש וסיסמה
+            // ==========================================
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+              errorDiv.textContent = 'נא למלא את כל השדות';
+              errorDiv.style.display = 'block';
+              return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'מתחבר...';
+
+            const response = await fetch((window.API_BASE_URL || '') + '/api/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+
+            // 1. משתמש לא קיים במערכת -> הפניה להרשמה
+            if (response.status === 404) {
+              alert('שם המשתמש אינו קיים במערכת. מועבר לדף ההרשמה.');
+              window.location.href = 'register.html';
+              return;
+            }
+
+            // 2. שגיאה כללית או סיסמה שגויה
+            if (!response.ok) {
+              errorDiv.textContent = data.message || 'פרטי התחברות שגויים';
+              errorDiv.style.display = 'block';
+              return;
+            }
+
+            // 3. במידה ומדובר במנהל הקשיח (NOAR) שנכנס מיד בלי OTP
+            if (data.redirectUrl && !data.requireOtp) {
+              localStorage.setItem('user', JSON.stringify(data.user));
+              window.location.href = data.redirectUrl;
+              return;
+            }
+
+            // 4. אם השרת דורש אימות OTP
+            if (data.requireOtp) {
+              pendingEmail = data.email;
+              isOtpStep = true;
+
+              // הסתרת שדות שם משתמש וסיסמה והצגת שדה הקוד
+              document.getElementById('group-username').style.display = 'none';
+              document.getElementById('group-password').style.display = 'none';
+              document.getElementById('group-otp').style.display = 'block';
+
+              errorDiv.style.color = '#16a34a'; // צבע ירוק להודעת הצלחה
+              errorDiv.textContent = data.message || 'קוד אימות נשלח למייל שלך';
+              errorDiv.style.display = 'block';
+
+              submitBtn.textContent = 'אמת קוד והתחבר';
+            }
           }
         } catch (err) {
           console.error('Login error:', err);
+          errorDiv.style.color = '#ef4444';
           errorDiv.textContent = 'שגיאת תקשורת מול השרת';
           errorDiv.style.display = 'block';
         } finally {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'התחבר';
+          if (!isOtpStep) {
+            submitBtn.textContent = 'התחבר';
+          }
         }
       });
     });

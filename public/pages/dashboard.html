@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botify - לוח בקרה</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            margin: 0;
-            padding: 50px;
-            text-align: center;
-        }
-        .card {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #555;
-            font-size: 16px;
-        }
-        .btn-logout {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #e74c3c;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-        .btn-logout:hover {
-            background-color: #c0392b;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Botify - אזור אישי</title>
+  <link rel="icon" type="image/png" href="../images/pic.png">
+  <!-- טעינת העיצוב הכללי של האתר (לסרגל הניווט, פוטר ובסיס) -->
+  <link rel="stylesheet" href="../css/global.css">
+  <!-- טעינת העיצוב הייעודי לעמוד ה-Dashboard -->
+  <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-    <div class="card">
-        <h1>לוח בקרה - Botify</h1>
-        <p>התחברת בהצלחה למערכת!</p>
-        <a href="login.html" class="btn-logout">התנתק</a>
+
+  <!-- סרגל ניווט עליון -->
+  <header>
+    <nav class="navbar">
+      <a href="dashboard.html" class="logo" title="חזרה לדף הבית">
+        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="dashboard.html" class="active">בית</a></li>
+        <li><a href="about.html">אודות</a></li>
+        <li><a href="pricing.html">מחירון</a></li>
+        <li><a href="demo.html">דמו</a></li>
+        <li><a href="contact.html">צור קשר</a></li>
+      </ul>
+
+      <!-- אזור שישתנה אוטומטית דרך קובץ ה-JS -->
+      <div class="auth-buttons" id="auth-buttons-container"></div>
+    </nav>
+  </header>
+
+  <!-- תוכן העמוד -->
+  <main class="dashboard-hero">
+    <div class="welcome-card">
+      <h1 id="welcome-title">שלום רב!</h1>
+      <p>ברוך הבא לאזור האישי שלך ב-Botify. מכאן תוכל לנהל את הבוטים שלך, לעקוב אחר שימוש וליהנות מכל שירותי המערכת.</p>
     </div>
+  </main>
+
+  <!-- פוטר -->
+  <footer>
+    <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+  </footer>
+
+  <!-- טעינת קובץ הלוגיקה החיצוני -->
+  <script src="../js/dashboard.js"></script>
 </body>
 </html>
