@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Botify - התחברות</title>
+  <link rel="icon" type="image/png" href="../images/pic.png">
   <link rel="stylesheet" href="../css/global.css">
-  
+  <link rel="stylesheet" href="../css/login.css">
   <style>
     .login-wrapper {
       min-height: calc(100vh - 160px);
@@ -45,7 +46,7 @@
     }
     .form-group input:focus {
       border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      box-shadow: 0 0 0 3px rgba(0, 4, 13, 0.12);
     }
     .btn-submit {
       width: 100%;
@@ -81,11 +82,13 @@
 </head>
 <body>
 
+  <!-- סרגל ניווט עליון -->
   <header>
     <nav class="navbar">
       <a href="../index.html" class="logo" title="חזרה לדף הבית">
-        <img src="../poto/pic.png" alt="Botify - בינה שמבינה" class="logo-img">
+        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
+
       <ul class="nav-links">
         <li><a href="../index.html">בית</a></li>
         <li><a href="about.html">אודות</a></li>
@@ -93,12 +96,14 @@
         <li><a href="demo.html">דמו</a></li>
         <li><a href="contact.html">צור קשר</a></li>
       </ul>
+
       <div class="auth-buttons">
         <a href="register.html" class="btn-primary">הרשמה</a>
       </div>
     </nav>
   </header>
 
+  <!-- כרטיס התחברות -->
   <main class="login-wrapper">
     <div class="login-card">
       <h2>התחברות ל-Botify</h2>
@@ -124,12 +129,12 @@
     </div>
   </main>
 
+  <!-- פוטר -->
   <footer>
     <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
   <script src="../js/config.js"></script>
-  
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -163,17 +168,16 @@
           const data = await response.json();
 
           if (response.ok && data.success) {
-            localStorage.setItem('user', JSON.stringify({ username: username }));
+            // שמירת נתוני המשתמש המלאים והטוקן המקומי עבור האזור האישי
+            localStorage.setItem('user', JSON.stringify(data.user || { username: username }));
+            if (data.token) {
+              localStorage.setItem('token', data.token);
+            }
 
-            // אם הוגדר redirect מראש (כמו צור קשר) נשתמש בו, אחרת נשתמש ב־redirectUrl שהחזיר השרת (כמו admin.html)
             if (redirectPage) {
               window.location.href = redirectPage;
             } else {
-<<<<<<< HEAD:public/pages/login.html
-              window.location.href = '../index.html';
-=======
-              window.location.href = data.redirectUrl || 'index.html';
->>>>>>> 99a9d875fca9957b70df211fa1e37d2e54d1ad4e:public/login.html
+              window.location.href = data.redirectUrl || 'dashboard.html';
             }
           } else {
             errorDiv.textContent = data.message || 'שם משתמש או סיסמה שגויים';
@@ -181,21 +185,8 @@
           }
         } catch (err) {
           console.error('Login error:', err);
-<<<<<<< HEAD:public/pages/login.html
-          
-          // שמירה זמנית לטובת בדיקות צד לקוח
-          localStorage.setItem('token', 'sample_token_123');
-          localStorage.setItem('user', JSON.stringify({ username: username, email: `${username}@example.com` }));
-          
-          if (redirectPage) {
-            window.location.href = redirectPage;
-          } else {
-              window.location.href = '../index.html';
-          }
-=======
           errorDiv.textContent = 'שגיאת תקשורת מול השרת';
           errorDiv.style.display = 'block';
->>>>>>> 99a9d875fca9957b70df211fa1e37d2e54d1ad4e:public/login.html
         } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = 'התחבר';

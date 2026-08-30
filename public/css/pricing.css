@@ -1,5 +1,5 @@
 /* ==========================================
-   Pricing Page Styling
+   Pricing Page Styling (Fixed RTL & Badge)
    ========================================== */
 
 .pricing-container {
@@ -24,7 +24,7 @@
   color: var(--text-muted, #4b5563);
 }
 
-/* Grid layout for 4 cards */
+/* Grid layout for cards */
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -37,7 +37,7 @@
   background: #ffffff;
   border: 1px solid var(--border-color, #e2e8f0);
   border-radius: 12px;
-  padding: 2.2rem 1.6rem;
+  padding: 2.8rem 1.6rem 2.2rem 1.6rem; /* הגדלת המרווח העליון למניעת חפיפה */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -63,11 +63,12 @@
   transform: scale(1.02) translateY(-6px);
 }
 
+/* תיקון תווית "הכי פופולרי" עבור RTL */
 .badge-popular {
   position: absolute;
   top: -14px;
-  right: 50%;
-  transform: translateX(50%);
+  left: 50%; /* מרכוז תקני באמצעות left בשילוב transform -50% */
+  transform: translateX(-50%);
   background-color: var(--primary-color, #2563eb);
   color: #ffffff;
   padding: 4px 14px;
@@ -75,9 +76,15 @@
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.5px;
+  white-space: nowrap; /* מונע שבירת שורה בתווית */
+  z-index: 10;
 }
 
 /* Header inside card */
+.card-header {
+  text-align: center;
+}
+
 .card-header h3 {
   font-size: 1.35rem;
   color: var(--text-dark, #1f2937);

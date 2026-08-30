@@ -21,3 +21,6 @@ function choosePlan(planId, price, planName) {
     window.location.href = `register.html?plan=${planId}&price=${price}`;
   }
 }
+
+// חשיפת הפונקציה כדי שאירוע ה-onclick ב-HTML יזהה אותה בוודאות
+window.choosePlan = choosePlan;

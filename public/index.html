@@ -1,30 +1,108 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-
     <!-- כותרת הלשונית עם הסלוגן המלא -->
+    <title>Botify - בינה שמבינה</title>
 
-
-    
-<title>Botify - בינה שמבינה</title>
-
-<!-- אייקון הלשונית (Favicon) לפי הנתיב של התמונה האמצעית -->
-<link rel="icon" type="image/png" href="/poto/pic.png">
+    <!-- אייקון הלשונית (Favicon) -->
+    <link rel="icon" type="image/png" href="/images/pic.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botify - דף הבית</title>
-    <link rel="stylesheet" href="./css/pricing.css">
+
+    <!-- קישור לעיצוב הראשי של האתר -->
+    <link rel="stylesheet" href="/css/global.css">
+    <style>
+        /* תוספות עיצוב מותאמות לעמוד הבית */
+        .home-sections {
+            max-width: 1050px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .step-card {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+
+        .faq-container {
+            background: var(--bg-light);
+            border-radius: var(--radius-card);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 50px;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .faq-answer {
+            color: var(--text-muted);
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+    </style>
 </head>
 <body>
 
     <header>
         <nav class="navbar">
             <a href="index.html" class="logo" title="Botify - חזרה לדף הבית">
-                <img src="/poto/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+                <img src="/images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
             </a>
 
             <ul class="nav-links">
-                <li><a href="index.html">בית</a></li>
+                <li><a href="index.html" class="active">בית</a></li>
                 <li><a href="./pages/about.html">אודות</a></li>
                 <li><a href="./pages/pricing.html">מחירון</a></li>
                 <li><a href="./pages/demo.html">דמו</a></li>
@@ -39,6 +117,7 @@
     </header>
 
     <main>
+        <!-- אזור פתיח מרכזי -->
         <section class="hero">
             <div class="hero-container">
                 <div class="hero-text">
@@ -51,10 +130,81 @@
                 </div>
 
                 <div class="hero-image">
-                    <img src="/poto/pic3.png" alt="בוט של Botify">
+                    <img src="/images/pic3.png" alt="בוט של Botify">
                 </div>
             </div>
         </section>
+
+        <!-- אזורי תוכן מורחבים -->
+        <div class="home-sections">
+
+            <!-- יתרונות המערכת -->
+            <section>
+                <div class="section-header">
+                    <h2>למה העסק שלך חייב בוט חכם?</h2>
+                    <p>הכלים שיעזרו לך לחסוך זמן ולהגדיל את אחוז ההמשרות</p>
+                </div>
+
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>⚡ מענה מיידי 24/7</h3>
+                        <p class="desc">הלקוחות שלך לא מחכים. הבוט מספק תשובות מדויקות גם מחוץ לשעות הפעילות.</p>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>🎯 איסוף לידים חכם</h3>
+                        <p class="desc">סינון פניות, איסוף פרטי התקשרות והעברה ישירה למערכת ה-CRM שלך.</p>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>📚 למידה מקבצים</h3>
+                        <p class="desc">מעלים קובצי PDF או מחירונים, והבוט לומד להשיב על בסיס התוכן העסקי שלך.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- איך זה עובד -->
+            <section style="margin-top: 60px;">
+                <div class="section-header">
+                    <h2>איך זה עובד?</h2>
+                    <p>שלושה צעדים פשוטים עד שהבוט שלך באוויר</p>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>נרשמים למערכת</h4>
+                        <p>יוצרים חשבון בחינם תוך פחות מדקה.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>מעלים תוכן</h4>
+                        <p>מזינים את השאלות והתשובות או מעלים קובץ מידע.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>מטמיעים באתר</h4>
+                        <p>מעתיקים שורת קוד אחת והבוט מוכן לעבודה.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- שאלות נפוצות -->
+            <section>
+                <div class="section-header">
+                    <h2>שאלות נפוצות</h2>
+                </div>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">❓ האם נדרש ידע בקוד כדי לתפעל את המערכת?</div>
+                        <div class="faq-answer">לא. המערכת נבנתה במיוחד עבור בעלי עסקים ללא רקע טכני.</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">❓ האם אפשר לנסות את המערכת בחינם?</div>
+                        <div class="faq-answer">בוודאי, ניתן להירשם ולנסות את הדמו בחינם ללא צורך באשראי.</div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
     </main>
 
     <footer>

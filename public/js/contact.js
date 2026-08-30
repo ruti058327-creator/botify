@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   const userString = localStorage.getItem('user');
-  
+
   const unauthBox = document.getElementById('unauth-box');
   const contactForm = document.getElementById('contact-form');
   const userDisplay = document.getElementById('current-user-display');
@@ -16,13 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. בדיקת סטטוס התחברות
   // ==========================================
   if (!token) {
-    // משתמש לא מחובר - מציגים התראה וחוסמים את הטופס
     unauthBox.style.display = 'block';
     contactForm.style.display = 'none';
     return;
   }
 
-  // משתמש מחובר - חושפים את הטופס ומציגים את שמו
   unauthBox.style.display = 'none';
   contactForm.style.display = 'block';
 
@@ -41,24 +39,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================
   messageInput.addEventListener('input', () => {
     const text = messageInput.value.trim();
-    // ספירת מילים לפי רווחים
     const words = text === '' ? [] : text.split(/\s+/);
     const wordCount = words.length;
 
     if (wordCount > MAX_WORDS) {
-      // חיתוך הטקסט ל-200 המילים הראשונות בלבד
       const trimmedWords = words.slice(0, MAX_WORDS);
       messageInput.value = trimmedWords.join(' ');
-      wordCountDisplay.textContent = `${MAX_WORDS} / ${MAX_WORDS} מילים (הגעת למגבלה!)`;
+      wordCountDisplay.textContent = `${MAX_WORDS} /${MAX_WORDS} מילים (הגעת למגבלה!)`;
       wordCountDisplay.classList.add('limit-reached');
     } else {
-      wordCountDisplay.textContent = `${wordCount} / ${MAX_WORDS} מילים`;
+      wordCountDisplay.textContent = `${wordCount} /${MAX_WORDS} מילים`;
       wordCountDisplay.classList.remove('limit-reached');
     }
   });
 
   // ==========================================
-  // 3. שליחת הטופס לשרת (נשמר למנהל)
+  // 3. שליחת הטופס לשרת
   // ==========================================
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -75,12 +71,11 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.textContent = 'שולח פנייה...';
 
     try {
-      // שליחת הפנייה לשרת (השרת שולף את פרטי המשתמש מה-Token ושומר למנהל)
       const response = await fetch((window.API_BASE_URL || '') + '/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}` // תיקון כאן לגרש הפוך
         },
         body: JSON.stringify({
           subject: subject,
@@ -100,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error('Error sending contact message:', err);
-      // fallback למקרה שאין עדיין נתיב backend פעיל
       showFeedback('הפנייה נקלטה בהצלחה במערכת!', true);
       contactForm.reset();
       wordCountDisplay.textContent = `0 / ${MAX_WORDS} מילים`;

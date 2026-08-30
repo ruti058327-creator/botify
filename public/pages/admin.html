@@ -4,119 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Botify - פאנל ניהול</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; display: flex; height: 100vh; }
-        
-        .sidebar {
-            width: 240px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .sidebar .badge {
-            background-color: #e74c3c;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            display: inline-block;
-            margin-top: 5px;
-        }
-        .sidebar h2 { font-size: 20px; margin-bottom: 10px; }
-        .sidebar p { font-size: 14px; color: #bdc3c7; }
-
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        
-        .stats-cards {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            min-width: 200px;
-            border-right: 5px solid #3498db;
-        }
-        .stat-card h3 { font-size: 14px; color: #7f8c8d; margin-bottom: 10px; }
-        .stat-card .number { font-size: 28px; font-weight: bold; color: #2c3e50; }
-
-        .section-title { margin: 25px 0 15px 0; color: #2c3e50; font-size: 18px; }
-
-        /* עיצוב תיבת ההודעות הנכנסות */
-        .messages-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            padding: 15px;
-            margin-bottom: 25px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        .message-card {
-            border-bottom: 1px solid #eee;
-            padding: 15px 5px;
-            margin-bottom: 10px;
-        }
-        .message-card:last-child { border-bottom: none; }
-        .message-header { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; font-size: 14px; color: #2c3e50; }
-        .message-username { font-size: 13px; color: #2980b9; font-weight: bold; }
-        .message-text { font-size: 14px; color: #34495e; margin-top: 5px; line-height: 1.4; }
-        .message-date { font-size: 11px; color: #95a5a6; }
-
-        /* עיצוב אזור התגובה */
-        .reply-section {
-            margin-top: 10px;
-            display: flex;
-            gap: 8px;
-        }
-        .reply-section input {
-            flex: 1;
-            padding: 6px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-        .reply-section button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .reply-section button:hover {
-            background-color: #2980b9;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-        th, td { padding: 12px 15px; text-align: right; border-bottom: 1px solid #ddd; }
-        th { background-color: #3498db; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-        
-        .plan-tag {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            background-color: #e8f8f5;
-            color: #27ae60;
-        }
-    </style>
+    <link rel="icon" type="image/png" href="../images/pic.png">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/admin.css">
 </head>
 <body>
 
@@ -124,10 +14,10 @@
         <div>
             <h2>Botify Admin</h2>
             <span class="badge">פרופיל ניהול פעיל</span>
-            <p style="margin-top: 15px;">מנהלת מחוברת: <strong>NOAR</strong></p>
+            <p class="admin-info">מנהל מחובר: <strong>Admin</strong></p>
         </div>
         <div>
-            <a href="login.html" style="color: #ecf0f1; text-decoration: none;">התנתקות</a>
+            <a href="login.html" class="logout-link">התנתקות</a>
         </div>
     </div>
 
@@ -147,7 +37,7 @@
         <!-- תיבת הודעות נכנסות (צור קשר) -->
         <h2 class="section-title">הודעות נכנסות (צור קשר)</h2>
         <div class="messages-container" id="messagesList">
-            <p style="text-align: center; color: #7f8c8d;">טוען הודעות...</p>
+            <p class="status-msg">טוען הודעות...</p>
         </div>
 
         <!-- טבלת משתמשים -->
@@ -163,13 +53,12 @@
                 </tr>
             </thead>
             <tbody id="usersTableBody">
-                <tr><td colspan="5" style="text-align:center;">טוען נתונים...</td></tr>
+                <tr><td colspan="5" class="status-msg">טוען נתונים...</td></tr>
             </tbody>
         </table>
     </div>
 
     <script>
-        // שליפת כמות המנויים
         async function loadSubscriberCount() {
             try {
                 const response = await fetch('/api/users/count');
@@ -186,7 +75,6 @@
             }
         }
 
-        // שליפת הודעות נכנסות מטופס צור קשר והוספת שדה תגובה
         async function loadMessages() {
             try {
                 const response = await fetch('/api/messages');
@@ -205,23 +93,21 @@
                             </div>
                             <div class="message-text">${msg.message}</div>
                             
-                            <!-- אזור תגובה למשתמש -->
                             <div class="reply-section">
-                                <input type="text" id="reply-${msg._id}" placeholder="הקלידי תגובה למשתמש...">
+                                <input type="text" id="reply-${msg._id}" placeholder="הקלד תגובה למשתמש...">
                                 <button onclick="sendReply('${msg.username}', '${msg._id}')">שלח תגובה</button>
                             </div>
                         </div>
                     `).join('');
                 } else {
-                    container.innerHTML = '<p style="text-align:center; color:#7f8c8d;">אין הודעות חדשות כרגע</p>';
+                    container.innerHTML = '<p class="status-msg">אין הודעות חדשות כרגע</p>';
                 }
             } catch (err) {
                 console.error('Error loading messages:', err);
-                document.getElementById('messagesList').innerHTML = '<p style="text-align:center; color:red;">שגיאה בטעינת ההודעות מהשרת</p>';
+                container.innerHTML = '<p class="status-msg error">שגיאה בטעינת ההודעות מהשרת</p>';
             }
         }
 
-        // פונקציה לשליחת תגובה בחזרה לשרת
         async function sendReply(username, messageId) {
             const replyInput = document.getElementById(`reply-${messageId}`);
             const replyText = replyInput.value.trim();
@@ -251,7 +137,6 @@
             }
         }
 
-        // שליפת רשימת המשתמשים
         async function loadUsers() {
             try {
                 const response = await fetch('/api/users');
@@ -277,15 +162,14 @@
                         tableBody.innerHTML += row;
                     });
                 } else {
-                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">אין משתמשים רשומים כרגע במערכת</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="5" class="status-msg">אין משתמשים רשומים כרגע במערכת</td></tr>';
                 }
             } catch (err) {
                 console.error('Error:', err);
-                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color:red;">שגיאה בטעינת הנתונים מהשרת</td></tr>';
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="5" class="status-msg error">שגיאה בטעינת הנתונים מהשרת</td></tr>';
             }
         }
 
-        // טעינת הנתונים בעת פתיחת העמוד
         document.addEventListener('DOMContentLoaded', () => {
             loadSubscriberCount();
             loadMessages();
