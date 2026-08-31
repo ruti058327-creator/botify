@@ -399,6 +399,24 @@ router.get('/messages', async (req, res) => {
   }
 });
 
+// הוספנו את הנתיב החסר כאן!! 
+// שליפת הודעות אישיות של משתמש ספציפי לדשבורד - GET /api/user-messages
+router.get('/user-messages', async (req, res) => {
+  try {
+    const { username } = req.query;
+
+    if (!username) {
+      return res.status(400).json({ success: false, message: 'שם משתמש חסר בבקשה' });
+    }
+
+    const messages = await Contact.find({ username: username }).sort({ createdAt: -1 });
+    
+    res.json({ success: true, messages });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'שגיאה בשליפת הודעות הלקוח', error: error.message });
+  }
+});
+
 // שליחת הודעה חדשה - POST /api/contact
 router.post('/contact', async (req, res) => {
   const { username, message } = req.body;

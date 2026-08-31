@@ -65,13 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// פונקציה לטעינת הפניות והודעות של הלקוח הספציפי מהשרת
+// פונקציה מעודכנת המציגה את ההודעות כמו צ'אט בוואטסאפ
 async function loadUserMessages(username) {
     const container = document.getElementById('userMessagesList');
     if (!container) return;
 
     try {
-        // הוספנו את משיכת הטוקן ושליחתו בהדרים כדי שהשרת יאשר את הבקשה
         const token = localStorage.getItem('token');
         const response = await fetch(`/api/user-messages?username=${username}`, {
             headers: {
@@ -85,21 +84,34 @@ async function loadUserMessages(username) {
         const messages = data.messages || [];
 
         if (messages.length > 0) {
-            container.innerHTML = messages.map(msg => `
-                <div class="message-card" style="background: #fff; padding: 15px; margin-bottom: 10px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-                    <div class="message-header" style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 8px;">
-                        <span>תאריך פנייה: ${new Date(msg.createdAt).toLocaleString('he-IL')}</span>
-                    </div>
-                    <div class="message-text" style="font-size: 16px; margin-bottom: 10px;"><strong>הפנייה שלך:</strong> ${msg.message}</div>
-                    ${msg.reply ? `<div style="background: #eef2f7; padding: 10px; border-radius: 5px; color: #333;"><strong>תגובת המנהלת:</strong> ${msg.reply}</div>` : '<div style="color: #888; font-style: italic;">טרם התקבלה תגובה מהמנהלות</div>'}
+            // סידור היסטוריית השיחה מהישן לחדש
+            messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+            
+            // בניית ממשק צ'אט (בועות הודעה ימין ושמאל)
+            container.innerHTML = `
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;">
+                    ${messages.map(msg => `
+                        <div style="align-self: flex-start; background: #ffffff; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>אני</strong></div>
+                            <div style="color: #334155; font-size: 15px;">${msg.message}</div>
+                        </div>
+                        ${msg.reply ? `
+                        <div style="align-self: flex-end; background: #eff6ff; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #bfdbfe;">
+                            <div style="font-size: 11px; color: #3b82f6; margin-bottom: 4px;"><strong>תגובת צוות Botify</strong></div>
+                            <div style="color: #1e40af; font-size: 15px;">${msg.reply}</div>
+                        </div>
+                        ` : ''}
+                    `).join('')}
                 </div>
-            `).join('');
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="contact.html" style="color: #2563eb; font-weight: bold; text-decoration: none;">+ פנייה חדשה / המשך שיחה</a>
+                </div>
+            `;
         } else {
-            container.innerHTML = '<p class="status-msg" style="color: #666; background: #fff; padding: 15px; border-radius: 8px;">אין לך פניות חדשות במערכת כרגע.</p>';
+            container.innerHTML = '<p class="status-msg" style="color: #64748b; background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center;">אין לך פניות או התכתבויות קודמות במערכת.</p>';
         }
     } catch (err) {
         console.error('Error loading user messages:', err);
-        // תיקון הודעת השגיאה
-        container.innerHTML = '<p class="status-msg" style="color: #d9534f; background: #fdf2f2; padding: 15px; border-radius: 8px; border: 1px solid #d9534f;">שגיאה בטעינת ההודעות. ייתכן והשרת דורש התחברות מחדש.</p>';
+        container.innerHTML = '<p class="status-msg" style="color: #dc2626; background: #fef2f2; padding: 15px; border-radius: 8px; border: 1px solid #f87171;">שגיאה בטעינת ההודעות. ייתכן והשרת דורש התחברות מחדש.</p>';
     }
 }
