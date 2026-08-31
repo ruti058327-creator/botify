@@ -399,7 +399,6 @@ router.get('/messages', async (req, res) => {
   }
 });
 
-// הוספנו את הנתיב החסר כאן!! 
 // שליפת הודעות אישיות של משתמש ספציפי לדשבורד - GET /api/user-messages
 router.get('/user-messages', async (req, res) => {
   try {
@@ -417,11 +416,12 @@ router.get('/user-messages', async (req, res) => {
   }
 });
 
-// שליחת הודעה חדשה - POST /api/contact
+// שליחת הודעה חדשה על ידי הלקוח - POST /api/contact
 router.post('/contact', async (req, res) => {
   const { username, message } = req.body;
   try {
-    const newMessage = new Contact({ username, message });
+    // כאן הוספנו isAdmin: false כדי לדעת שזו הודעה מהלקוח
+    const newMessage = new Contact({ username, message, isAdmin: false });
     await newMessage.save();
     res.json({ success: true, message: 'ההודעה נשלחה בהצלחה' });
   } catch (error) {
@@ -429,27 +429,25 @@ router.post('/contact', async (req, res) => {
   }
 });
 
-// שמירת תגובת מנהל - POST /api/reply (תוקן לביצוע עדכון במקום יצירה מחדש)
+// שמירת תגובת מנהלת כהודעה חדשה בצ'אט - POST /api/reply 
 router.post('/reply', async (req, res) => {
-  const { username, messageId, reply } = req.body;
+  // אנחנו כבר לא צריכים את messageId, כי הופכים את זה לשיחת צ'אט
+  const { username, reply } = req.body;
   
   try {
-    if (!messageId) {
-      return res.status(400).json({ success: false, message: 'מזהה ההודעה (messageId) חסר בבקשה' });
+    if (!username || !reply) {
+      return res.status(400).json({ success: false, message: 'חסרים נתונים לשליחת התגובה' });
     }
 
-    // חיפוש ההודעה המקורית במסד הנתונים לפי ה-ID שלה ועדכון שדה ה-reply
-    const updatedMessage = await Contact.findByIdAndUpdate(
-      messageId, 
-      { reply: reply }, 
-      { new: true } // מחזיר לנו את המסמך לאחר העדכון
-    );
+    // במקום לעדכן שורה קיימת, אנחנו מייצרים שורת הודעה חדשה! 
+    const newReplyMessage = new Contact({
+      username: username,
+      message: reply,
+      isAdmin: true // דגל חובה שמסמן למערכת שההודעה נשלחה על ידי המנהלת
+    });
 
-    if (!updatedMessage) {
-      return res.status(404).json({ success: false, message: 'ההודעה המקורית לא נמצאה במסד הנתונים' });
-    }
-
-    res.json({ success: true, message: 'התגובה עודכנה ונשמרה בהצלחה בתוך פניית הלקוח' });
+    await newReplyMessage.save();
+    res.json({ success: true, message: 'התגובה נשמרה בהצלחה כהודעה חדשה בשיחה' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'שגיאה בשמירת התגובה', error: error.message });
   }

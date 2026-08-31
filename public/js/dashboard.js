@@ -65,12 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// פונקציה מעודכנת המציגה את ההודעות כמו צ'אט בוואטסאפ
+// פונקציה לטעינת הפניות והודעות של הלקוח הספציפי מהשרת
 async function loadUserMessages(username) {
     const container = document.getElementById('userMessagesList');
     if (!container) return;
 
     try {
+        // הוספנו את משיכת הטוקן ושליחתו בהדרים כדי שהשרת יאשר את הבקשה
         const token = localStorage.getItem('token');
         const response = await fetch(`/api/user-messages?username=${username}`, {
             headers: {
@@ -84,24 +85,35 @@ async function loadUserMessages(username) {
         const messages = data.messages || [];
 
         if (messages.length > 0) {
-            // סידור היסטוריית השיחה מהישן לחדש
             messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
             
-            // בניית ממשק צ'אט (בועות הודעה ימין ושמאל)
             container.innerHTML = `
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow-y: auto;">
-                    ${messages.map(msg => `
-                        <div style="align-self: flex-start; background: #ffffff; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-                            <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>אני</strong></div>
-                            <div style="color: #334155; font-size: 15px;">${msg.message}</div>
-                        </div>
-                        ${msg.reply ? `
-                        <div style="align-self: flex-end; background: #eff6ff; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #bfdbfe;">
-                            <div style="font-size: 11px; color: #3b82f6; margin-bottom: 4px;"><strong>תגובת צוות Botify</strong></div>
-                            <div style="color: #1e40af; font-size: 15px;">${msg.reply}</div>
-                        </div>
-                        ` : ''}
-                    `).join('')}
+                    ${messages.map(msg => {
+                        let html = '';
+                        if (!msg.isAdmin) {
+                            html += `
+                            <div style="align-self: flex-start; background: #ffffff; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                                <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>אני</strong></div>
+                                <div style="color: #334155; font-size: 15px;">${msg.message}</div>
+                            </div>`;
+                            
+                            if (msg.reply) {
+                                html += `
+                                <div style="align-self: flex-end; background: #eff6ff; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #bfdbfe; margin-top: 12px;">
+                                    <div style="font-size: 11px; color: #3b82f6; margin-bottom: 4px;"><strong>תגובת צוות Botify</strong></div>
+                                    <div style="color: #1e40af; font-size: 15px;">${msg.reply}</div>
+                                </div>`;
+                            }
+                        } else {
+                            html += `
+                            <div style="align-self: flex-end; background: #eff6ff; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #bfdbfe;">
+                                <div style="font-size: 11px; color: #3b82f6; margin-bottom: 4px;">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>צוות Botify</strong></div>
+                                <div style="color: #1e40af; font-size: 15px;">${msg.message}</div>
+                            </div>`;
+                        }
+                        return html;
+                    }).join('')}
                 </div>
                 <div style="margin-top: 15px; text-align: center;">
                     <a href="contact.html" style="color: #2563eb; font-weight: bold; text-decoration: none;">+ פנייה חדשה / המשך שיחה</a>
@@ -112,6 +124,6 @@ async function loadUserMessages(username) {
         }
     } catch (err) {
         console.error('Error loading user messages:', err);
-        container.innerHTML = '<p class="status-msg" style="color: #dc2626; background: #fef2f2; padding: 15px; border-radius: 8px; border: 1px solid #f87171;">שגיאה בטעינת ההודעות. ייתכן והשרת דורש התחברות מחדש.</p>';
+        container.innerHTML = '<p class="status-msg" style="color: #dc2626; background: #fef2f2; padding: 15px; border-radius: 8px; border: 1px solid #f87171;">שגיאה בטעינת השיחה מהשרת.</p>';
     }
 }
