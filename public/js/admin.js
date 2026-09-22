@@ -98,11 +98,14 @@ function renderAdminChats(messages, pendingOnly = false) {
 
     container.innerHTML = '';
     if (Object.keys(groupedByUserAndChat).length === 0) {
-        container.innerHTML = '<p class="status-msg">אין שיחות פעילות כרגע</p>';
+        container.innerHTML = pendingOnly
+            ? '<p class="status-msg">אין הודעות שממתינות לטיפול</p>'
+            : '<p class="status-msg">אין היסטוריית שיחות ללקוח הזה</p>';
         return;
     }
 
     let boxCounter = 1;
+    let renderedChatCount = 0;
 
     for (const [user, userChats] of Object.entries(groupedByUserAndChat)) {
         for (const [chatId, chatMessages] of Object.entries(userChats)) {
@@ -110,6 +113,9 @@ function renderAdminChats(messages, pendingOnly = false) {
             
             const lastMsg = chatMessages[chatMessages.length - 1];
             const needsAttention = !lastMsg.isAdmin && (!lastMsg.reply || lastMsg.reply.trim() === '');
+                if (pendingOnly && !needsAttention) {
+                    continue;
+                }
             
             const statusBadge = needsAttention 
                 ? '<span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">🔴 ממתין לתשובה</span>' 
@@ -161,7 +167,14 @@ function renderAdminChats(messages, pendingOnly = false) {
                 </div>
             `;
             container.innerHTML += chatHtml;
+            renderedChatCount += 1;
         }
+    }
+
+    if (renderedChatCount === 0) {
+        container.innerHTML = pendingOnly
+            ? '<p class="status-msg">אין הודעות שממתינות לטיפול</p>'
+            : '<p class="status-msg">אין היסטוריית שיחות ללקוח הזה</p>';
     }
 }
 
@@ -260,9 +273,9 @@ function renderUsers(users) {
 window.showClientHistory = function(username) {
     const searchInput = document.getElementById('adminSearchClient');
     if (searchInput) searchInput.value = username;
-    renderAdminChats(allMessagesCache.filter(message => message.username === username));
+    renderAdminChats(allMessagesCache.filter(message => message.username === username), false);
 
-    const messagesTitle = document.querySelector('#messagesList')?.previousElementSibling?.querySelector('h2');
+    const messagesTitle = document.getElementById('messagesSectionTitle');
     if (messagesTitle) {
         messagesTitle.textContent = `היסטוריית השיחות של ${username}`;
     }
@@ -273,7 +286,17 @@ window.showClientHistory = function(username) {
 window.showAllClientChats = function() {
     const searchInput = document.getElementById('adminSearchClient');
     if (searchInput) searchInput.value = '';
-    renderAdminChats(allMessagesCache);
+    renderAdminChats(allMessagesCache, true);
+    const messagesTitle = document.getElementById('messagesSectionTitle');
+    if (messagesTitle) messagesTitle.textContent = 'הודעות נכנסות (ממתינות לטיפול)';
+};
+
+window.showConversationHistory = function() {
+    const searchInput = document.getElementById('adminSearchClient');
+    if (searchInput) searchInput.value = '';
+    renderAdminChats(allMessagesCache, false);
+    const messagesTitle = document.getElementById('messagesSectionTitle');
+    if (messagesTitle) messagesTitle.textContent = 'היסטוריית שיחות';
 };
 
 function escapeHtml(value) {

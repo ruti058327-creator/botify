@@ -37,10 +37,11 @@
 
         <!-- תיבת הודעות נכנסות (צור קשר) עם שורת חיפוש -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-            <h2 class="section-title" style="margin: 0;">הודעות נכנסות (צור קשר)</h2>
+            <h2 id="messagesSectionTitle" class="section-title" style="margin: 0;">הודעות נכנסות (ממתינות לטיפול)</h2>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <input type="text" id="adminSearchClient" placeholder="🔍 חפש שם לקוח..." oninput="filterAdminChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 250px; font-size: 14px;">
-                <button onclick="showAllClientChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #334155; cursor: pointer;">הצג הכל</button>
+                <button onclick="showAllClientChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #334155; cursor: pointer;">הצג ממתינות</button>
+                <button onclick="showConversationHistory()" style="padding: 8px 12px; border: 1px solid #2563eb; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer;">היסטוריית שיחות</button>
             </div>
         </div>
 
