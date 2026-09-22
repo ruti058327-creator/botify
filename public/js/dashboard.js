@@ -116,11 +116,11 @@ async function loadUserMessages(username) {
                     }).join('')}
                 </div>
                 <div style="margin-top: 15px; text-align: center;">
-                    <a href="contact.html" style="color: #2563eb; font-weight: bold; text-decoration: none;">+ פנייה חדשה / המשך שיחה</a>
+                    <a href="contact.html" style="color: #2563eb; font-weight: bold; text-decoration: none;">💬 לחץ כאן כדי להמשיך את השיחה ולהגיב</a>
                 </div>
             `;
         } else {
-            container.innerHTML = '<p class="status-msg" style="color: #64748b; background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center;">אין לך פניות או התכתבויות קודמות במערכת.</p>';
+            container.innerHTML = '<p class="status-msg" style="color: #64748b; background: #f8fafc; padding: 20px; border-radius: 12px; text-align: center;">אין לך פניות או התכתבויות קודמות במערכת. לחץ על הלחצן הכחול למעלה כדי להתחיל.</p>';
         }
     } catch (err) {
         console.error('Error loading user messages:', err);

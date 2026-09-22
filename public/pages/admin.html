@@ -35,8 +35,12 @@
             </div>
         </div>
 
-        <!-- תיבת הודעות נכנסות (צור קשר) -->
-        <h2 class="section-title">הודעות נכנסות (צור קשר)</h2>
+        <!-- תיבת הודעות נכנסות (צור קשר) עם שורת חיפוש -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+            <h2 class="section-title" style="margin: 0;">הודעות נכנסות (צור קשר)</h2>
+            <input type="text" id="adminSearchClient" placeholder="🔍 חפש שם לקוח..." oninput="filterAdminChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 250px; font-size: 14px;">
+        </div>
+
         <div class="messages-container" id="messagesList">
             <p class="status-msg">טוען הודעות...</p>
         </div>
@@ -59,7 +63,6 @@
         </table>
     </div>
 
-    <!-- טעינת קובץ הלוגיקה החיצוני -->
     <script src="../js/admin.js"></script>
     <script src="../js/navbar-auth.js"></script>
 </body>
