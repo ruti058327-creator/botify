@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const authContainer = document.getElementById('auth-buttons-container');
-  const welcomeTitle = document.getElementById('welcome-title');
+  const welcomeTitle = document.getElementById('userNameDisplay');
 
   if (!authContainer) return;
 
@@ -36,18 +36,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // הזרקת עיצוב הכפתורים ושם המשתמש לסרגל הניווט (במקום התחברות והרשמה)
       authContainer.innerHTML = `
-        <div class="user-greeting">
+        <div class="user-greeting" style="display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333;">
           <span>👤</span>
           <span>${username}</span>
         </div>
-        <button id="logout-btn" class="btn-logout">התנתקות</button>
+        <button id="logout-btn" class="btn-logout" style="background: #dc3526; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;">התנתקות</button>
       `;
 
       // טיפול בלחיצה על כפתור התנתקות
       document.getElementById('logout-btn').addEventListener('click', () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
-        // חזרה לדף הבית הציבורי שנמצא בתיקיית השורש (public/index.html)
+        // חזרה לדף הבית הציבורי שנמצא בתיקיית השורש
         window.location.href = '../index.html';
       });
 
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error parsing user session data', e);
     }
   } else {
-    // בדיקה מתוקנת: אם אין נתוני משתמש אך יש טוקן פעיל, לא זורקים החוצה
+    // בדיקה: אם אין נתוני משתמש אך יש טוקן פעיל, לא זורקים החוצה
     const token = localStorage.getItem('token');
     if (!token) {
       window.location.href = 'login.html';
@@ -71,9 +71,8 @@ async function loadUserMessages(username) {
     if (!container) return;
 
     try {
-        // הוספנו את משיכת הטוקן ושליחתו בהדרים כדי שהשרת יאשר את הבקשה
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/user-messages?username=${username}`, {
+        const response = await fetch(`/api/user-messages?username=${encodeURIComponent(username)}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
