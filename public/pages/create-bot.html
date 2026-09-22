@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botify - יצירת בוט חדש</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="url"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>מחולל הבוטים של Botify</h2>
+        <form id="createBotForm">
+            <div class="form-group">
+                <label for="websiteUrl">כתובת האתר שלך (URL):</label>
+                <input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="instructions">הנחיות לבוט (מה תרצה שהבוט יעשה?):</label>
+                <textarea id="instructions" name="instructions" placeholder="לדוגמה: ענה על שאלות לקוחות מתוך אתר החברה בלבד..."></textarea>
+            </div>
+
+            <button type="submit">צור בוט אישי</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('createBotForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const websiteUrl = document.getElementById('websiteUrl').value;
+            const instructions = document.getElementById('instructions').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.style.color = '#333';
+            resultDiv.textContent = 'יוצר בוט וסורק את האתר, אנתן להמתין...';
+
+            try {
+                const response = await fetch('/api/bots/create-bot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ websiteUrl, instructions })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.style.color = 'green';
+                    resultDiv.innerHTML = `הבוט נוצר בהצלחה! <br><a href="${data.botUrl}" target="_blank">מעבר לבוט האישי שלך</a>`;
+                } else {
+                    resultDiv.style.color = 'red';
+                    resultDiv.textContent = data.message || 'שגיאה ביצירת הבוט';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultDiv.style.color = 'red';
+                resultDiv.textContent = 'שגיאת תקשורת מול השרת';
+            }
+        });
+    </script>
+
+</body>
+</html>

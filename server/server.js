@@ -23,13 +23,16 @@ const app = express();
 
 // 3. מידלוורים וקבצים סטטיים
 app.use(express.json());
-// שימי לב: בהתאם למבנה התיקיות, אם תיקיית ה-public נמצאת רמה אחת למעלה מתיקיית השרת:
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../public/pages')));
 
 // 4. ראוטים
 const authRoutes = require('./routes/authRoutes');
 app.use('/api', authRoutes);
+
+// ---> הוספה חדשה עבור הבוטים <---
+const botRoutes = require('./routes/botRoutes');
+app.use('/api/bots', botRoutes);
 
 // 5. שכבת טיפול בשגיאות
 app.use((err, req, res, next) => {
