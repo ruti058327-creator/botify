@@ -4,7 +4,7 @@ let loggedInUsername = '';
 
 document.addEventListener('DOMContentLoaded', () => {
   const authContainer = document.getElementById('auth-buttons-container');
-  const welcomeTitle = document.getElementById('welcome-title');
+  const welcomeTitle = document.getElementById('userNameDisplay');
 
   if (!authContainer) return;
 
@@ -31,17 +31,18 @@ document.addEventListener('DOMContentLoaded', () => {
       loadUserMessages(loggedInUsername);
 
       authContainer.innerHTML = `
-        <div class="user-greeting">
+        <div class="user-greeting" style="display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333;">
           <span>👤</span>
           <span>${loggedInUsername}</span>
         </div>
-        <button id="logout-btn" class="btn-logout">התנתקות</button>
+        <button id="logout-btn" class="btn-logout" style="background: #dc3526; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;">התנתקות</button>
       `;
 
       document.getElementById('logout-btn').addEventListener('click', () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
         localStorage.removeItem('currentChatId');
+        // חזרה לדף הבית הציבורי שנמצא בתיקיית השורש
         window.location.href = '../index.html';
       });
 
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error parsing session data', e);
     }
   } else {
+    // בדיקה: אם אין נתוני משתמש אך יש טוקן פעיל, לא זורקים החוצה
     const token = localStorage.getItem('token');
     if (!token) window.location.href = 'login.html';
   }
@@ -71,8 +73,10 @@ async function loadUserMessages(username) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/user-messages?username=${username}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const response = await fetch(`/api/user-messages?username=${encodeURIComponent(username)}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         });
         
         if (!response.ok) throw new Error('שגיאה בשליפת ההודעות');
