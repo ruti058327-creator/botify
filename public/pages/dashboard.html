@@ -21,7 +21,6 @@
         <li><a href="about.html">אודות</a></li>
         <li><a href="pricing.html">מחירון</a></li>
         <li><a href="demo.html">דמו</a></li>
-        <li><a href="contact.html">צור קשר</a></li>
       </ul>
       <div class="auth-buttons" id="auth-buttons-container"></div>
     </nav>
@@ -74,14 +73,24 @@
       </div>
     </div>
 
-    <!-- אזור פניות ותגובות עם כפתור שיחה חדשה -->
+    <!-- אזור פניות ותגובות -->
     <div class="welcome-card" style="margin-bottom: 0;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-          <h2 style="font-size: 18px; margin: 0; color: #333;">הפניות וההודעות שלי (המשך שיחה)</h2>
-          <button onclick="window.location.href='contact.html'" style="background: #2563eb; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">+ פתח שיחה חדשה</button>
+          <h2 style="font-size: 18px; margin: 0; color: #333;">צ'אט שירות לקוחות</h2>
+          <div style="display: flex; gap: 10px; align-items: center;">
+             <select id="chatHistorySelect" onchange="loadSelectedChat()" style="padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                 <option value="">טוען שיחות קודמות...</option>
+             </select>
+             <button onclick="startNewChat()" style="background: #2563eb; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold;">+ פתח שיחה חדשה</button>
+          </div>
       </div>
-      <div class="messages-container" id="userMessagesList">
-        <p class="status-msg" style="color: #666;">טוען את ההודעות שלך...</p>
+      <div class="messages-container" id="userMessagesList" style="min-height: 200px; max-height: 350px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+        <p class="status-msg" style="color: #666; text-align: center;">טוען את ההודעות שלך...</p>
+      </div>
+      
+      <div style="display: flex; gap: 10px;">
+        <input type="text" id="chatInputDashboard" placeholder="הקלד/י הודעה לצוות כאן (לחץ Enter לשליחה)..." style="flex: 1; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none; font-size: 14px;">
+        <button onclick="sendMessageFromDashboard()" style="background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px;">שלח</button>
       </div>
     </div>
 

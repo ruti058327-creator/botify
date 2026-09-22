@@ -418,10 +418,15 @@ router.get('/user-messages', async (req, res) => {
 
 // שליחת הודעה חדשה על ידי הלקוח - POST /api/contact
 router.post('/contact', async (req, res) => {
-  const { username, message } = req.body;
+  const { username, message, chatId } = req.body;
   try {
     // כאן הוספנו isAdmin: false כדי לדעת שזו הודעה מהלקוח
-    const newMessage = new Contact({ username, message, isAdmin: false });
+    const newMessage = new Contact({
+      username,
+      message,
+      chatId: chatId || 'chat_old_history',
+      isAdmin: false
+    });
     await newMessage.save();
     res.json({ success: true, message: 'ההודעה נשלחה בהצלחה' });
   } catch (error) {
@@ -432,7 +437,7 @@ router.post('/contact', async (req, res) => {
 // שמירת תגובת מנהלת כהודעה חדשה בצ'אט - POST /api/reply 
 router.post('/reply', async (req, res) => {
   // אנחנו כבר לא צריכים את messageId, כי הופכים את זה לשיחת צ'אט
-  const { username, reply } = req.body;
+  const { username, chatId, reply } = req.body;
   
   try {
     if (!username || !reply) {
@@ -442,6 +447,7 @@ router.post('/reply', async (req, res) => {
     // במקום לעדכן שורה קיימת, אנחנו מייצרים שורת הודעה חדשה! 
     const newReplyMessage = new Contact({
       username: username,
+      chatId: chatId || 'chat_old_history',
       message: reply,
       isAdmin: true // דגל חובה שמסמן למערכת שההודעה נשלחה על ידי המנהלת
     });
