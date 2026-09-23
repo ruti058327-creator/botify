@@ -49,6 +49,14 @@
             const messageText = inputField.value.trim();
             if (!messageText) return;
 
+            if (!botId) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message bot-message';
+                errorMsg.innerText = 'לא נמצא מזהה של בוט בקישור.';
+                document.getElementById('chatMessages').appendChild(errorMsg);
+                return;
+            }
+
             const messagesContainer = document.getElementById('chatMessages');
 
             // הצגת הודעת משתמש
@@ -76,23 +84,23 @@
                     body: JSON.stringify({ message: messageText })
                 });
 
-                const data = await response.json();
-                document.getElementById('loadingMsg').remove();
+                const data = await response.json().catch(() => ({}));
+                document.getElementById('loadingMsg')?.remove();
 
                 const botMsg = document.createElement('div');
                 botMsg.className = 'message bot-message';
 
-                if (data.success) {
+                if (response.ok && data.success) {
                     botMsg.innerText = data.reply;
                 } else {
-                    botMsg.innerText = 'שגיאה בקבלת תשובה מהבוט.';
+                    botMsg.innerText = data.message || 'שגיאה בקבלת תשובה מהבוט.';
                 }
 
                 messagesContainer.appendChild(botMsg);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             } catch (err) {
-                document.getElementById('loadingMsg').remove();
+                document.getElementById('loadingMsg')?.remove();
                 const errorMsg = document.createElement('div');
                 errorMsg.className = 'message bot-message';
                 errorMsg.innerText = 'שגיאת תקשורת עם השרת.';

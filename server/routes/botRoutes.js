@@ -53,10 +53,19 @@ router.post('/create-bot', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Scraping error:', error.message);
+        const networkErrorCodes = ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'ENOTFOUND'];
+        const isNetworkError = networkErrorCodes.includes(error.code) || /TLS|secure connection|socket disconnected/i.test(error.message);
+        const statusCode = error.response?.status;
+        const message = isNetworkError
+            ? 'השרת לא הצליח לגשת לאתר דרך HTTPS. בדקי שהשרת מחובר לאינטרנט ושאין חסימת proxy או TLS.'
+            : statusCode
+                ? `האתר החזיר שגיאה ${statusCode}. ייתכן שהוא חוסם סריקה אוטומטית.`
+                : 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה.';
+
+        console.error('Scraping error:', error.code || statusCode || error.message);
         res.status(500).json({ 
             success: false, 
-            message: 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה ושאין חסימת אבטחה באתר.' 
+            message
         });
     }
 });
@@ -97,7 +106,7 @@ ${bot.scrapedContent}
 
         // שליחת בקשת HTTP ישירה ל-API הרשמי של גוגל
         const geminiResponse = await axios.post(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
             {
                 contents: [
                     {
@@ -123,7 +132,11 @@ ${bot.scrapedContent}
 
     } catch (error) {
         console.error('AI Chat error:', error.response?.data || error.message);
-        res.status(500).json({ success: false, message: 'שגיאה פנימית בתקשורת עם מודל הבינה המלאכותית' });
+        const apiMessage = error.response?.data?.error?.message;
+        const message = /self-signed certificate|certificate in certificate chain|TLS/i.test(error.message)
+            ? 'השרת לא מצליח לאמת את תעודת ה-HTTPS של Google. יש להגדיר את תעודת ה-proxy של הרשת עבור Node.js.'
+            : apiMessage || 'שגיאה בתקשורת עם מודל הבינה המלאכותית';
+        res.status(500).json({ success: false, message });
     }
 });
 
