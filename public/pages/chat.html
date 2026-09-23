@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>צ'אט עם הבוט - Botify</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .chat-container { width: 100%; max-width: 600px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; height: 80vh; overflow: hidden; }
+        .chat-header { background: #0056b3; color: white; padding: 15px; text-align: center; font-size: 18px; font-weight: bold; }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 10px 15px; border-radius: 8px; max-width: 75%; line-height: 1.4; word-break: break-word; }
+        .bot-message { background: #e9ecef; color: #333; align-self: flex-start; }
+        .user-message { background: #0056b3; color: white; align-self: flex-end; }
+        .chat-input-area { display: flex; padding: 15px; background: #fff; border-top: 1px solid #ddd; }
+        .chat-input-area input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; outline: none; font-size: 16px; }
+        .chat-input-area button { background: #0056b3; color: white; border: none; padding: 10px 20px; margin-right: 10px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        .chat-input-area button:hover { background: #004085; }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header" id="botTitle">טוען את הבוט שלך...</div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">שלום! אני הבוט שנסרק מהאתר. שאל אותי כל דבר ואענה מתוך תוכן האתר.</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="הקלדי הודעה כאן...">
+            <button onclick="sendMessage()">שלח</button>
+        </div>
+    </div>
+
+    <script>
+        // שליפת ה-botId מכתובת ה-URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const botId = urlParams.get('botId');
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (botId) {
+                document.getElementById('botTitle').innerText = `בוט פעיל (מזהה: ${botId.substring(0, 6)}...)`;
+            } else {
+                document.getElementById('botTitle').innerText = 'צ\'אט כללי';
+            }
+        });
+
+        async function sendMessage() {
+            const inputField = document.getElementById('userInput');
+            const messageText = inputField.value.trim();
+            if (!messageText) return;
+
+            const messagesContainer = document.getElementById('chatMessages');
+
+            // הצגת הודעת משתמש
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user-message';
+            userMsg.innerText = messageText;
+            messagesContainer.appendChild(userMsg);
+
+            inputField.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // הודעת טעינה בזמן שהשרת מחפש בנתונים
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'message bot-message';
+            loadingMsg.id = 'loadingMsg';
+            loadingMsg.innerText = 'הבוט מחפש בנתוני האתר...';
+            messagesContainer.appendChild(loadingMsg);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                // שליחת הבקשה לשרת האמיתי
+                const response = await fetch(`/api/bots/${botId}/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: messageText })
+                });
+
+                const data = await response.json();
+                document.getElementById('loadingMsg').remove();
+
+                const botMsg = document.createElement('div');
+                botMsg.className = 'message bot-message';
+
+                if (data.success) {
+                    botMsg.innerText = data.reply;
+                } else {
+                    botMsg.innerText = 'שגיאה בקבלת תשובה מהבוט.';
+                }
+
+                messagesContainer.appendChild(botMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            } catch (err) {
+                document.getElementById('loadingMsg').remove();
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message bot-message';
+                errorMsg.innerText = 'שגיאת תקשורת עם השרת.';
+                messagesContainer.appendChild(errorMsg);
+            }
+        }
+
+        // אפשרות שליחה על ידי מקש Enter
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

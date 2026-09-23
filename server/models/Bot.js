@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const botSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },
     websiteUrl: { type: String, required: true },
     scrapedContent: { type: String, required: true }, // הטקסט שחולץ מהאתר
     instructions: { type: String }, // הנחיות אישיות מהמשתמש
