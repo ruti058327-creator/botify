@@ -1,9 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { spawn } = require('child_process');
 const axios = require('axios');
 const https = require('https');
-const cheerio = require('cheerio');
-const { chromium } = require('playwright');
 const Bot = require('../models/Bot');
 
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
@@ -73,36 +72,7 @@ function extractCommercePricing(text) {
     };
 }
 
-async function scrapeRenderedPage(websiteUrl) {
-    const browser = await chromium.launch({ headless: true });
-    try {
-        const page = await browser.newPage({
-            ignoreHTTPSErrors: true,
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36'
-        });
-
-        await page.goto(websiteUrl, { waitUntil: 'domcontentloaded', timeout: 30000 });
-        await page.waitForTimeout(5000);
-
-        return await page.evaluate(() => {
-            const visibleText = document.body?.innerText || '';
-            const metadata = [...document.querySelectorAll('meta[property], meta[name]')]
-                .map(element => `${element.getAttribute('property') || element.getAttribute('name')}: ${element.content}`)
-                .join('\n');
-            const structuredData = [...document.querySelectorAll('script[type="application/ld+json"]')]
-                .map(element => element.textContent || '')
-                .join('\n');
-
-            return `${visibleText}\n${metadata}\n${structuredData}`
-                .replace(/\s+/g, ' ')
-                .trim();
-        });
-    } finally {
-        await browser.close();
-    }
-}
-
-// ראוט ליצירת בוט חדש על ידי סריקת אתר אמיתי
+// ראוט ליצירת בוט חדש על ידי סריקת אתר באמצעות סקריפט הפייתון
 router.post('/create-bot', async (req, res) => {
     try {
         let { websiteUrl, instructions, userId } = req.body;
@@ -129,91 +99,66 @@ router.post('/create-bot', async (req, res) => {
             });
         }
 
-        // 1. שליפת תוכן ה-HTML של האתר עם כותרות דפדפן למניעת חסימות
-        let html = '';
-        let response = null;
-        try {
-            response = await axios.get(websiteUrl, {
-                httpsAgent: geminiHttpsAgent,
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-                },
-                timeout: 15000
-            });
-            html = response.data;
-        } catch (fetchError) {
-            console.error('HTML scrape fallback:', fetchError.code || fetchError.message);
-        }
+        // הפעלת סקריפט הפייתון (scraper.py) ברקע לחילוץ מושלם של תוכן האתר
+        const pythonProcess = spawn('python', ['scraper.py', websiteUrl]);
 
-        const finalUrl = response?.request?.res?.responseUrl || response?.request?.responseURL || '';
-        const isBlockedByNetFree = /safepage\.etrog\.net\.il\/blocked|netfree/i.test(`${finalUrl} ${html}`);
-        if (isBlockedByNetFree) {
-            return res.status(403).json({
-                success: false,
-                message: 'הרשת חסמה את האתר, ולכן לא ניתן לסרוק את תוכנו. יש לבחור אתר שנגיש מהרשת הנוכחית.'
-            });
-        }
+        let scrapedData = '';
+        let errorData = '';
 
-        // 2. ניקוי סקריפטים ועיצובים ישירות מה-HTML בבטחה מלאה
-        const cleanHtml = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-            .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '');
-
-        // 3. חילוץ טקסט נקי בעזרת Cheerio
-        const $ = cheerio.load(cleanHtml);
-        let scrapedText = $('body').text().replace(/\s+/g, ' ').trim();
-
-        try {
-            const renderedText = await scrapeRenderedPage(websiteUrl);
-            if (renderedText.length > scrapedText.length) {
-                scrapedText = renderedText;
-            }
-        } catch (renderError) {
-            console.error('Rendered scrape error:', renderError.message);
-        }
-
-        if (!scrapedText) {
-            scrapedText = $('html').text().replace(/\s+/g, ' ').trim() || `אתר בוט: ${websiteUrl}`;
-        }
-
-        if (scrapedText.length < 100) {
-            return res.status(422).json({
-                success: false,
-                message: 'האתר נטען באופן דינמי או חסם את הסריקה, ולא נמצא בו מספיק תוכן קריא. נסי קישור ישיר לעמוד הרלוונטי או אתר נגיש יותר.'
-            });
-        }
-
-        // 4. שמירה במסד הנתונים
-        const newBot = new Bot({
-            userId: userId || null,
-            websiteUrl,
-            scrapedContent: scrapedText.substring(0, 15000),
-            instructions: instructions || ''
+        pythonProcess.stdout.on('data', (data) => {
+            scrapedData += data.toString();
         });
 
-        await newBot.save();
+        pythonProcess.stderr.on('data', (data) => {
+            errorData += data.toString();
+        });
 
-        res.status(201).json({
-            success: true,
-            message: 'הבוט נוצר ונסרק בהצלחה!',
-            botId: newBot._id,
-            botUrl: `/pages/chat.html?botId=${newBot._id}`
+        pythonProcess.on('close', async (code) => {
+            if (code !== 0 || !scrapedData.trim()) {
+                console.error('Python Scraper Error:', errorData);
+                return res.status(422).json({ 
+                    success: false, 
+                    message: 'האתר חוסם סריקות אוטומטיות או נטען באופן דינמי. ודאי שהכתובת תקינה.' 
+                });
+            }
+
+            const scrapedText = scrapedData.trim();
+
+            if (scrapedText.length < 100) {
+                return res.status(422).json({
+                    success: false,
+                    message: 'האתר נטען באופן דינמי או חסם את הסריקה, ולא נמצא בו מספיק תוכן קריא. נסי קישור ישיר לעמוד הרלוונטי או אתר נגיש יותר.'
+                });
+            }
+
+            try {
+                // שמירה במסד הנתונים
+                const newBot = new Bot({
+                    userId: userId || null,
+                    websiteUrl,
+                    scrapedContent: scrapedText.substring(0, 15000),
+                    instructions: instructions || ''
+                });
+
+                await newBot.save();
+
+                return res.status(201).json({
+                    success: true,
+                    message: 'הבוט נוצר ונסרק בהצלחה באמצעות פייתון!',
+                    botId: newBot._id,
+                    botUrl: `/pages/chat.html?botId=${newBot._id}`
+                });
+            } catch (dbError) {
+                console.error('Database Save Error:', dbError);
+                return res.status(500).json({ success: false, message: 'שגיאה בשמירת הבוט במסד הנתונים' });
+            }
         });
 
     } catch (error) {
-        const networkErrorCodes = ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'ENOTFOUND'];
-        const isNetworkError = networkErrorCodes.includes(error.code) || /TLS|secure connection|socket disconnected/i.test(error.message);
-        const statusCode = error.response?.status;
-        const message = isNetworkError
-            ? 'השרת לא הצליח לגשת לאתר דרך HTTPS. בדקי שהשרת מחובר לאינטרנט ושאין חסימת proxy או TLS.'
-            : statusCode
-                ? `האתר החזיר שגיאה ${statusCode}. ייתכן שהוא חוסם סריקה אוטומטית.`
-                : 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה.';
-
-        console.error('Scraping error:', error.code || statusCode || error.message);
+        console.error('Scraping error:', error.message);
         res.status(500).json({ 
             success: false, 
-            message
+            message: 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה.' 
         });
     }
 });
@@ -335,7 +280,6 @@ router.post('/:botId/chat', async (req, res) => {
             return res.status(500).json({ success: false, message: 'מפתח API של גוגל לא הוגדר בקובץ הסביבה' });
         }
 
-        // שליחת בקשת HTTP ישירה ל-API הרשמי של גוגל
         const geminiResponse = await axios.post(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
             {
@@ -354,7 +298,6 @@ router.post('/:botId/chat', async (req, res) => {
             }
         );
 
-        // חילוץ התשובה מתוך מבנה הנתונים של גוגל
         const replyText = geminiResponse.data?.candidates?.[0]?.content?.parts?.[0]?.text || 'לא התקבלה תשובה תקינה מהמודל.';
 
         res.json({
