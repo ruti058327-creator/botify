@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node server/server.js"
+  },
   "dependencies": {
     "playwright": "^1.63.0"
   }
