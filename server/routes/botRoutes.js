@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { spawn } = require('child_process');
 const axios = require('axios');
 const https = require('https');
+const { chromium } = require('playwright');
 const Bot = require('../models/Bot');
 
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
@@ -72,7 +72,112 @@ function extractCommercePricing(text) {
     };
 }
 
-// ראוט ליצירת בוט חדש על ידי סריקת אתר באמצעות סקריפט הפייתון
+function extractCourseNames(siteContent) {
+    const coursePatterns = [
+        [/Full Stack courses?/i, 'קורסי Full Stack'],
+        [/Chip\s*&\s*Embedded courses?/i, 'קורסי Chip & Embedded'],
+        [/AI\s*&\s*Data courses?/i, 'קורסי AI & Data'],
+        [/Bootcamps\s*&\s*Practicum/i, 'Bootcamps והתנסות מעשית'],
+        [/Preparation for Job interviews/i, 'הכנה לראיונות עבודה']
+    ];
+
+    return coursePatterns
+        .filter(([pattern]) => pattern.test(String(siteContent)))
+        .map(([, label]) => label);
+}
+
+function buildLocalSiteReply(siteContent, question, websiteUrl) {
+    const questionText = String(question);
+    const courseNames = extractCourseNames(siteContent);
+
+    if (/אזור ה?אישי|התחבר|כניסה|חשבון|login|personal area/i.test(questionText)) {
+        const loginUrl = new URL('/login/index.php', websiteUrl).href;
+        return `כדי להיכנס לאזור האישי, פתחי את עמוד ההתחברות של האתר: ${loginUrl}`;
+    }
+
+    if (/ראיון|ראיונות|הכנה.*עבודה/i.test(questionText) && /Preparation for Job interviews/i.test(String(siteContent))) {
+        return 'לפי האתר, יש בו מסלול הכנה לראיונות עבודה.';
+    }
+
+    if (/(full|דאש|סטאק)/i.test(questionText) && /Full Stack courses?/i.test(String(siteContent))) {
+        return 'לפי האתר, יש בו קורס Full Stack.';
+    }
+
+    if (/מקצוע|קורס|תחום|חדש|courses?|profession/i.test(questionText) && courseNames.length) {
+        return `לפי האתר, הקורסים והתחומים המופיעים בו הם: ${courseNames.join(', ')}.`;
+    }
+
+    if (courseNames.length) {
+        return `לפי התוכן שנסרק, האתר מציע: ${courseNames.join(', ')}.`;
+    }
+
+    return 'מצאתי תוכן באתר, אבל אין כרגע מספיק מידע מסודר כדי לענות על השאלה.';
+}
+
+async function scrapeWebsite(websiteUrl) {
+    const browser = await chromium.launch({ headless: true });
+    try {
+        const page = await browser.newPage({
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+        });
+
+        const visitedUrls = new Set();
+        const pageTexts = [];
+        const extractPageText = async () => page.evaluate(() => {
+            const visibleText = document.body?.innerText || '';
+            const metadata = [...document.querySelectorAll('title, meta[name="description"], h1, h2, h3, p, a')]
+                .map(element => element.getAttribute('content') || element.textContent || '')
+                .join(' ');
+
+            return `${visibleText} ${metadata}`;
+        });
+
+        const firstUrl = new URL(websiteUrl);
+        await page.goto(firstUrl.href, { timeout: 30000, waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(5000);
+        await page.waitForFunction(
+            () => document.body && document.body.innerText.trim().length > 50,
+            null,
+            { timeout: 10000 }
+        ).catch(() => {});
+
+        visitedUrls.add(page.url());
+        pageTexts.push(await extractPageText());
+
+        const internalUrls = await page.locator('a[href]').evaluateAll((links, origin) => links
+            .map(link => {
+                try {
+                    return new URL(link.href, origin);
+                } catch {
+                    return null;
+                }
+            })
+            .filter(url => url && url.origin === origin)
+            .filter(url => !/login|admin|privacy|\.js(?:$|\?)/i.test(url.pathname))
+            .map(url => url.href)
+            .filter((url, index, urls) => urls.indexOf(url) === index)
+            .slice(0, 8), firstUrl.origin);
+
+        for (const internalUrl of internalUrls) {
+            if (visitedUrls.has(internalUrl)) continue;
+
+            try {
+                await page.goto(internalUrl, { timeout: 20000, waitUntil: 'domcontentloaded' });
+                await page.waitForTimeout(1500);
+                visitedUrls.add(internalUrl);
+                pageTexts.push(await extractPageText());
+            } catch (error) {
+                console.warn(`Skipping internal page ${internalUrl}: ${error.message}`);
+            }
+        }
+
+        return pageTexts.join(' ').replace(/\s+/g, ' ').trim();
+    } finally {
+        await browser.close();
+    }
+}
+
+// ראוט ליצירת בוט חדש על ידי סריקת אתר בדפדפן headless
 router.post('/create-bot', async (req, res) => {
     try {
         let { websiteUrl, instructions, userId } = req.body;
@@ -99,60 +204,42 @@ router.post('/create-bot', async (req, res) => {
             });
         }
 
-        // הפעלת סקריפט הפייתון (scraper.py) ברקע לחילוץ מושלם של תוכן האתר
-        const pythonProcess = spawn('python', ['scraper.py', websiteUrl]);
+        const scrapedText = await scrapeWebsite(websiteUrl);
 
-        let scrapedData = '';
-        let errorData = '';
+        if (!scrapedText) {
+            return res.status(422).json({
+                success: false,
+                message: 'לא נמצא באתר תוכן קריא לסריקה. ייתכן שהוא נטען באופן דינמי או חסם את הסריקה.'
+            });
+        }
 
-        pythonProcess.stdout.on('data', (data) => {
-            scrapedData += data.toString();
-        });
+        if (scrapedText.length < 20) {
+            return res.status(422).json({
+                success: false,
+                message: 'לא נמצא באתר מספיק תוכן קריא לסריקה. ודאי שהקישור מוביל לעמוד ציבורי ונגיש.'
+            });
+        }
 
-        pythonProcess.stderr.on('data', (data) => {
-            errorData += data.toString();
-        });
+        try {
+            const newBot = new Bot({
+                userId: userId || null,
+                websiteUrl,
+                scrapedContent: scrapedText.substring(0, 15000),
+                instructions: instructions || ''
+            });
 
-        pythonProcess.on('close', async (code) => {
-            if (code !== 0 || !scrapedData.trim()) {
-                console.error('Python Scraper Error:', errorData);
-                return res.status(422).json({ 
-                    success: false, 
-                    message: 'האתר חוסם סריקות אוטומטיות או נטען באופן דינמי. ודאי שהכתובת תקינה.' 
-                });
-            }
+            await newBot.save();
 
-            const scrapedText = scrapedData.trim();
-
-            if (scrapedText.length < 100) {
-                return res.status(422).json({
-                    success: false,
-                    message: 'האתר נטען באופן דינמי או חסם את הסריקה, ולא נמצא בו מספיק תוכן קריא. נסי קישור ישיר לעמוד הרלוונטי או אתר נגיש יותר.'
-                });
-            }
-
-            try {
-                // שמירה במסד הנתונים
-                const newBot = new Bot({
-                    userId: userId || null,
-                    websiteUrl,
-                    scrapedContent: scrapedText.substring(0, 15000),
-                    instructions: instructions || ''
-                });
-
-                await newBot.save();
-
-                return res.status(201).json({
-                    success: true,
-                    message: 'הבוט נוצר ונסרק בהצלחה באמצעות פייתון!',
-                    botId: newBot._id,
-                    botUrl: `/pages/chat.html?botId=${newBot._id}`
-                });
-            } catch (dbError) {
-                console.error('Database Save Error:', dbError);
-                return res.status(500).json({ success: false, message: 'שגיאה בשמירת הבוט במסד הנתונים' });
-            }
-        });
+            return res.status(201).json({
+                success: true,
+                message: 'הבוט נוצר ונסרק בהצלחה באמצעות Playwright!',
+                botId: newBot._id,
+                botUrl: `/pages/chat.html?botId=${newBot._id}`
+            });
+        } catch (dbError) {
+            console.error('Database Save Error:', dbError);
+            return res.status(500).json({ success: false, message: 'שגיאה בשמירת הבוט במסד הנתונים' });
+        }
 
     } catch (error) {
         console.error('Scraping error:', error.message);
@@ -165,24 +252,44 @@ router.post('/create-bot', async (req, res) => {
 
 // ראוט לקבלת הודעות בצ'אט ישירות דרך ה-API של גוגל באמצעות Axios
 router.post('/:botId/chat', async (req, res) => {
+    let bot;
+    let userQuestion = '';
     try {
         const { botId } = req.params;
         const { message } = req.body;
+        userQuestion = String(message || '');
 
-        const bot = await Bot.findById(botId);
+        bot = await Bot.findById(botId);
         if (!bot) {
             return res.status(404).json({ success: false, message: 'הבוט לא נמצא' });
         }
 
-        if (bot.scrapedContent.length < 100) {
+        if (!bot.scrapedContent || !bot.scrapedContent.trim()) {
             return res.json({
                 success: true,
-                reply: 'לא נשמר מספיק תוכן מהאתר כדי לענות באופן אמין. נסי לשלוח קישור ישיר לעמוד הרלוונטי או לבדוק שהעמוד נגיש.'
+                reply: 'לא נשמר תוכן מהאתר. נסי ליצור את הבוט מחדש עם קישור ישיר לעמוד ציבורי ונגיש.'
             });
         }
 
         const productSignals = extractProductSignals(bot.websiteUrl);
         const questionText = String(message);
+        const isGreeting = /^(הי|היי|שלום|הלו|hello|hi|hey|vh)[!?.\s]*$/i.test(questionText.trim());
+
+        if (isGreeting) {
+            return res.json({
+                success: true,
+                reply: 'היי! אני כאן כדי לענות על שאלות מתוך תוכן האתר. מה תרצי לדעת?'
+            });
+        }
+
+        const isLocalSiteQuestion = /מקצוע|קורס|תחום|חדש|ראיון|ראיונות|הכנה|אזור ה?אישי|התחבר|כניסה|חשבון|full|דאש|סטאק|courses?|profession/i.test(questionText);
+        if (isLocalSiteQuestion) {
+            return res.json({
+                success: true,
+                reply: buildLocalSiteReply(bot.scrapedContent, questionText, bot.websiteUrl)
+            });
+        }
+
         const isPriceQuestion = /מחיר|עולה|עלות|price|cost|כמה\s+(?:זה|הוא)\s*(?:עולה)?|כמה.*(?:עולה|עלות|מחיר)/i.test(questionText);
         const asksOriginalPrice = /מחיר\s*מקור|מחיר\s*רגיל|מחיר\s*לפני|original|regular/i.test(String(message));
         const asksAllPrices = /כל\s*(ה)?מחירים|מחירים\s*של|all\s*prices/i.test(String(message));
@@ -317,7 +424,10 @@ router.post('/:botId/chat', async (req, res) => {
                     : apiMessage || 'שגיאה בתקשורת עם מודל הבינה המלאכותית';
         const isQuotaError = error.response?.status === 429 || error.response?.data?.error?.status === 'RESOURCE_EXHAUSTED';
         if (isQuotaError) {
-            return res.json({ success: true, reply: message });
+            return res.json({
+                success: true,
+                reply: buildLocalSiteReply(bot.scrapedContent, userQuestion, bot.websiteUrl)
+            });
         }
 
         res.status(500).json({ success: false, message });
