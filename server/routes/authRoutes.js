@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const { randomInt } = require('crypto');
 
 // ייבוא המודלים
 const User = require('../models/User');
@@ -9,6 +10,12 @@ const Contact = require('../models/Contact');
 
 // מבנה זיכרון זמני לשמירת קודי אימות
 const otpStore = new Map();
+const passwordResetStore = new Map();
+
+const findUserByUsername = (username) => {
+  const escapedUsername = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return User.findOne({ username: new RegExp(`^${escapedUsername}$`, 'i') });
+};
 
 // הגדרת שירות שליחת המיילים (Nodemailer)
 const transporter = nodemailer.createTransport({
@@ -364,6 +371,113 @@ router.post('/login-verify', async (req, res) => {
 // ==========================================
 // 3. נתיבי ניהול משתמשים
 // ==========================================
+
+// בקשת קוד לאיפוס סיסמה - POST /api/password-reset/request
+router.post('/password-reset/request', async (req, res) => {
+  const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
+
+  if (!username) {
+    return res.status(400).json({ success: false, message: 'נא להזין שם משתמש' });
+  }
+
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    return res.status(503).json({ success: false, message: 'שירות שליחת האימייל אינו זמין כרגע' });
+  }
+
+  try {
+    const user = await findUserByUsername(username);
+    let maskedEmail = '';
+    if (user) {
+      const otpCode = randomInt(100000, 1000000).toString();
+      const resetKey = user.username.toLowerCase();
+      const [emailName, emailDomain] = user.email.split('@');
+      const visibleEmailName = `${'*'.repeat(Math.max(1, emailName.length - 3))}${emailName.slice(-3)}`;
+      maskedEmail = `${visibleEmailName}@${emailDomain}`;
+      passwordResetStore.set(resetKey, {
+        otpCode,
+        expires: Date.now() + 5 * 60 * 1000,
+        attempts: 0
+      });
+
+      try {
+        await transporter.sendMail({
+          from: `"Botify Security" <${process.env.EMAIL_USER}>`,
+          to: user.email,
+          subject: 'קוד לאיפוס סיסמה - Botify',
+          html: `
+            <div dir="rtl" style="font-family: Arial, sans-serif; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; max-width: 500px; margin: auto; background-color: #ffffff;">
+              <h2 style="color: #2563eb; text-align: center;">איפוס סיסמה ל-Botify</h2>
+              <p style="color: #334155;">קוד האימות שלך לאיפוס הסיסמה הוא:</p>
+              <div style="text-align: center; margin: 30px 0;">
+                <span style="font-size: 32px; font-weight: bold; letter-spacing: 6px; background: #eff6ff; color: #1d4ed8; padding: 12px 28px; border-radius: 8px; border: 2px dashed #3b82f6; display: inline-block;">${otpCode}</span>
+              </div>
+              <p style="color: #dc2626; font-weight: bold; text-align: center;">הקוד בתוקף ל-5 דקות בלבד.</p>
+              <p style="font-size: 12px; color: #64748b; text-align: center;">אם לא ביקשת לאפס את הסיסמה, אפשר להתעלם מהודעה זו.</p>
+            </div>
+          `
+        });
+      } catch (mailError) {
+        passwordResetStore.delete(resetKey);
+        throw mailError;
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: maskedEmail
+        ? `קוד אימות נשלח לכתובת המייל ${maskedEmail}. הזינו את הקוד כדי ליצור סיסמה חדשה.`
+        : 'אם שם המשתמש קיים, נשלח קוד אימות לכתובת המייל המשויכת לחשבון.',
+      maskedEmail: maskedEmail || undefined
+    });
+  } catch (error) {
+    console.error('Password reset email error:', error.message);
+    return res.status(500).json({ success: false, message: 'לא ניתן לשלוח קוד איפוס כרגע' });
+  }
+});
+
+// אימות הקוד ועדכון הסיסמה - POST /api/password-reset/confirm
+router.post('/password-reset/confirm', async (req, res) => {
+  const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
+  const { otpCode, password } = req.body;
+
+  if (!username || typeof otpCode !== 'string' || !/^\d{6}$/.test(otpCode) || typeof password !== 'string' || password.length < 8) {
+    return res.status(400).json({
+      success: false,
+      message: 'יש להזין קוד תקין וסיסמה חדשה בת 8 תווים לפחות'
+    });
+  }
+
+  const resetKey = username.toLowerCase();
+  const resetData = passwordResetStore.get(resetKey);
+  if (!resetData || Date.now() > resetData.expires) {
+    passwordResetStore.delete(resetKey);
+    return res.status(400).json({ success: false, message: 'קוד האיפוס אינו תקף או שפג תוקפו. בקשו קוד חדש.' });
+  }
+
+  if (resetData.otpCode !== otpCode) {
+    resetData.attempts += 1;
+    if (resetData.attempts >= 5) {
+      passwordResetStore.delete(resetKey);
+    }
+    return res.status(400).json({ success: false, message: 'קוד האיפוס שגוי או שפג תוקפו' });
+  }
+
+  try {
+    const user = await findUserByUsername(username);
+    if (!user) {
+      passwordResetStore.delete(resetKey);
+      return res.status(400).json({ success: false, message: 'קוד האיפוס אינו תקף או שפג תוקפו' });
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    await user.save();
+    passwordResetStore.delete(resetKey);
+    return res.json({ success: true, message: 'הסיסמה עודכנה בהצלחה' });
+  } catch (error) {
+    console.error('Password reset error:', error.message);
+    return res.status(500).json({ success: false, message: 'לא ניתן לעדכן את הסיסמה כרגע' });
+  }
+});
 
 // ספירת משתמשים - GET /api/users/count
 router.get('/users/count', async (req, res) => {
