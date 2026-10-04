@@ -18,7 +18,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 return;
             }
 
-            const response = await fetch('/api/login-verify', {
+            const response = await ApiService.request('/api/login-verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: pendingLoginEmail, otpCode })
@@ -49,7 +49,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             const passwordInput = document.getElementById('password').value.trim();
 
             // משתמשים רגילים
-            const response = await fetch('/api/login', {
+            const response = await ApiService.request('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: usernameInput, password: passwordInput })

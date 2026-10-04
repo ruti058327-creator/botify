@@ -20,10 +20,10 @@ const connectDB = async () => {
 connectDB();
 
 const app = express();
-const requestLogger = require('./middlewares/requestLogger');
+const createRequestLogger = require('./middlewares/requestLogger');
 
 // 3. מידלוורים וקבצים סטטיים
-app.use(requestLogger);
+app.use(createRequestLogger('Botify'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../public/pages')));

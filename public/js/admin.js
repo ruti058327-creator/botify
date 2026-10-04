@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadSubscriberCount() {
     try {
-        const response = await fetch('/api/users/count', {
+        const response = await ApiService.request('/api/users/count', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
         });
         if (!response.ok) throw new Error('שגיאה');
@@ -48,7 +48,7 @@ async function loadSubscriberCount() {
 async function loadMessages() {
     const container = document.getElementById('messagesList');
     try {
-        const response = await fetch('/api/messages', {
+        const response = await ApiService.request('/api/messages', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
         });
         if (!response.ok) throw new Error('שגיאה בשליפת הודעות');
@@ -198,7 +198,7 @@ async function sendReply(username, chatId, htmlId) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('/api/reply', {
+        const response = await ApiService.request('/api/reply', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ username, chatId, reply: replyText }) 
@@ -218,7 +218,7 @@ async function sendReply(username, chatId, htmlId) {
 async function loadUsers() {
     const tableBody = document.getElementById('usersTableBody');
     try {
-        const response = await fetch('/api/users', {
+        const response = await ApiService.request('/api/users', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
         });
         if (!response.ok) return;

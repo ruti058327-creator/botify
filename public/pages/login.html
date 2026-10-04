@@ -185,6 +185,7 @@
   </footer>
 
   <script src="../js/config.js"></script>
+  <script src="../services/api-service.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -242,7 +243,7 @@
             throw new Error('הסיסמאות אינן תואמות');
           }
 
-          const response = await fetch((window.API_BASE_URL || '') + endpoint, {
+          const response = await ApiService.request(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -316,7 +317,7 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'מאמת קוד...';
 
-            const response = await fetch((window.API_BASE_URL || '') + '/api/login-verify', {
+            const response = await ApiService.request('/api/login-verify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email: pendingEmail, otpCode })
@@ -356,7 +357,7 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'מתחבר...';
 
-            const response = await fetch((window.API_BASE_URL || '') + '/api/login', {
+            const response = await ApiService.request('/api/login', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ username, password })

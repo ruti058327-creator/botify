@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const response = await fetch('/api/register-verify', {
+                const response = await ApiService.request('/api/register-verify', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...userData, otpCode })
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resendCodeBtn.textContent = 'שולח קוד חדש...';
 
             try {
-                const response = await fetch('/api/send-otp', {
+                const response = await ApiService.request('/api/send-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: userData.email, username: userData.username })

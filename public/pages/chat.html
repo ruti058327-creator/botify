@@ -179,6 +179,8 @@
         </div>
     </div>
 
+    <script src="../js/config.js"></script>
+    <script src="../services/api-service.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const botId = urlParams.get('botId');
@@ -228,7 +230,7 @@
 
             try {
                 // שליחת הבקשה לשרת כולל היסטוריית השיחה לצורך הקשר (Context)
-                const response = await fetch(`/api/bots/${botId}/chat`, { // תוקן לגרש הפוך
+                const response = await ApiService.request(`/api/bots/${botId}/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 

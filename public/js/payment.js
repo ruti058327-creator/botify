@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardLast4 = document.getElementById('cardLast4').value.trim();
 
     try {
-      const response = await fetch('/api/payments', {
+      const response = await ApiService.request('/api/payments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

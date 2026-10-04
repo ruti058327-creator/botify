@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sendOtpBtn.textContent = '⏳ שולח קוד אימות למייל...';
 
             try {
-                const response = await fetch('/api/send-otp', {
+                const response = await ApiService.request('/api/send-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: cachedUserData.email, username: cachedUserData.username })
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
             verifyBtn.disabled = true;
             verifyBtn.textContent = 'מאמת ויוצר חשבון...';
             try {
-                const response = await fetch('/api/register-verify', {
+                const response = await ApiService.request('/api/register-verify', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ...cachedUserData, otpCode })
@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resendBtn.disabled = true;
             resendBtn.textContent = 'שולח קוד חדש...';
             try {
-                const response = await fetch('/api/send-otp', {
+                const response = await ApiService.request('/api/send-otp', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email: cachedUserData.email, username: cachedUserData.username })

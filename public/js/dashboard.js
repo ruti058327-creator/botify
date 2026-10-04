@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('profileImage', file);
 
                 try {
-                    const response = await fetch('/api/users/me/profile-image', {
+                    const response = await ApiService.request('/api/users/me/profile-image', {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` },
                         body: formData
@@ -124,7 +124,7 @@ async function loadUserMessages(username) {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/user-messages?username=${encodeURIComponent(username)}`, {
+        const response = await ApiService.request(`/api/user-messages?username=${encodeURIComponent(username)}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -148,7 +148,7 @@ async function loadOwnedBots() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('/api/bots', {
+        const response = await ApiService.request('/api/bots', {
             headers: { 'Authorization': `Bearer ${token || ''}` }
         });
         const data = await response.json();
@@ -181,7 +181,7 @@ async function loadOwnedBots() {
                 const instructions = window.prompt('הנחיות לבוט:', bot.instructions || '');
                 if (instructions === null) return;
 
-                const updateResponse = await fetch(`/api/bots/${encodeURIComponent(bot.id)}`, {
+                const updateResponse = await ApiService.request(`/api/bots/${encodeURIComponent(bot.id)}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -201,7 +201,7 @@ async function loadOwnedBots() {
             deleteButton.textContent = 'מחיקה';
             deleteButton.addEventListener('click', async () => {
                 if (!window.confirm('למחוק את הבוט?')) return;
-                const deleteResponse = await fetch(`/api/bots/${encodeURIComponent(bot.id)}`, {
+                const deleteResponse = await ApiService.request(`/api/bots/${encodeURIComponent(bot.id)}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
                 });
@@ -339,7 +339,7 @@ window.sendMessageFromDashboard = async function() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch('/api/contact', {
+        const response = await ApiService.request('/api/contact', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
