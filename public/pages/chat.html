@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -185,12 +183,12 @@
         const urlParams = new URLSearchParams(window.location.search);
         const botId = urlParams.get('botId');
 
-        // מערך לשמירת היסטוריית השיחה עבור ה-Context - הפתרון של חברה שלך!
+        // מערך לשמירת היסטוריית השיחה עבור ה-Context
         let chatHistory = [];
 
         window.addEventListener('DOMContentLoaded', () => {
             if (botId) {
-                document.getElementById('botTitle').innerText = `בוט פעיל (מזהה: ${botId.substring(0, 6)}...)`;
+                document.getElementById('botTitle').innerText = `בוט פעיל (מזהה: ${botId.substring(0, 6)}...)`; // תוקן לגרש הפוך
             } else {
                 document.getElementById('botTitle').innerText = 'צ\'אט כללי';
             }
@@ -230,7 +228,7 @@
 
             try {
                 // שליחת הבקשה לשרת כולל היסטוריית השיחה לצורך הקשר (Context)
-                const response = await fetch(`/api/bots/${botId}/chat`, {
+                const response = await fetch(`/api/bots/${botId}/chat`, { // תוקן לגרש הפוך
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
@@ -278,4 +276,3 @@
     </script>
 </body>
 </html>
->>>>>>> b2bfc2d14049709ceeea182d0b1c06118eefbe3c

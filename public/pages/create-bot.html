@@ -28,6 +28,17 @@
             color: #333;
             margin-bottom: 20px;
         }
+        .dashboard-link {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 20px;
+            color: #0056b3;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .dashboard-link:hover {
+            text-decoration: underline;
+        }
         .form-group {
             margin-bottom: 15px;
         }
@@ -36,6 +47,9 @@
             margin-bottom: 5px;
             font-weight: bold;
             color: #555;
+        }
+        .quota-checking .container {
+            visibility: hidden;
         }
         input[type="url"], textarea {
             width: 100%;
@@ -70,10 +84,11 @@
         }
     </style>
 </head>
-<body>
+<body class="quota-checking">
 
     <div class="container">
         <h2>מחולל הבוטים של Botify</h2>
+        <a class="dashboard-link" href="dashboard.html">חזרה לאזור האישי</a>
         <form id="createBotForm">
             <div class="form-group">
                 <label for="websiteUrl">כתובת האתר שלך (URL):</label>
@@ -91,12 +106,57 @@
     </div>
 
     <script>
-        document.getElementById('createBotForm').addEventListener('submit', async function(e) {
+        const createBotForm = document.getElementById('createBotForm');
+        const resultDiv = document.getElementById('result');
+        const pendingDraft = sessionStorage.getItem('botify_pending_bot_draft');
+        if (pendingDraft) {
+            try {
+                const draft = JSON.parse(pendingDraft);
+                document.getElementById('websiteUrl').value = draft.websiteUrl || '';
+                document.getElementById('instructions').value = draft.instructions || '';
+            } catch {
+                sessionStorage.removeItem('botify_pending_bot_draft');
+            }
+        }
+
+        async function checkBotQuota() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                document.body.classList.remove('quota-checking');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/bots/quota', {
+                    headers: { 'Authorization': `Bearer ${token}` } // תוקן לגרש הפוך
+                });
+                const data = await response.json();
+
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    resultDiv.style.color = 'red';
+                    resultDiv.innerHTML = 'יש להתחבר מחדש כדי ליצור בוט. <a href="login.html">מעבר להתחברות</a>.';
+                } else if (!response.ok) {
+                    throw new Error(data.message || 'לא ניתן לבדוק את מכסת הבוטים');
+                } else if (data.requiresPayment) {
+                    window.location.replace(data.pricingUrl);
+                    return;
+                }
+            } catch (error) {
+                resultDiv.style.color = 'red';
+                resultDiv.textContent = error.message || 'לא ניתן לבדוק את מכסת הבוטים';
+            }
+
+            document.body.classList.remove('quota-checking');
+        }
+
+        checkBotQuota();
+
+        createBotForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const websiteUrl = document.getElementById('websiteUrl').value;
             const instructions = document.getElementById('instructions').value;
-            const resultDiv = document.getElementById('result');
             const token = localStorage.getItem('token');
 
             if (!token) {
@@ -113,16 +173,23 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}` // תוקן לגרש הפוך
                     },
                     body: JSON.stringify({ websiteUrl, instructions })
                 });
 
                 const data = await response.json();
 
+                if (response.status === 403 && data.code === 'BOT_LIMIT_REACHED') {
+                    sessionStorage.setItem('botify_pending_bot_draft', JSON.stringify({ websiteUrl, instructions }));
+                    window.location.href = data.pricingUrl;
+                    return;
+                }
+
                 if (data.success) {
+                    sessionStorage.removeItem('botify_pending_bot_draft');
                     resultDiv.style.color = 'green';
-                    resultDiv.innerHTML = `הבוט נוצר בהצלחה! <br><a href="${data.botUrl}" target="_blank">מעבר לבוט האישי שלך</a>`;
+                    resultDiv.innerHTML = `הבוט נוצר בהצלחה! <br><a href="${data.botUrl}" target="_blank">מעבר לבוט האישי שלך</a>`; // תוקן לגרש הפוך
                 } else {
                     resultDiv.style.color = 'red';
                     resultDiv.textContent = data.message || 'שגיאה ביצירת הבוט';

@@ -36,6 +36,15 @@
   margin-bottom: 1.8rem;
 }
 
+.payment-note {
+  padding: 1rem;
+  border: 1px solid #facc15;
+  border-radius: 6px;
+  background: #fefce8;
+  color: #713f12;
+  line-height: 1.6;
+}
+
 .form-group {
   margin-bottom: 1.25rem;
   display: flex;

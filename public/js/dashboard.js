@@ -53,8 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (welcomeTitle) welcomeTitle.textContent = `שלום, ${loggedInUsername}!`;
 
+            const planNames = {
+                starter: 'מסלול Starter בתשלום',
+                pro: 'בוט מקצועי (Pro)',
+                business: 'בוט עסקי (Business)',
+                enterprise: 'בוט ארגוני (Enterprise)',
+                'בסיסי': 'מסלול חינמי - בוט אחד'
+            };
       const planEl = document.getElementById('userPlanDisplay');
-      if (planEl) planEl.textContent = userData.plan || 'בסיסי';
+            const planName = planNames[userData.plan] || userData.plan || 'מסלול חינמי - בוט אחד';
+            if (planEl) planEl.textContent = planName;
+
+            const paymentNotice = document.getElementById('paymentSuccessNotice');
+            if (paymentNotice && new URLSearchParams(window.location.search).get('payment') === 'success') {
+                paymentNotice.textContent = `התשלום נקלט והמסלול ${planName} הופעל.`;
+                paymentNotice.hidden = false;
+            }
 
       const dateEl = document.getElementById('userDateDisplay');
       if (dateEl && userData.createdAt) {
@@ -227,7 +241,7 @@ function populateChatHistoryDropdown() {
         
         const option = document.createElement('option');
         option.value = chatId;
-        option.textContent = `שיחה מ- ${dateStr}`;
+        option.textContent = `שיחה מ-${dateStr}`;
         if (chatId === currentChatId) {
             option.selected = true;
         }

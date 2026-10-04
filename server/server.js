@@ -35,6 +35,8 @@ app.use('/api', authRoutes);
 // ---> הוספה חדשה עבור הבוטים <---
 const botRoutes = require('./routes/botRoutes');
 app.use('/api/bots', botRoutes);
+const paymentRoutes = require('./routes/paymentRoutes');
+app.use('/api/payments', paymentRoutes);
 
 // 5. שכבת טיפול בשגיאות
 app.use((err, req, res, next) => {

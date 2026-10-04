@@ -1,90 +1,72 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. שליפת פרטי המסלול
   const urlParams = new URLSearchParams(window.location.search);
-  const planParam = urlParams.get('plan');
-  const priceParam = urlParams.get('price');
-
-  let selectedPlan = {
-    name: 'בוט מקצועי (Pro)',
-    price: 149,
-    planId: 'pro'
+  const plans = {
+    starter: { name: 'מסלול Starter בתשלום', price: 49 },
+    pro: { name: 'בוט מקצועי (Pro)', price: 149 },
+    business: { name: 'בוט עסקי (Business)', price: 299 },
+    enterprise: { name: 'בוט ארגוני (Enterprise)', price: 599 }
   };
+  const planId = urlParams.get('plan') || 'pro';
+  const selectedPlan = plans[planId] ? { ...plans[planId], planId } : { ...plans.pro, planId: 'pro' };
+  const token = localStorage.getItem('token');
+  const statusMsg = document.getElementById('payment-status');
+  const submitBtn = document.getElementById('submit-btn');
+  const paymentForm = document.getElementById('payment-form');
 
-  if (priceParam && planParam) {
-    selectedPlan.planId = planParam;
-    selectedPlan.price = parseFloat(priceParam);
-    selectedPlan.name = planParam.toUpperCase();
-  } else {
-    const savedPlan = localStorage.getItem('botify_selected_plan');
-    if (savedPlan) {
-      selectedPlan = JSON.parse(savedPlan);
-    }
-  }
-
-  // 2. חישוב מחירים
   const subtotal = selectedPlan.price;
   const tax = Math.round(subtotal * 0.18);
   const total = subtotal + tax;
 
-  // 3. הצגת נתונים בסיכום (תוקן לגרשים הפוכים)
   document.getElementById('summary-plan-name').textContent = selectedPlan.name;
-  document.getElementById('summary-subtotal').textContent = `₪${subtotal}`;
-  document.getElementById('summary-tax').textContent = `₪${tax}`;
-  document.getElementById('summary-total').textContent = `₪${total}`;
+  document.getElementById('summary-subtotal').textContent = `₪${subtotal}`; // תוקן לגרש הפוך
+  document.getElementById('summary-tax').textContent = `₪${tax}`; // תוקן לגרש הפוך
+  document.getElementById('summary-total').textContent = `₪${total}`; // תוקן לגרש הפוך
 
-  // 4. שליחת הטופס לשרת
-  const paymentForm = document.getElementById('payment-form');
-  const statusMsg = document.getElementById('payment-status');
-  const submitBtn = document.getElementById('submit-btn');
-
-  paymentForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const fullName = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-
+  if (!token) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'שומר נתונים ומבצע חיוב...';
+    statusMsg.textContent = 'יש להתחבר כדי לשמור את התשלום ולהפעיל את המסלול.';
+    statusMsg.className = 'status-message error';
+    statusMsg.style.display = 'block';
+    return;
+  }
+
+  paymentForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'שומר תשלום...';
+    const cardholderName = document.getElementById('cardholderName').value.trim();
+    const cardLast4 = document.getElementById('cardLast4').value.trim();
 
     try {
-      // שליחת בקשת POST לשרת
       const response = await fetch('/api/payments', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // תוקן לגרש הפוך
         },
-        body: JSON.stringify({
-          fullName: fullName,
-          email: email,
-          planId: selectedPlan.planId,
-          amount: total
-        })
+        body: JSON.stringify({ planId: selectedPlan.planId, cardholderName, cardLast4 })
       });
-
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'לא ניתן לשמור את התשלום');
 
-      if (!response.ok) {
-        throw new Error(data.message || 'אירעה שגיאה בביצוע התשלום');
+      const activePlan = data.plan || selectedPlan.planId;
+      localStorage.setItem('botify_user_plan', activePlan);
+
+      try {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        user.plan = activePlan;
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch {
+        localStorage.removeItem('user');
       }
 
-      // הצלחה
-      statusMsg.textContent = '✓ התשלום נשמר בהצלחה במסד הנתונים! מעביר ללוח הבקרה...';
-      statusMsg.className = 'status-message success';
-      statusMsg.style.display = 'block';
-
-      localStorage.setItem('botify_user_plan', selectedPlan.planId);
-
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 1500);
-
+      window.location.replace('/pages/dashboard.html?payment=success');
     } catch (error) {
-      // תוקן לגרשים הפוכים
-      statusMsg.textContent = `❌ ${error.message}`;
+      statusMsg.textContent = error.message;
       statusMsg.className = 'status-message error';
       statusMsg.style.display = 'block';
       submitBtn.disabled = false;
-      submitBtn.textContent = 'אישור תשלום והפעלת הבוט 🔒';
+      submitBtn.textContent = 'אישור תשלום';
     }
   });
 });

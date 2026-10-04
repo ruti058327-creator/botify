@@ -272,6 +272,7 @@ async function loginVerify(req, res) {
       phone: user.phone || 'לא הוזן',
       profileImage: user.profileImage || '',
       businessName: user.businessName || 'העסק שלי',
+      plan: user.plan || 'בסיסי',
       role: user.role,
       subscription: user.subscription || {
         planName: 'חבילת התנסות (Free Trial)',

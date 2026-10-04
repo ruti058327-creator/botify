@@ -1,7 +1,10 @@
 const Bot = require('../models/Bot');
+const Payment = require('../models/Payment');
+const User = require('../models/User');
 const axios = require('axios');
 const https = require('https');
 const { chromium } = require('playwright');
+const { getBotLimit } = require('../utils/plans');
 
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
 
@@ -206,8 +209,53 @@ async function remove(req, res) {
   }
 }
 
+async function getBotQuota(userId) {
+  const [user, botCount, completedPayment] = await Promise.all([
+    User.findById(userId).select('_id'),
+    Bot.countDocuments({ userId }),
+    Payment.findOne({ userId, status: 'completed' }).sort({ createdAt: -1 }).select('planId')
+  ]);
+  if (!user) return null;
+
+  const botLimit = completedPayment ? getBotLimit(completedPayment.planId) : 1;
+  return { botCount, botLimit, canCreate: botCount < botLimit };
+}
+
+async function quota(req, res) {
+  if (req.user.role === 'admin') {
+    return res.json({ success: true, canCreate: true, requiresPayment: false });
+  }
+
+  try {
+    const userQuota = await getBotQuota(req.user.id);
+    if (!userQuota) return res.status(401).json({ success: false, message: 'יש להתחבר מחדש כדי ליצור בוט' });
+    return res.json({
+      success: true,
+      ...userQuota,
+      requiresPayment: !userQuota.canCreate,
+      pricingUrl: '/pages/pricing.html?required=bot'
+    });
+  } catch (error) {
+    console.error('Bot quota check error:', error.message);
+    return res.status(500).json({ success: false, message: 'לא ניתן לבדוק את מכסת הבוטים כרגע' });
+  }
+}
+
 async function createFromWebsite(req, res) {
   try {
+    if (req.user.role !== 'admin') {
+      const userQuota = await getBotQuota(req.user.id);
+      if (!userQuota) return res.status(401).json({ success: false, message: 'יש להתחבר מחדש כדי ליצור בוט' });
+      if (!userQuota.canCreate) {
+        return res.status(403).json({
+          success: false,
+          code: 'BOT_LIMIT_REACHED',
+          message: 'הגעת למכסת הבוטים במסלול שלך. יש לבחור מסלול בתשלום כדי ליצור בוטים נוספים.',
+          pricingUrl: '/pages/pricing.html?required=bot'
+        });
+      }
+    }
+
     let { websiteUrl, instructions } = req.body;
     if (!websiteUrl) return res.status(400).json({ success: false, message: 'נא להזין כתובת אתר' });
     if (!/^[a-z][a-z\d+.-]*:\/\//i.test(websiteUrl)) websiteUrl = `https://${websiteUrl}`;
@@ -337,7 +385,8 @@ async function chat(req, res) {
     console.error('AI Chat error:', error.response?.data || error.message);
     const apiMessage = error.response?.data?.error?.message;
     const isQuotaError = error.response?.status === 429 || error.response?.data?.error?.status === 'RESOURCE_EXHAUSTED';
-    if (isQuotaError && bot) {
+    const isModelUnavailable = error.response?.status === 503 || error.response?.data?.error?.status === 'UNAVAILABLE';
+    if ((isQuotaError || isModelUnavailable) && bot) {
       return res.json({ success: true, reply: buildLocalSiteReply(bot.scrapedContent, userQuestion, bot.websiteUrl) });
     }
     const message = /self-signed certificate|certificate in certificate chain|TLS/i.test(error.message)
@@ -351,4 +400,4 @@ async function chat(req, res) {
   }
 }
 
-module.exports = { list, getById, update, remove, createFromWebsite, chat };
+module.exports = { list, getById, update, remove, quota, createFromWebsite, chat };
