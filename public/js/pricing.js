@@ -22,9 +22,9 @@ function continueToPlan(planId, price, planName, returnToCreate) {
   const token = localStorage.getItem('token');
   if (token) {
     const returnParam = returnToCreate ? '&return=create-bot' : '';
-    window.location.href = `payment.html?plan=${planId}&price=${price}${returnParam}`; // תוקן לגרש הפוך
+    window.location.href = `payment.html?plan=${planId}&price=${price}${returnParam}`;
   } else {
-    window.location.href = `register.html?plan=${planId}&price=${price}`; // תוקן לגרש הפוך
+    window.location.href = `register.html?plan=${planId}&price=${price}`;
   }
 }
 
@@ -59,7 +59,7 @@ function choosePlan(planId, price, planName) {
     if (planNames[currentPlanId] && currentPlanId !== planId) {
       const currentPlanName = planNames[currentPlanId];
       const nextPlanName = planNames[planId] || planName;
-      planChangeMessage.textContent = `האם את/ה בטוח/ה שברצונך לעבור מ-${currentPlanName} ל-${nextPlanName}? המסלול החדש יופעל לאחר אישור התשלום.`; // תוקן לגרש הפוך
+      planChangeMessage.textContent = `האם את/ה בטוח/ה שברצונך לעבור מ-${currentPlanName} ל-${nextPlanName}? המסלול החדש יופעל לאחר אישור התשלום.`;
       pendingPlanSelection = [planId, price, planName, returnToCreate];
       planChangeDialog.showModal();
       return;

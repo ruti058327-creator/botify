@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const total = subtotal + tax;
 
   document.getElementById('summary-plan-name').textContent = selectedPlan.name;
-  document.getElementById('summary-subtotal').textContent = `₪${subtotal}`; // תוקן לגרש הפוך
-  document.getElementById('summary-tax').textContent = `₪${tax}`; // תוקן לגרש הפוך
-  document.getElementById('summary-total').textContent = `₪${total}`; // תוקן לגרש הפוך
+  document.getElementById('summary-subtotal').textContent = `₪${subtotal}`;
+  document.getElementById('summary-tax').textContent = `₪${tax}`;
+  document.getElementById('summary-total').textContent = `₪${total}`;
 
   if (!token) {
     submitBtn.disabled = true;
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // תוקן לגרש הפוך
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ planId: selectedPlan.planId, cardholderName, cardLast4 })
       });

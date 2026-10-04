@@ -128,7 +128,7 @@
 
             try {
                 const response = await fetch('/api/bots/quota', {
-                    headers: { 'Authorization': `Bearer ${token}` } // תוקן לגרש הפוך
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
 
@@ -173,7 +173,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` // תוקן לגרש הפוך
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ websiteUrl, instructions })
                 });
@@ -189,7 +189,7 @@
                 if (data.success) {
                     sessionStorage.removeItem('botify_pending_bot_draft');
                     resultDiv.style.color = 'green';
-                    resultDiv.innerHTML = `הבוט נוצר בהצלחה! <br><a href="${data.botUrl}" target="_blank">מעבר לבוט האישי שלך</a>`; // תוקן לגרש הפוך
+                    resultDiv.innerHTML = `הבוט נוצר בהצלחה! <br><a href="${data.botUrl}" target="_blank">מעבר לבוט האישי שלך</a>`;
                 } else {
                     resultDiv.style.color = 'red';
                     resultDiv.textContent = data.message || 'שגיאה ביצירת הבוט';
