@@ -34,7 +34,7 @@
             max-width: 650px;
             background: var(--chat-bg);
             border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
             height: 85vh;
@@ -52,6 +52,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .chat-header::before {
@@ -76,6 +77,13 @@
             line-height: 1.5;
             word-break: break-word;
             font-size: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .bot-message {
@@ -103,6 +111,9 @@
             animation: bounce 1.3s infinite ease-in-out;
         }
 
+        .loading-dots span:nth-child(2) { animation-delay: -1.1s; }
+        .loading-dots span:nth-child(3) { animation-delay: -0.9s; }
+
         @keyframes bounce {
             0%, 60%, 100% { transform: translateY(0); }
             30% { transform: translateY(-6px); }
@@ -125,6 +136,13 @@
             outline: none;
             font-size: 15px;
             background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .chat-input-area input:focus {
+            border-color: var(--primary-color);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
         .chat-input-area button {
@@ -136,15 +154,24 @@
             cursor: pointer;
             font-size: 15px;
             font-weight: 600;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .chat-input-area button:hover {
+            background: var(--primary-hover);
+        }
+
+        .chat-input-area button:active {
+            transform: scale(0.97);
         }
     </style>
 </head>
 <body>
 
     <div class="chat-container">
-        <div class="chat-header" id="botTitle">בוט פעיל</div>
+        <div class="chat-header" id="botTitle">טוען את הבוט שלך...</div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">שלום! אני מוכן לשאלות שלך על האתר 😊</div>
+            <div class="message bot-message">שלום! אני הבוט שנסרק מהאתר. שאל אותי כל דבר ואענה מתוך תוכן האתר עם חיוך! 😊</div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="userInput" placeholder="הקלדי הודעה כאן...">
@@ -156,21 +183,33 @@
         const urlParams = new URLSearchParams(window.location.search);
         const botId = urlParams.get('botId');
 
+        // מערך לשמירת היסטוריית השיחה עבור ה-Context - הפתרון של חברה שלך!
+        let chatHistory = [];
+
         window.addEventListener('DOMContentLoaded', () => {
             if (botId) {
                 document.getElementById('botTitle').innerText = `בוט פעיל (מזהה: ${botId.substring(0, 6)}...)`;
             } else {
-                document.getElementById('botTitle').innerText = 'שגיאה: לא נמצא בוט';
+                document.getElementById('botTitle').innerText = 'צ\'אט כללי';
             }
         });
 
         async function sendMessage() {
             const inputField = document.getElementById('userInput');
             const messageText = inputField.value.trim();
-            if (!messageText || !botId) return;
+            if (!messageText) return;
+
+            if (!botId) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'message bot-message';
+                errorMsg.innerText = 'לא נמצא מזהה של בוט בקישור.';
+                document.getElementById('chatMessages').appendChild(errorMsg);
+                return;
+            }
 
             const messagesContainer = document.getElementById('chatMessages');
 
+            // הצגת הודעת משתמש
             const userMsg = document.createElement('div');
             userMsg.className = 'message user-message';
             userMsg.innerText = messageText;
@@ -179,18 +218,23 @@
             inputField.value = '';
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
+            // הודעת טעינה מעוצבת עם אנימציה
             const loadingMsg = document.createElement('div');
             loadingMsg.className = 'message bot-message';
             loadingMsg.id = 'loadingMsg';
-            loadingMsg.innerHTML = 'הבוט חושב... <div class="loading-dots"><span></span><span></span><span></span></div>';
+            loadingMsg.innerHTML = 'הבוט חושב ובוחר תשובה בשבילך <div class="loading-dots"><span></span><span></span><span></span></div>';
             messagesContainer.appendChild(loadingMsg);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
             try {
+                // שליחת הבקשה לשרת כולל היסטוריית השיחה לצורך הקשר (Context)
                 const response = await fetch(`/api/bots/${botId}/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: messageText })
+                    body: JSON.stringify({ 
+                        message: messageText,
+                        history: chatHistory 
+                    })
                 });
 
                 const data = await response.json().catch(() => ({}));
@@ -198,10 +242,22 @@
 
                 const botMsg = document.createElement('div');
                 botMsg.className = 'message bot-message';
-                botMsg.innerText = data.reply || 'שגיאה בקבלת תשובה.';
+
+                let replyText = '';
+                if (response.ok && data.success) {
+                    replyText = data.reply;
+                    botMsg.innerText = replyText;
+                } else {
+                    replyText = data.message || 'שגיאה בקבלת תשובה מהבוט.';
+                    botMsg.innerText = replyText;
+                }
 
                 messagesContainer.appendChild(botMsg);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                // עדכון היסטוריית השיחה לצורך שאלות ההמשך והקשר
+                chatHistory.push({ role: 'user', text: messageText });
+                chatHistory.push({ role: 'model', text: replyText });
 
             } catch (err) {
                 document.getElementById('loadingMsg')?.remove();
