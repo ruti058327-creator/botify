@@ -4,9 +4,11 @@ const User = require('../models/User');
 const axios = require('axios');
 const https = require('https');
 const { chromium } = require('playwright');
-const { getBotLimit } = require('../utils/plans');
+const Fuse = require('fuse.js');
+const { PLANS, getBotLimit } = require('../utils/plans');
 
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
+const LOCAL_FALLBACK_REPLY = 'מצאתי תוכן באתר, אבל אין כרגע מספיק מידע מסודר כדי לענות על השאלה.';
 
 function extractProductSignals(websiteUrl) {
   try {
@@ -74,6 +76,55 @@ function extractCourseNames(siteContent) {
   return coursePatterns.filter(([pattern]) => pattern.test(String(siteContent))).map(([, label]) => label);
 }
 
+function findRelevantSiteText(siteContent, question) {
+  const sentences = String(siteContent)
+    .replace(/\s+/g, ' ')
+    .split(/[.!?…]+|\s+[|•]\s+/u)
+    .flatMap(sentence => {
+      const parts = [];
+      let remaining = sentence.trim();
+      while (remaining.length > 360) {
+        let splitAt = remaining.lastIndexOf(' ', 360);
+        if (splitAt < 180) splitAt = 360;
+        parts.push(remaining.slice(0, splitAt).trim());
+        remaining = remaining.slice(splitAt).trim();
+      }
+      if (remaining) parts.push(remaining);
+      return parts;
+    })
+    .filter(sentence => sentence.length >= 20);
+  if (!sentences.length || !String(question).trim()) return '';
+
+  const queryTerms = [...new Set(String(question).toLocaleLowerCase().match(/[\p{L}\p{N}]+/gu) || [])]
+    .filter(term => term.length >= 3);
+  if (!queryTerms.length) return '';
+
+  const fuse = new Fuse(sentences, {
+    includeScore: true,
+    ignoreLocation: true,
+    minMatchCharLength: 3,
+    threshold: 0.38
+  });
+  const scoredSentences = new Map();
+  for (const term of queryTerms) {
+    for (const result of fuse.search(term)) {
+      if (result.score === undefined || result.score > 0.38) continue;
+      const current = scoredSentences.get(result.item) || { matchCount: 0, totalScore: 0 };
+      current.matchCount += 1;
+      current.totalScore += result.score;
+      scoredSentences.set(result.item, current);
+    }
+  }
+
+  const minimumMatches = Math.min(2, queryTerms.length);
+  return [...scoredSentences.entries()]
+    .filter(([, result]) => result.matchCount >= minimumMatches)
+    .sort((first, second) => second[1].matchCount - first[1].matchCount || first[1].totalScore - second[1].totalScore)
+    .slice(0, 2)
+    .map(([sentence]) => sentence)
+    .join(' ');
+}
+
 function buildLocalSiteReply(siteContent, question, websiteUrl) {
   const questionText = String(question);
   const courseNames = extractCourseNames(siteContent);
@@ -90,7 +141,18 @@ function buildLocalSiteReply(siteContent, question, websiteUrl) {
     return `לפי האתר, הקורסים והתחומים המופיעים בו הם: ${courseNames.join(', ')}.`;
   }
   if (courseNames.length) return `לפי התוכן שנסרק, האתר מציע: ${courseNames.join(', ')}.`;
-  return 'מצאתי תוכן באתר, אבל אין כרגע מספיק מידע מסודר כדי לענות על השאלה.';
+  const relevantText = findRelevantSiteText(siteContent, questionText);
+  return relevantText ? `לפי התוכן שנסרק באתר: ${relevantText}` : LOCAL_FALLBACK_REPLY;
+}
+
+function buildChatFallbackReply(siteContent, question, websiteUrl, reason) {
+  const localReply = buildLocalSiteReply(siteContent, question, websiteUrl);
+  if (localReply !== LOCAL_FALLBACK_REPLY) return localReply;
+
+  if (reason === 'quota') {
+    return 'מכסת השימוש ב-Gemini נוצלה כרגע, וגם החיפוש המקומי בתוכן האתר לא מצא תשובה מתאימה לשאלה. אפשר לנסות שוב לאחר איפוס המכסה או לוודא שמוגדרת לשרת מכסת API זמינה.';
+  }
+  return 'Gemini אינו זמין כרגע, והחיפוש המקומי בתוכן האתר לא מצא תשובה מתאימה. אפשר לנסות שוב בעוד כמה דקות.';
 }
 
 async function scrapeWebsite(websiteUrl) {
@@ -218,7 +280,12 @@ async function getBotQuota(userId) {
   if (!user) return null;
 
   const botLimit = completedPayment ? getBotLimit(completedPayment.planId) : 1;
-  return { botCount, botLimit, canCreate: botCount < botLimit };
+  return {
+    botCount,
+    botLimit,
+    planId: completedPayment?.planId || 'בסיסי',
+    canCreate: botCount < botLimit
+  };
 }
 
 async function quota(req, res) {
@@ -227,11 +294,19 @@ async function quota(req, res) {
   }
 
   try {
+    const requestedPlanId = req.query.planId;
+    if (requestedPlanId && !PLANS[requestedPlanId]) {
+      return res.status(400).json({ success: false, message: 'המסלול שנבחר אינו תקין' });
+    }
+
     const userQuota = await getBotQuota(req.user.id);
     if (!userQuota) return res.status(401).json({ success: false, message: 'יש להתחבר מחדש כדי ליצור בוט' });
+    const targetBotLimit = requestedPlanId ? getBotLimit(requestedPlanId) : userQuota.botLimit;
     return res.json({
       success: true,
       ...userQuota,
+      targetBotLimit,
+      botsToDelete: Math.max(0, userQuota.botCount - targetBotLimit),
       requiresPayment: !userQuota.canCreate,
       pricingUrl: '/pages/pricing.html?required=bot'
     });
@@ -310,10 +385,6 @@ async function chat(req, res) {
     if (/^(הי|היי|שלום|הלו|hello|hi|hey|vh)[!?.\s]*$/i.test(questionText.trim())) {
       return res.json({ success: true, reply: 'היי! אני כאן כדי לענות על שאלות מתוך תוכן האתר. מה תרצי לדעת?' });
     }
-    if (/מקצוע|קורס|תחום|חדש|ראיון|ראיונות|הכנה|אזור ה?אישי|התחבר|כניסה|חשבון|full|דאש|סטאק|courses?|profession/i.test(questionText)) {
-      return res.json({ success: true, reply: buildLocalSiteReply(bot.scrapedContent, questionText, bot.websiteUrl) });
-    }
-
     const isPriceQuestion = /מחיר|עולה|עלות|price|cost|כמה\s+(?:זה|הוא)\s*(?:עולה)?|כמה.*(?:עולה|עלות|מחיר)/i.test(questionText);
     const asksOriginalPrice = /מחיר\s*מקור|מחיר\s*רגיל|מחיר\s*לפני|original|regular/i.test(questionText);
     const asksAllPrices = /כל\s*(ה)?מחירים|מחירים\s*של|all\s*prices/i.test(questionText);
@@ -387,7 +458,8 @@ async function chat(req, res) {
     const isQuotaError = error.response?.status === 429 || error.response?.data?.error?.status === 'RESOURCE_EXHAUSTED';
     const isModelUnavailable = error.response?.status === 503 || error.response?.data?.error?.status === 'UNAVAILABLE';
     if ((isQuotaError || isModelUnavailable) && bot) {
-      return res.json({ success: true, reply: buildLocalSiteReply(bot.scrapedContent, userQuestion, bot.websiteUrl) });
+      const reason = isQuotaError ? 'quota' : 'unavailable';
+      return res.json({ success: true, reply: buildChatFallbackReply(bot.scrapedContent, userQuestion, bot.websiteUrl, reason) });
     }
     const message = /self-signed certificate|certificate in certificate chain|TLS/i.test(error.message)
       ? 'השרת לא מצליח לאמת את תעודת ה-HTTPS של Google. יש להגדיר את תעודת ה-proxy של הרשת עבור Node.js.'
@@ -400,4 +472,4 @@ async function chat(req, res) {
   }
 }
 
-module.exports = { list, getById, update, remove, quota, createFromWebsite, chat };
+module.exports = { list, getById, update, remove, quota, createFromWebsite, chat, findRelevantSiteText, buildChatFallbackReply };

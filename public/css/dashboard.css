@@ -82,16 +82,57 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
   margin-bottom: 8px;
   padding: 12px;
   border: 1px solid #e2e8f0;
   border-radius: 6px;
 }
 
+.owned-bot-title {
+  flex: 1 1 220px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .owned-bot-actions {
   display: flex;
   flex-wrap: wrap;
+  min-width: 0;
   gap: 8px;
+}
+
+.bot-list-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.bot-list-heading h2 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.bot-quota-display {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.add-bot-button {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #0056b3;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .dashboard-chat-empty,

@@ -66,7 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const paymentNotice = document.getElementById('paymentSuccessNotice');
             if (paymentNotice && new URLSearchParams(window.location.search).get('payment') === 'success') {
-                paymentNotice.textContent = `התשלום נקלט והמסלול ${planName} הופעל.`;
+                const removedBots = Number.parseInt(new URLSearchParams(window.location.search).get('removedBots') || '0', 10);
+                const removalNotice = removedBots > 0
+                    ? ` הוסרו ${removedBots} הבוטים הוותיקים ביותר כדי להתאים למכסה החדשה.`
+                    : '';
+                paymentNotice.textContent = `התשלום נקלט והמסלול ${planName} הופעל.${removalNotice}`;
                 paymentNotice.hidden = false;
             }
 
@@ -148,11 +152,21 @@ async function loadOwnedBots() {
 
     try {
         const token = localStorage.getItem('token');
-        const response = await ApiService.request('/api/bots', {
-            headers: { 'Authorization': `Bearer ${token || ''}` }
-        });
-        const data = await response.json();
+        const headers = { 'Authorization': `Bearer ${token || ''}` };
+        const [response, quotaResponse] = await Promise.all([
+            ApiService.request('/api/bots', { headers }),
+            ApiService.request('/api/bots/quota', { headers })
+        ]);
+        const [data, quotaData] = await Promise.all([response.json(), quotaResponse.json()]);
         if (!response.ok) throw new Error(data.message || 'לא ניתן לטעון את הבוטים');
+        if (!quotaResponse.ok) throw new Error(quotaData.message || 'לא ניתן לטעון את מכסת הבוטים');
+
+        const quotaDisplay = document.getElementById('botQuotaDisplay');
+        if (quotaDisplay) {
+            const limit = quotaData.botLimit;
+            const limitText = limit == null || !Number.isFinite(limit) ? 'ללא הגבלה' : limit;
+            quotaDisplay.textContent = `${data.bots.length} מתוך ${limitText} בוטים`;
+        }
 
         container.replaceChildren();
         if (!data.bots?.length) {
@@ -165,6 +179,7 @@ async function loadOwnedBots() {
             row.className = 'owned-bot-row';
 
             const title = document.createElement('strong');
+            title.className = 'owned-bot-title';
             title.textContent = bot.websiteUrl;
 
             const actions = document.createElement('div');

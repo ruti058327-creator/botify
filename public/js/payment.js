@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusMsg = document.getElementById('payment-status');
   const submitBtn = document.getElementById('submit-btn');
   const paymentForm = document.getElementById('payment-form');
+  const botDeletionDialog = document.getElementById('bot-deletion-dialog');
+  const botDeletionMessage = document.getElementById('bot-deletion-message');
+  let confirmedBotCount = Number.parseInt(urlParams.get('confirmedBotCount') || '0', 10) || 0;
+  let pendingBotDeletionCount = 0;
 
   const subtotal = selectedPlan.price;
   const tax = Math.round(subtotal * 0.18);
@@ -30,8 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  paymentForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
+  async function submitPayment(botDeletionConfirmation) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'שומר תשלום...';
     const cardholderName = document.getElementById('cardholderName').value.trim();
@@ -44,9 +47,22 @@ document.addEventListener('DOMContentLoaded', () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ planId: selectedPlan.planId, cardholderName, cardLast4 })
+        body: JSON.stringify({
+          planId: selectedPlan.planId,
+          cardholderName,
+          cardLast4,
+          confirmedBotCount: botDeletionConfirmation
+        })
       });
       const data = await response.json();
+      if (response.status === 409 && data.code === 'BOT_DELETION_CONFIRMATION_REQUIRED') {
+        pendingBotDeletionCount = data.botsToDelete;
+        botDeletionMessage.textContent = data.message;
+        botDeletionDialog.showModal();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'אישור תשלום';
+        return;
+      }
       if (!response.ok) throw new Error(data.message || 'לא ניתן לשמור את התשלום');
 
       const activePlan = data.plan || selectedPlan.planId;
@@ -60,7 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('user');
       }
 
-      window.location.replace('/pages/dashboard.html?payment=success');
+      const dashboardUrl = new URL('/pages/dashboard.html', window.location.origin);
+      dashboardUrl.searchParams.set('payment', 'success');
+      if (data.removedBots) dashboardUrl.searchParams.set('removedBots', String(data.removedBots));
+      window.location.replace(dashboardUrl);
     } catch (error) {
       statusMsg.textContent = error.message;
       statusMsg.className = 'status-message error';
@@ -68,5 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.disabled = false;
       submitBtn.textContent = 'אישור תשלום';
     }
+  }
+
+  paymentForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitPayment(confirmedBotCount);
+  });
+
+  document.getElementById('cancel-bot-deletion').addEventListener('click', () => {
+    pendingBotDeletionCount = 0;
+    botDeletionDialog.close();
+  });
+
+  document.getElementById('confirm-bot-deletion').addEventListener('click', () => {
+    confirmedBotCount = pendingBotDeletionCount;
+    pendingBotDeletionCount = 0;
+    botDeletionDialog.close();
+    submitPayment(confirmedBotCount);
   });
 });
