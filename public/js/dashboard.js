@@ -82,11 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadOwnedBots();
 
       authContainer.innerHTML = `
-        <div class="user-greeting" style="display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333;">
+                <div class="user-greeting">
           <span>👤</span>
           <span>${loggedInUsername}</span>
         </div>
-        <button id="logout-btn" class="btn-logout" style="background: #dc3526; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px;">התנתקות</button>
+                <button id="logout-btn" class="btn-logout">התנתקות</button>
       `;
 
       document.getElementById('logout-btn').addEventListener('click', () => {
@@ -138,7 +138,7 @@ async function loadUserMessages(username) {
         populateChatHistoryDropdown();
         renderCurrentChatWindow();
     } catch (err) {
-        container.innerHTML = '<p class="status-msg" style="color: #dc2626;">שגיאה בטעינת השיחות.</p>';
+        container.innerHTML = '<p class="status-msg dashboard-status-error">שגיאה בטעינת השיחות.</p>';
     }
 }
 
@@ -162,13 +162,13 @@ async function loadOwnedBots() {
 
         for (const bot of data.bots) {
             const row = document.createElement('div');
-            row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:8px; flex-wrap:wrap;';
+            row.className = 'owned-bot-row';
 
             const title = document.createElement('strong');
             title.textContent = bot.websiteUrl;
 
             const actions = document.createElement('div');
-            actions.style.cssText = 'display:flex; gap:8px;';
+            actions.className = 'owned-bot-actions';
 
             const openLink = document.createElement('a');
             openLink.href = `chat.html?botId=${encodeURIComponent(bot.id)}`;
@@ -253,7 +253,7 @@ function renderCurrentChatWindow() {
     const container = document.getElementById('userMessagesList');
     
     if (currentUserMessages.length === 0) {
-        container.innerHTML = '<p class="status-msg" style="text-align: center; margin-top: 20px;">אין היסטוריית שיחות. הקלד הודעה למטה כדי להתחיל.</p>';
+        container.innerHTML = '<p class="status-msg dashboard-chat-empty">אין היסטוריית שיחות. הקלד הודעה למטה כדי להתחיל.</p>';
         return;
     }
 
@@ -270,7 +270,7 @@ function renderCurrentChatWindow() {
     const chatMessages = currentUserMessages.filter(m => (m.chatId || 'chat_old_history') === currentChatId);
 
     if (chatMessages.length === 0) {
-        container.innerHTML = '<p class="status-msg" style="text-align: center; margin-top: 20px; font-weight: bold; color: #2563eb;">✨ שיחה חדשה פתוחה! הקלד/י למטה כדי להתחיל.</p>';
+        container.innerHTML = '<p class="status-msg dashboard-chat-new">✨ שיחה חדשה פתוחה! הקלד/י למטה כדי להתחיל.</p>';
         return;
     }
 
@@ -280,18 +280,18 @@ function renderCurrentChatWindow() {
         let html = '';
         if (!msg.isAdmin) {
             html += `
-            <div style="display: flex; flex-direction: column; margin-bottom: 12px;">
-                <div style="align-self: flex-start; background: #ffffff; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-                    <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>אני</strong></div>
-                    <div style="color: #334155; font-size: 15px;">${msg.message}</div>
+            <div class="dashboard-chat-row">
+                <div class="dashboard-chat-bubble dashboard-chat-bubble-user">
+                    <div class="dashboard-chat-meta">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>אני</strong></div>
+                    <div class="dashboard-chat-text">${msg.message}</div>
                 </div>
             </div>`;
         } else {
             html += `
-            <div style="display: flex; flex-direction: column; margin-bottom: 12px;">
-                <div style="align-self: flex-end; background: #eff6ff; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 85%; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border: 1px solid #bfdbfe;">
-                    <div style="font-size: 11px; color: #3b82f6; margin-bottom: 4px;">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>צוות Botify</strong></div>
-                    <div style="color: #1e40af; font-size: 15px;">${msg.message}</div>
+            <div class="dashboard-chat-row">
+                <div class="dashboard-chat-bubble dashboard-chat-bubble-admin">
+                    <div class="dashboard-chat-meta">${new Date(msg.createdAt).toLocaleString('he-IL')} - <strong>צוות Botify</strong></div>
+                    <div class="dashboard-chat-text">${msg.message}</div>
                 </div>
             </div>`;
         }

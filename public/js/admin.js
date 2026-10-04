@@ -113,51 +113,49 @@ function renderAdminChats(messages, pendingOnly = false) {
                     continue;
                 }
             
-            const statusBadge = needsAttention 
-                ? '<span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">🔴 ממתין לתשובה</span>' 
-                : '<span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold;">🟢 טופל</span>';
-
-            const borderColor = needsAttention ? '#fca5a5' : '#e2e8f0';
-            const headerBg = needsAttention ? '#fef2f2' : '#f8fafc';
+            const chatStatusClass = needsAttention ? 'is-pending' : 'is-resolved';
+            const statusBadge = needsAttention
+                ? '<span class="chat-status-badge is-pending">🔴 ממתין לתשובה</span>'
+                : '<span class="chat-status-badge is-resolved">🟢 טופל</span>';
             const htmlId = `chatBox_${boxCounter++}`;
             
             // תאריך פתיחת השיחה לתצוגה יפה למנהל
             const chatStartDate = new Date(chatMessages[0].createdAt).toLocaleString('he-IL');
 
             const chatHtml = `
-                <div class="message-card" style="margin-bottom: 15px; border: 1px solid ${borderColor}; border-radius: 8px; overflow: hidden; background: #fff;">
-                    <div style="background: ${headerBg}; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; border-bottom: 1px solid #e2e8f0;" onclick="toggleChat('${htmlId}')">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <h3 style="margin: 0; font-size: 16px; color: #1e293b;">💬 שיחה עם: <span style="color: #2563eb;">${user}</span> <span style="font-size: 12px; color: #64748b;">(נפתחה: ${chatStartDate})</span></h3>
+                <div class="message-card admin-chat-card ${chatStatusClass}">
+                    <div class="admin-chat-header ${chatStatusClass}" onclick="toggleChat('${htmlId}')">
+                        <div class="admin-chat-header-main">
+                            <h3 class="admin-chat-title">💬 שיחה עם: <span class="message-username">${user}</span> <span class="admin-chat-date">(נפתחה: ${chatStartDate})</span></h3>
                             ${statusBadge}
                         </div>
-                        <button class="btn-secondary" style="background: #e2e8f0; color: #334155; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer;">הצג / הסתר שיחה ▾</button>
+                        <button class="admin-chat-toggle" type="button">הצג / הסתר שיחה ▾</button>
                     </div>
                     
-                    <div id="${htmlId}" style="display: none; padding: 15px;">
-                        <div style="max-height: 350px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 12px; padding-left: 5px;">
+                    <div id="${htmlId}" class="admin-chat-body" hidden>
+                        <div class="admin-chat-messages">
                             ${chatMessages.map(m => {
                                 let html = '';
                                 if (!m.isAdmin) {
                                     html += `
-                                    <div style="align-self: flex-start; background: #f1f5f9; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 85%; border: 1px solid #e2e8f0;">
-                                        <div style="color: #64748b; font-size: 11px; margin-bottom: 4px;">${new Date(m.createdAt).toLocaleString('he-IL')} - <strong>לקוח</strong></div>
-                                        <div style="color: #334155;">${m.message}</div>
+                                    <div class="admin-chat-bubble admin-chat-bubble-client">
+                                        <div class="admin-chat-meta">${new Date(m.createdAt).toLocaleString('he-IL')} - <strong>לקוח</strong></div>
+                                        <div class="admin-chat-text">${m.message}</div>
                                     </div>`;
                                 } else {
                                     html += `
-                                    <div style="align-self: flex-end; background: #eff6ff; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 85%; border: 1px solid #bfdbfe;">
-                                        <div style="color: #3b82f6; font-size: 11px; margin-bottom: 4px;">${new Date(m.createdAt).toLocaleString('he-IL')} - <strong>מנהלת</strong></div>
-                                        <div style="color: #1e40af;">${m.message}</div>
+                                    <div class="admin-chat-bubble admin-chat-bubble-admin">
+                                        <div class="admin-chat-meta">${new Date(m.createdAt).toLocaleString('he-IL')} - <strong>מנהלת</strong></div>
+                                        <div class="admin-chat-text">${m.message}</div>
                                     </div>`;
                                 }
                                 return html;
                             }).join('')}
                         </div>
                         
-                        <div style="display: flex; gap: 10px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
-                            <input type="text" id="reply-input-${htmlId}" placeholder="הקלידי תגובה ללקוח כאן (לחצי Enter לשליחה)..." style="flex: 1; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;" onkeypress="handleAdminEnter(event, '${user}', '${chatId}', '${htmlId}')">
-                            <button onclick="sendReply('${user}', '${chatId}', '${htmlId}')" style="background: #2563eb; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">שלחי תגובה</button>
+                        <div class="reply-section admin-reply-section">
+                            <input class="admin-reply-input" type="text" id="reply-input-${htmlId}" placeholder="הקלידי תגובה ללקוח כאן (לחצי Enter לשליחה)..." onkeypress="handleAdminEnter(event, '${user}', '${chatId}', '${htmlId}')">
+                            <button class="admin-reply-button" onclick="sendReply('${user}', '${chatId}', '${htmlId}')">שלחי תגובה</button>
                         </div>
                     </div>
                 </div>
@@ -176,7 +174,7 @@ function renderAdminChats(messages, pendingOnly = false) {
 
 window.toggleChat = function(htmlId) {
     const chatDiv = document.getElementById(htmlId);
-    if (chatDiv) chatDiv.style.display = chatDiv.style.display === 'none' ? 'block' : 'none';
+    if (chatDiv) chatDiv.hidden = !chatDiv.hidden;
 };
 
 // --- הפונקציה החדשה למנהל לטיפול במקש Enter ---
@@ -256,7 +254,7 @@ function renderUsers(users) {
             <td><span class="plan-tag">${escapeHtml(user.plan || 'בסיסי')}</span></td>
             <td>${user.createdAt ? new Date(user.createdAt).toLocaleDateString('he-IL') : 'חדש'}</td>
             <td>
-                <button class="btn-secondary client-history-btn" data-username="${escapeHtml(user.username || '')}" style="padding: 6px 10px; border: 0; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer;">
+                <button class="btn-secondary client-history-btn" data-username="${escapeHtml(user.username || '')}">
                     צפה בהיסטוריה
                 </button>
             </td>

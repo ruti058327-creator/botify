@@ -6,12 +6,18 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   idNumber: {
-    type: String
+    type: String,
+    minlength: [9, 'מספר תעודת הזהות חייב להכיל 9 ספרות'],
+    maxlength: [9, 'מספר תעודת הזהות חייב להכיל 9 ספרות'],
+    match: [/^\d{9}$/, 'מספר תעודת הזהות חייב להכיל 9 ספרות']
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    trim: true,
+    lowercase: true,
+    match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'יש להזין כתובת אימייל תקינה']
   },
   phone: {
     type: String
