@@ -15,6 +15,42 @@ document.addEventListener('DOMContentLoaded', () => {
       const userData = JSON.parse(storedUser);
       loggedInUsername = userData.username || userData.fullName || 'משתמש';
 
+            const profileImagePreview = document.getElementById('profileImagePreview');
+            const profileImageInput = document.getElementById('profileImageInput');
+            const profileImageStatus = document.getElementById('profileImageStatus');
+            if (userData.profileImage && profileImagePreview) {
+                profileImagePreview.src = userData.profileImage;
+                profileImagePreview.hidden = false;
+            }
+            profileImageInput?.addEventListener('change', async () => {
+                const file = profileImageInput.files?.[0];
+                if (!file) return;
+
+                profileImageStatus.textContent = 'מעלה תמונה...';
+                const formData = new FormData();
+                formData.append('profileImage', file);
+
+                try {
+                    const response = await fetch('/api/users/me/profile-image', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` },
+                        body: formData
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || 'העלאת התמונה נכשלה');
+
+                    profileImagePreview.src = data.profileImage;
+                    profileImagePreview.hidden = false;
+                    profileImageStatus.textContent = 'התמונה עודכנה';
+                    userData.profileImage = data.profileImage;
+                    localStorage.setItem('user', JSON.stringify(userData));
+                } catch (error) {
+                    profileImageStatus.textContent = error.message;
+                } finally {
+                    profileImageInput.value = '';
+                }
+            });
+
       if (welcomeTitle) welcomeTitle.textContent = `שלום, ${loggedInUsername}!`;
 
       const planEl = document.getElementById('userPlanDisplay');
@@ -29,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // טעינה ראשונית של השיחות מהשרת
       loadUserMessages(loggedInUsername);
+    loadOwnedBots();
 
       authContainer.innerHTML = `
         <div class="user-greeting" style="display: flex; align-items: center; gap: 8px; font-weight: bold; color: #333;">
@@ -88,6 +125,85 @@ async function loadUserMessages(username) {
         renderCurrentChatWindow();
     } catch (err) {
         container.innerHTML = '<p class="status-msg" style="color: #dc2626;">שגיאה בטעינת השיחות.</p>';
+    }
+}
+
+async function loadOwnedBots() {
+    const container = document.getElementById('botsListContainer');
+    if (!container) return;
+
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/bots', {
+            headers: { 'Authorization': `Bearer ${token || ''}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'לא ניתן לטעון את הבוטים');
+
+        container.replaceChildren();
+        if (!data.bots?.length) {
+            container.textContent = 'עדיין לא יצרת בוט.';
+            return;
+        }
+
+        for (const bot of data.bots) {
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:8px; flex-wrap:wrap;';
+
+            const title = document.createElement('strong');
+            title.textContent = bot.websiteUrl;
+
+            const actions = document.createElement('div');
+            actions.style.cssText = 'display:flex; gap:8px;';
+
+            const openLink = document.createElement('a');
+            openLink.href = `chat.html?botId=${encodeURIComponent(bot.id)}`;
+            openLink.textContent = 'פתיחת צ׳אט';
+
+            const editButton = document.createElement('button');
+            editButton.type = 'button';
+            editButton.textContent = 'עריכת הנחיות';
+            editButton.addEventListener('click', async () => {
+                const instructions = window.prompt('הנחיות לבוט:', bot.instructions || '');
+                if (instructions === null) return;
+
+                const updateResponse = await fetch(`/api/bots/${encodeURIComponent(bot.id)}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
+                    },
+                    body: JSON.stringify({ instructions })
+                });
+                if (!updateResponse.ok) {
+                    alert('לא ניתן לעדכן את הנחיות הבוט');
+                    return;
+                }
+                await loadOwnedBots();
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button';
+            deleteButton.textContent = 'מחיקה';
+            deleteButton.addEventListener('click', async () => {
+                if (!window.confirm('למחוק את הבוט?')) return;
+                const deleteResponse = await fetch(`/api/bots/${encodeURIComponent(bot.id)}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+                });
+                if (!deleteResponse.ok) {
+                    alert('לא ניתן למחוק את הבוט');
+                    return;
+                }
+                await loadOwnedBots();
+            });
+
+            actions.append(openLink, editButton, deleteButton);
+            row.append(title, actions);
+            container.appendChild(row);
+        }
+    } catch (error) {
+        container.textContent = error.message || 'שגיאה בטעינת הבוטים';
     }
 }
 

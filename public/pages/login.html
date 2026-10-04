@@ -381,6 +381,7 @@
             // 3. במידה ומדובר במנהל הקשיח (NOAR) שנכנס מיד בלי OTP
             if (data.redirectUrl && !data.requireOtp) {
               localStorage.setItem('user', JSON.stringify(data.user));
+              localStorage.setItem('token', data.token);
               window.location.href = data.redirectUrl;
               return;
             }

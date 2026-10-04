@@ -1,9 +1,3 @@
-const ADMIN_CREDENTIALS = {
-    "NOA": "578621",
-    "RUTI": "578621",
-    "MIRYAM": "578621"
-};
-
 let allMessagesCache = [];
 let allUsersCache = [];
 
@@ -22,10 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    const rawUsername = userData.username || userData.name || '';
-    const username = rawUsername.toString().toUpperCase().trim();
-
-    if (!ADMIN_CREDENTIALS[username]) {
+    const username = String(userData.username || userData.name || '').toUpperCase().trim();
+    if (userData.role !== 'admin' || !localStorage.getItem('token')) {
         alert('אין לך הרשאה לגשת לעמוד הניהול');
         window.location.href = 'dashboard.html';
         return;
@@ -43,7 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadSubscriberCount() {
     try {
-        const response = await fetch('/api/users/count');
+        const response = await fetch('/api/users/count', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+        });
         if (!response.ok) throw new Error('שגיאה');
         const data = await response.json();
         const countElement = document.getElementById('subscriberCount');
@@ -54,7 +48,9 @@ async function loadSubscriberCount() {
 async function loadMessages() {
     const container = document.getElementById('messagesList');
     try {
-        const response = await fetch('/api/messages');
+        const response = await fetch('/api/messages', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+        });
         if (!response.ok) throw new Error('שגיאה בשליפת הודעות');
 
         const data = await response.json();
@@ -222,7 +218,9 @@ async function sendReply(username, chatId, htmlId) {
 async function loadUsers() {
     const tableBody = document.getElementById('usersTableBody');
     try {
-        const response = await fetch('/api/users');
+        const response = await fetch('/api/users', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+        });
         if (!response.ok) return;
         const data = await response.json();
         allUsersCache = Array.isArray(data) ? data : (data.users || []);

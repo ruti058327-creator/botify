@@ -97,6 +97,13 @@
             const websiteUrl = document.getElementById('websiteUrl').value;
             const instructions = document.getElementById('instructions').value;
             const resultDiv = document.getElementById('result');
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                resultDiv.style.color = 'red';
+                resultDiv.innerHTML = 'כדי ליצור ולשמור בוט, יש <a href="login.html">להתחבר</a> תחילה.';
+                return;
+            }
             
             resultDiv.style.color = '#333';
             resultDiv.textContent = 'יוצר בוט וסורק את האתר, אנתן להמתין...';
@@ -105,7 +112,8 @@
                 const response = await fetch('/api/bots/create-bot', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ websiteUrl, instructions })
                 });
