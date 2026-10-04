@@ -337,7 +337,8 @@ async function chat(req, res) {
     console.error('AI Chat error:', error.response?.data || error.message);
     const apiMessage = error.response?.data?.error?.message;
     const isQuotaError = error.response?.status === 429 || error.response?.data?.error?.status === 'RESOURCE_EXHAUSTED';
-    if (isQuotaError && bot) {
+    const isModelUnavailable = error.response?.status === 503 || error.response?.data?.error?.status === 'UNAVAILABLE';
+    if ((isQuotaError || isModelUnavailable) && bot) {
       return res.json({ success: true, reply: buildLocalSiteReply(bot.scrapedContent, userQuestion, bot.websiteUrl) });
     }
     const message = /self-signed certificate|certificate in certificate chain|TLS/i.test(error.message)
