@@ -42,7 +42,7 @@
 
       <div class="pricing-card" data-plan="starter">
         <div class="card-header">
-          <h3>בוט בסיסי (Starter)</h3>
+          <h3>מסלול Starter בתשלום</h3>
           <p class="desc">מתאים לעסקים קטנים בתחילת הדרך</p>
           <div class="price">
             <span class="currency">₪</span>
@@ -51,13 +51,13 @@
           </div>
         </div>
         <ul class="features-list">
-          <li>✓ בוט 1 פעיל באתר</li>
+          <li>✓ עד 2 בוטים פעילים (כולל הבוט החינמי)</li>
           <li>✓ עד 500 הודעות בחודש</li>
           <li>✓ תבנית מענה לשאלות נפוצות</li>
           <li>✓ התאמת צבעים בסיסית</li>
           <li>✓ תמיכה במייל</li>
         </ul>
-        <button class="btn-select-plan btn-secondary" onclick="choosePlan('starter', 49, 'בוט בסיסי')">
+        <button class="btn-select-plan btn-secondary" onclick="choosePlan('starter', 49, 'Starter בתשלום')">
           בחירת מסלול
         </button>
       </div>
@@ -134,6 +134,15 @@
 
     </div>
   </main>
+
+  <dialog class="plan-change-dialog" id="plan-change-dialog" aria-labelledby="plan-change-title" aria-describedby="plan-change-message">
+    <h2 id="plan-change-title">אישור החלפת מסלול</h2>
+    <p id="plan-change-message"></p>
+    <div class="plan-dialog-actions">
+      <button type="button" class="plan-dialog-cancel" id="cancel-plan-change">ביטול</button>
+      <button type="button" class="plan-dialog-confirm" id="confirm-plan-change">המשך לתשלום</button>
+    </div>
+  </dialog>
 
     <footer class="site-footer">
         <div class="footer-container">

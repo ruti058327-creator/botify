@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   fullName: {
     type: String,
     required: [true, 'שם מלא הינו שדה חובה'],
@@ -12,6 +16,17 @@ const paymentSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
+  cardholderName: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: 100
+  },
+  cardLast4: {
+    type: String,
+    required: true,
+    match: /^\d{4}$/
+  },
   planId: {
     type: String,
     required: true,
@@ -21,6 +36,11 @@ const paymentSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0
+  },
+  mode: {
+    type: String,
+    enum: ['recorded', 'live'],
+    default: 'recorded'
   },
   status: {
     type: String,

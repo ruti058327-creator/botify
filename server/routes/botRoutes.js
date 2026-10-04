@@ -4,6 +4,7 @@ const botController = require('../controllers/botController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 
 router.get('/', authenticateToken, botController.list);
+router.get('/quota', authenticateToken, botController.quota);
 router.get('/:botId', authenticateToken, botController.getById);
 router.post('/create-bot', authenticateToken, botController.createFromWebsite);
 router.put('/:botId', authenticateToken, botController.update);

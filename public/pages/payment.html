@@ -33,38 +33,21 @@
 
       <!-- צד ימין: טופס פרטי תשלום -->
       <section class="payment-form-section">
-        <h2>פרטי תשלום וחיוב</h2>
-        <p class="subtitle">סליקה מאובטחת באמצעות כרטיס אשראי</p>
+        <h2>שדרוג מסלול</h2>
+        <p class="subtitle">תשלום והפעלת מסלול</p>
 
         <form id="payment-form">
           <div class="form-group">
-            <label for="fullName">שם מלא (כפי שמופיע על הכרטיס)</label>
-            <input type="text" id="fullName" placeholder="ישראל ישראלי" required>
+            <label for="cardholderName">שם בעל הכרטיס</label>
+            <input type="text" id="cardholderName" maxlength="100" autocomplete="cc-name" required>
           </div>
-
           <div class="form-group">
-            <label for="email">כתובת אימייל לקבלת חשבונית</label>
-            <input type="email" id="email" placeholder="name@example.com" required>
+            <label for="cardLast4">ארבע הספרות האחרונות בכרטיס</label>
+            <input type="text" id="cardLast4" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required>
           </div>
-
-          <div class="form-group">
-            <label for="cardNumber">מספר כרטיס אשראי</label>
-            <input type="text" id="cardNumber" maxlength="19" placeholder="0000 0000 0000 0000" required>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="expDate">תוקף (MM/YY)</label>
-              <input type="text" id="expDate" maxlength="5" placeholder="12/28" required>
-            </div>
-            <div class="form-group">
-              <label for="cvv">CVV (3 ספרות בגב הכרטיס)</label>
-              <input type="password" id="cvv" maxlength="3" placeholder="123" required>
-            </div>
-          </div>
-
+          <p class="payment-note">באישור יישמרו פרטי ההזמנה, שם בעל הכרטיס וארבע הספרות האחרונות. מספר הכרטיס המלא ו־CVV אינם נשמרים. האתר אינו מחובר לספק סליקה ולא יתבצע חיוב בכרטיס.</p>
           <button type="submit" class="btn-pay-now" id="submit-btn">
-            אישור תשלום והפעלת הבוט 🔒
+            אישור תשלום
           </button>
         </form>
 
