@@ -1,6 +1,10 @@
 let allMessagesCache = [];
 let allUsersCache = [];
 
+/**
+ * מאמת את תפקיד המשתמש ומאתחל את נתוני מסך הניהול.
+ * @returns {void} טוען מונים, פניות ומשתמשים עבור מנהל מורשה.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const storedUser = localStorage.getItem('user');
     if (!storedUser) {
@@ -33,6 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loadUsers();
 });
 
+/**
+ * טוען ומציג את מספר המשתמשים הרשומים.
+ * @returns {Promise<void>} מעדכן את מונה המנויים אם הבקשה הצליחה.
+ */
 async function loadSubscriberCount() {
     try {
         const response = await ApiService.request('/api/users/count', {
@@ -45,6 +53,10 @@ async function loadSubscriberCount() {
     } catch (err) {}
 }
 
+/**
+ * טוען הודעות פנייה ושיחות ומציג את השיחות הממתינות לטיפול.
+ * @returns {Promise<void>} מעדכן את מטמון ההודעות ואת תצוגת השיחות.
+ */
 async function loadMessages() {
     const container = document.getElementById('messagesList');
     try {
@@ -61,6 +73,10 @@ async function loadMessages() {
     }
 }
 
+/**
+ * מסנן את מטמון השיחות לפי שם המשתמש שהוקלד ומציג תוצאות ממתינות.
+ * @returns {void} מרנדר מחדש את רשימת השיחות.
+ */
 window.filterAdminChats = function() {
     const query = document.getElementById('adminSearchClient')?.value.trim().toLowerCase() || '';
     if (!query) {
@@ -74,11 +90,22 @@ window.filterAdminChats = function() {
     renderAdminChats(filtered, true);
 };
 
+/**
+ * מקבץ ומציג הודעות לפי לקוח ושיחה, עם אפשרות להציג רק שיחות ממתינות.
+ * @param {Array<object>} messages הודעות הפנייה להצגה.
+ * @param {boolean} [pendingOnly=false] האם להסתיר שיחות שכבר טופלו.
+ * @returns {void} מרנדר את השיחות בממשק המנהל.
+ */
 function renderAdminChats(messages, pendingOnly = false) {
     const container = document.getElementById('messagesList');
     const groupedByUserAndChat = {};
 
     // חלוקה מדויקת למנהל: קודם שם לקוח, ואז לפי תעודת הזהות של השיחה (chatId)
+    /**
+     * משייך כל הודעת לקוח לקבוצת המשתמש והשיחה המתאימה.
+     * @param {object} msg הודעת פנייה אחת.
+     * @returns {void} מוסיף את ההודעה למבנה הקיבוץ.
+     */
     messages.forEach(msg => {
         const user = msg.username || 'אורח';
         if (user.startsWith('מנהלת')) return; 
@@ -134,7 +161,13 @@ function renderAdminChats(messages, pendingOnly = false) {
                     
                     <div id="${htmlId}" class="admin-chat-body" hidden>
                         <div class="admin-chat-messages">
-                            ${chatMessages.map(m => {
+                            ${chatMessages.map(
+                                /**
+                                 * ממירה הודעת שיחה אחת למקטע HTML לפי שולח ההודעה.
+                                 * @param {object} m הודעת לקוח או מנהל.
+                                 * @returns {string} תוכן HTML של ההודעה.
+                                 */
+                                m => {
                                 let html = '';
                                 if (!m.isAdmin) {
                                     html += `
@@ -150,7 +183,8 @@ function renderAdminChats(messages, pendingOnly = false) {
                                     </div>`;
                                 }
                                 return html;
-                            }).join('')}
+                                }
+                            ).join('')}
                         </div>
                         
                         <div class="reply-section admin-reply-section">
@@ -172,12 +206,25 @@ function renderAdminChats(messages, pendingOnly = false) {
     }
 }
 
+/**
+ * משנה את מצב התצוגה של גוף שיחה במסך הניהול.
+ * @param {string} htmlId מזהה רכיב השיחה.
+ * @returns {void} מציג או מסתיר את תוכן השיחה.
+ */
 window.toggleChat = function(htmlId) {
     const chatDiv = document.getElementById(htmlId);
     if (chatDiv) chatDiv.hidden = !chatDiv.hidden;
 };
 
 // --- הפונקציה החדשה למנהל לטיפול במקש Enter ---
+/**
+ * שולח את תגובת המנהל כאשר מקש Enter נלחץ בשדה התגובה.
+ * @param {KeyboardEvent} event אירוע המקלדת.
+ * @param {string} username שם הלקוח.
+ * @param {string} chatId מזהה השיחה.
+ * @param {string} htmlId מזהה רכיב השיחה בממשק.
+ * @returns {void} מונע ירידת שורה ושולח את התגובה בעת הצורך.
+ */
 window.handleAdminEnter = function(event, username, chatId, htmlId) {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -185,6 +232,13 @@ window.handleAdminEnter = function(event, username, chatId, htmlId) {
     }
 };
 
+/**
+ * שולח תגובת מנהל לשרת וטוען מחדש את השיחות לאחר הצלחה.
+ * @param {string} username שם הלקוח המקבל.
+ * @param {string} chatId מזהה השיחה שאליה מתווספת התגובה.
+ * @param {string} htmlId מזהה רכיב הקלט של השיחה.
+ * @returns {Promise<void>} שולח את התגובה ומעדכן את התצוגה.
+ */
 async function sendReply(username, chatId, htmlId) {
     const replyInput = document.getElementById(`reply-input-${htmlId}`);
     const replyText = replyInput.value.trim();
@@ -213,6 +267,10 @@ async function sendReply(username, chatId, htmlId) {
     }
 }
 
+/**
+ * טוען משתמשים מהשרת ושומר אותם במטמון לצורך סינון.
+ * @returns {Promise<void>} מרנדר את המשתמשים או הודעת שגיאה.
+ */
 async function loadUsers() {
     const tableBody = document.getElementById('usersTableBody');
     try {
@@ -228,6 +286,10 @@ async function loadUsers() {
     }
 }
 
+/**
+ * מסנן את רשימת המשתמשים לפי שם משתמש, שם מלא או כתובת דוא״ל.
+ * @returns {void} מרנדר את המשתמשים התואמים לחיפוש.
+ */
 window.filterAdminUsers = function() {
     const query = document.getElementById('adminSearchUsers')?.value.trim().toLowerCase() || '';
     const filteredUsers = allUsersCache.filter(user => {
@@ -237,6 +299,11 @@ window.filterAdminUsers = function() {
     renderUsers(filteredUsers);
 };
 
+/**
+ * מרנדר את רשימת המשתמשים בטבלה ומקשר פעולות להצגת היסטוריית לקוח.
+ * @param {Array<object>} users המשתמשים להצגה.
+ * @returns {void} מעדכן את גוף טבלת המשתמשים.
+ */
 function renderUsers(users) {
     const tableBody = document.getElementById('usersTableBody');
     if (!tableBody) return;
@@ -246,7 +313,14 @@ function renderUsers(users) {
         return;
     }
 
-    tableBody.innerHTML = users.map((user, index) => `
+    tableBody.innerHTML = users.map(
+        /**
+         * יוצר שורת טבלה עם פרטי משתמש וקישור להיסטוריית השיחות שלו.
+         * @param {object} user נתוני המשתמש.
+         * @param {number} index מיקום המשתמש ברשימה.
+         * @returns {string} HTML של שורת המשתמש.
+         */
+        (user, index) => `
         <tr>
             <td>${index + 1}</td>
             <td>${escapeHtml(user.username || user.fullName || 'ללא שם')}</td>
@@ -261,11 +335,21 @@ function renderUsers(users) {
         </tr>
     `).join('');
 
+    /**
+     * מקשר כל כפתור היסטוריה לטעינת השיחות של הלקוח המתאים.
+     * @param {HTMLButtonElement} button כפתור ההיסטוריה שנוצר בטבלה.
+     * @returns {void} מתקין מאזין לחיצה עבור הלקוח.
+     */
     tableBody.querySelectorAll('.client-history-btn').forEach(button => {
         button.addEventListener('click', () => showClientHistory(button.dataset.username));
     });
 }
 
+/**
+ * מציג את היסטוריית השיחות של לקוח מסוים ומגלגל אליה.
+ * @param {string} username שם המשתמש שאת שיחותיו מציגים.
+ * @returns {void} מעדכן כותרת ותצוגת שיחות.
+ */
 window.showClientHistory = function(username) {
     const searchInput = document.getElementById('adminSearchClient');
     if (searchInput) searchInput.value = username;
@@ -279,6 +363,10 @@ window.showClientHistory = function(username) {
     document.getElementById('messagesList')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
+/**
+ * מציג את השיחות הממתינות של כלל הלקוחות.
+ * @returns {void} מאפס את החיפוש ומציג שיחות לא מטופלות.
+ */
 window.showAllClientChats = function() {
     const searchInput = document.getElementById('adminSearchClient');
     if (searchInput) searchInput.value = '';
@@ -287,6 +375,10 @@ window.showAllClientChats = function() {
     if (messagesTitle) messagesTitle.textContent = 'הודעות נכנסות (ממתינות לטיפול)';
 };
 
+/**
+ * מציג את היסטוריית כל השיחות, כולל שיחות שכבר טופלו.
+ * @returns {void} מאפס את החיפוש ומרנדר מחדש את השיחות.
+ */
 window.showConversationHistory = function() {
     const searchInput = document.getElementById('adminSearchClient');
     if (searchInput) searchInput.value = '';
@@ -295,6 +387,11 @@ window.showConversationHistory = function() {
     if (messagesTitle) messagesTitle.textContent = 'היסטוריית שיחות';
 };
 
+/**
+ * מקודד תווים מיוחדים כדי להציג ערך טקסטואלי בבטחה בתוך HTML.
+ * @param {*} value הערך שיש לקודד.
+ * @returns {string} מחרוזת עם תווי HTML מוחלפים בישויות.
+ */
 function escapeHtml(value) {
     return String(value)
         .replaceAll('&', '&amp;')

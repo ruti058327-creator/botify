@@ -1,3 +1,7 @@
+/**
+ * מאתחל סיכום תשלום, בודק התחברות ומחבר את פעולות האישור.
+ * @returns {void} מציג את המסלול ומתקין טיפול בטופס התשלום.
+ */
 document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const plans = {
@@ -34,6 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
+  /**
+   * שולח לשרת את פרטי התשלום ואת מספר הבוטים שהמשתמש אישר להסיר.
+   * @param {number} botDeletionConfirmation מספר הבוטים העודפים שאושר למחיקה.
+   * @returns {Promise<void>} מפעיל מסלול או מציג בקשת אישור/שגיאה.
+   */
   async function submitPayment(botDeletionConfirmation) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'שומר תשלום...';
@@ -89,16 +98,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  /**
+   * מונע שליחה רגילה של הטופס ומתחיל את שמירת התשלום.
+   * @param {SubmitEvent} event אירוע שליחת הטופס.
+   * @returns {void} מעביר את מספר האישורים לתהליך התשלום.
+   */
   paymentForm.addEventListener('submit', (event) => {
     event.preventDefault();
     submitPayment(confirmedBotCount);
   });
 
+  /**
+   * מבטל את בקשת אישור מחיקת הבוטים העודפים.
+   * @returns {void} מאפס את המונה וסוגר את תיבת הדו-שיח.
+   */
   document.getElementById('cancel-bot-deletion').addEventListener('click', () => {
     pendingBotDeletionCount = 0;
     botDeletionDialog.close();
   });
 
+  /**
+   * מאשר את מספר הבוטים המיועדים למחיקה ומחדש את שמירת התשלום.
+   * @returns {void} סוגר את תיבת הדו-שיח וממשיך את תהליך התשלום.
+   */
   document.getElementById('confirm-bot-deletion').addEventListener('click', () => {
     confirmedBotCount = pendingBotDeletionCount;
     pendingBotDeletionCount = 0;

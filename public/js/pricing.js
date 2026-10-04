@@ -11,6 +11,15 @@ const confirmPlanChangeButton = document.getElementById('confirm-plan-change');
 const cancelPlanChangeButton = document.getElementById('cancel-plan-change');
 let pendingPlanSelection = null;
 
+/**
+ * שומר את בחירת המסלול ומנתב לתשלום או להרשמה בהתאם למצב ההתחברות.
+ * @param {string} planId מזהה המסלול שנבחר.
+ * @param {number} price מחיר המסלול לפני מס.
+ * @param {string} planName שם המסלול להצגה.
+ * @param {boolean} returnToCreate האם לחזור ליצירת בוט לאחר התשלום.
+ * @param {number} [confirmedBotCount=0] מספר הבוטים שהמשתמש אישר להסיר.
+ * @returns {void} שומר את הבחירה ומנווט לעמוד הבא.
+ */
 function continueToPlan(planId, price, planName, returnToCreate, confirmedBotCount = 0) {
   const selectedPlanData = {
     planId: planId,
@@ -32,11 +41,19 @@ function continueToPlan(planId, price, planName, returnToCreate, confirmedBotCou
   }
 }
 
+/**
+ * מבטל את בחירת המעבר וסוגר את תיבת האישור.
+ * @returns {void} מאפס את הבחירה הממתינה.
+ */
 document.getElementById('cancel-plan-change').addEventListener('click', () => {
   pendingPlanSelection = null;
   planChangeDialog.close();
 });
 
+/**
+ * מאשר מעבר למסלול וממשיך לתהליך ההרשמה או התשלום.
+ * @returns {void} מנקה מצב זמני ומבצע את הבחירה שאושרה.
+ */
 document.getElementById('confirm-plan-change').addEventListener('click', () => {
   const selection = pendingPlanSelection;
   pendingPlanSelection = null;
@@ -44,6 +61,10 @@ document.getElementById('confirm-plan-change').addEventListener('click', () => {
   if (selection) continueToPlan(...selection);
 });
 
+/**
+ * מאפס את כותרות וכפתורי הדו-שיח לאחר סגירתו.
+ * @returns {void} משחזר את מצב ברירת המחדל של חלון האישור.
+ */
 planChangeDialog.addEventListener('close', () => {
   pendingPlanSelection = null;
   planChangeTitle.textContent = 'אישור החלפת מסלול';
@@ -52,6 +73,13 @@ planChangeDialog.addEventListener('close', () => {
   cancelPlanChangeButton.textContent = 'ביטול';
 });
 
+/**
+ * מתחיל בחירת מסלול, תוך בדיקת המכסה והמסלול הפעיל למשתמש מחובר.
+ * @param {string} planId מזהה המסלול.
+ * @param {number} price מחיר המסלול.
+ * @param {string} planName שם המסלול לתצוגה.
+ * @returns {void} מציג אישור מעבר או ממשיך למסלול שנבחר.
+ */
 function choosePlan(planId, price, planName) {
   const token = localStorage.getItem('token');
   const returnToCreate = new URLSearchParams(window.location.search).get('required') === 'bot';
@@ -71,6 +99,15 @@ function choosePlan(planId, price, planName) {
   continueToPlan(planId, price, planName, returnToCreate);
 }
 
+/**
+ * בודק מול השרת את המכסה במסלול ומבקש אישור לפני מחיקה או החלפה.
+ * @param {string} planId מזהה המסלול החדש.
+ * @param {number} price מחיר המסלול.
+ * @param {string} planName שם המסלול לתצוגה.
+ * @param {boolean} returnToCreate האם לחזור ליצירת בוט לאחר התשלום.
+ * @param {string} currentPlanId מזהה המסלול המקומי הפעיל.
+ * @returns {Promise<void>} מציג את פרטי המעבר או ממשיך לתשלום.
+ */
 async function checkPlanChange(planId, price, planName, returnToCreate, currentPlanId) {
   let quota = null;
   try {

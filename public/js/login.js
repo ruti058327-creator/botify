@@ -1,5 +1,10 @@
 let pendingLoginEmail = '';
 
+/**
+ * מנהל את תהליך ההתחברות, אימות OTP והפניה לפי תפקיד המשתמש.
+ * @param {SubmitEvent} e אירוע שליחת טופס ההתחברות.
+ * @returns {Promise<void>} שולח בקשת התחברות או אימות ומעדכן את הממשק.
+ */
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 

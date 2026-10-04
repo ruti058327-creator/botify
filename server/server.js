@@ -9,6 +9,10 @@ const mongoose = require('mongoose');
 const dbURI = process.env.MONGO_URI || 'mongodb://localhost:27017/botify';
 
 // 2. חיבור יחיד למסד הנתונים
+/**
+ * מתחבר למסד הנתונים באמצעות כתובת החיבור המוגדרת בסביבה או ברירת המחדל.
+ * @returns {Promise<void>} מתעד הצלחה או כשל בחיבור ביומן השרת.
+ */
 const connectDB = async () => {
   try {
     await mongoose.connect(dbURI);
@@ -39,6 +43,14 @@ const paymentRoutes = require('./routes/paymentRoutes');
 app.use('/api/payments', paymentRoutes);
 
 // 5. שכבת טיפול בשגיאות
+/**
+ * ממפה שגיאות middleware לתשובות HTTP אחידות.
+ * @param {Error & {code?: string, statusCode?: number}} err השגיאה שהועברה בשרשרת.
+ * @param {import('express').Request} req בקשת HTTP המקורית.
+ * @param {import('express').Response} res תגובת HTTP.
+ * @param {import('express').NextFunction} next פונקציית המשך middleware (אינה נדרשת בטיפול זה).
+ * @returns {void} שולח תשובת JSON עם קוד ומסר מתאימים.
+ */
 app.use((err, req, res, next) => {
   console.error('🔥 Server Route Error:', err.message);
   const statusCode = err.code === 'LIMIT_FILE_SIZE' ? 413 : err.statusCode || 500;
@@ -56,6 +68,10 @@ app.use((err, req, res, next) => {
 // 6. הפעלת השרת
 const PORT = process.env.PORT || 3000;
 
+/**
+ * מדווחת ביומן לאחר ששרת HTTP התחיל להאזין.
+ * @returns {void} כותבת את כתובת השרת ליומן.
+ */
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });

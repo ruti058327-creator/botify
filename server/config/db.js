@@ -3,6 +3,10 @@ const dns = require('dns');
 
 dns.setServers(['8.8.8.8', '8.8.4.4']);
 
+/**
+ * מתחבר למסד Botify המקומי ומסיים את התהליך במקרה של כשל.
+ * @returns {Promise<void>} מתעד הצלחה או מסיים את השרת בשגיאה.
+ */
 const connectDB = async () => {
   // מחרוזת החיבור מוגדרת פה ישירות - ללא תלות ב-process.env
   const dbURI = 'mongodb://localhost:27017/botify';

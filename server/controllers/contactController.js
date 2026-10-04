@@ -1,5 +1,11 @@
 const Contact = require('../models/Contact');
 
+/**
+ * מחזיר למנהל את כל הודעות הפנייה, מהחדשה לישנה.
+ * @param {import('express').Request} req בקשת API מאומתת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} רשימת ההודעות או תשובת שגיאה.
+ */
 async function listAll(req, res) {
   try {
     const messages = await Contact.find().sort({ createdAt: -1 });
@@ -9,6 +15,12 @@ async function listAll(req, res) {
   }
 }
 
+/**
+ * מחזיר את הודעות הפנייה של המשתמש המחובר.
+ * @param {import('express').Request} req בקשה עם המשתמש המחובר.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} הודעות המשתמש או תשובת שגיאה.
+ */
 async function listMine(req, res) {
   try {
     const messages = await Contact.find({ username: req.user.username }).sort({ createdAt: -1 });
@@ -18,6 +30,12 @@ async function listMine(req, res) {
   }
 }
 
+/**
+ * שומר הודעת פנייה חדשה עבור המשתמש המחובר.
+ * @param {import('express').Request} req בקשה עם תוכן ההודעה ומזהה השיחה האופציונלי.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function create(req, res) {
   const { message, chatId } = req.body;
   if (typeof message !== 'string' || !message.trim()) {
@@ -37,6 +55,12 @@ async function create(req, res) {
   }
 }
 
+/**
+ * שומר תגובת מנהל כהודעה חדשה בשיחת הלקוח.
+ * @param {import('express').Request} req בקשה עם שם משתמש, מזהה שיחה ותוכן תגובה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function reply(req, res) {
   const { username, chatId, reply: replyText } = req.body;
   if (!username || typeof replyText !== 'string' || !replyText.trim()) {

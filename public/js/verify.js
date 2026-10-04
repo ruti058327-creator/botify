@@ -1,3 +1,7 @@
+/**
+ * מאתחל אימות הרשמה תלוי-שלבים ומוודא שקיימים פרטי הרשמה ממתינים.
+ * @returns {void} מציג את הדוא״ל, מפעיל טיימר ומחבר את פעולות האימות.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const pendingData = sessionStorage.getItem('pendingUser');
 
@@ -20,6 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const resendCodeBtn = document.getElementById('resendCodeBtn');
     const editDetailsBtn = document.getElementById('editDetailsBtn');
 
+    /**
+     * מציג הודעת הצלחה או שגיאה במסך אימות ההרשמה.
+     * @param {string} text ההודעה להצגה.
+     * @param {boolean} [isError=true] האם מדובר בהודעת שגיאה.
+     * @returns {void} מעדכן את רכיב ההודעה.
+     */
     function showMessage(text, isError = true) {
         if (!messageDiv) return;
         messageDiv.style.display = 'block';
@@ -27,6 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.className = isError ? 'error-msg' : 'success-msg';
     }
 
+    /**
+     * מסתיר ומנקה את הודעת האימות הנוכחית.
+     * @returns {void} מאפס את רכיב ההודעה אם הוא קיים.
+     */
     function clearMessage() {
         if (!messageDiv) return;
         messageDiv.style.display = 'none';
@@ -37,11 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let timeLeft = 5 * 60;
     let countdownInterval = null;
 
+    /**
+     * מתחיל מחדש ספירה לאחור של חמש דקות לתוקף קוד האימות.
+     * @returns {void} מאפשר אימות ומעדכן את תצוגת הזמן.
+     */
     function startTimer() {
         clearInterval(countdownInterval);
         timeLeft = 5 * 60;
         if (verifyBtn) verifyBtn.disabled = false;
 
+        /**
+         * מציג את הזמן שנותר ומשבית את כפתור האימות עם פקיעת הקוד.
+         * @returns {void} מעדכן את התצוגה ומטפל בפקיעת הקוד.
+         */
         countdownInterval = setInterval(() => {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -64,6 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // אימות הקוד ויצירת המשתמש
     if (verifyForm) {
+        /**
+         * שולח את קוד האימות ופרטי המשתמש ליצירת חשבון.
+         * @param {SubmitEvent} e אירוע שליחת טופס האימות.
+         * @returns {Promise<void>} משלים הרשמה או מציג שגיאת אימות.
+         */
         verifyForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             clearMessage();
@@ -98,6 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 showMessage('🎉 נרשמת בהצלחה למערכת! מעביר לדף ההתחברות...', false);
 
+                /**
+                 * מעביר למסך ההתחברות אחרי הצגת הודעת הצלחה.
+                 * @returns {void} משנה את כתובת העמוד.
+                 */
                 setTimeout(() => {
                     window.location.href = '/login.html';
                 }, 1800);
@@ -114,6 +145,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // שליחת קוד אימות חדש
     if (resendCodeBtn) {
+        /**
+         * מבקש קוד אימות חדש עבור פרטי ההרשמה ששמורים בדפדפן.
+         * @returns {Promise<void>} שולח שוב קוד ומאתחל את הטיימר.
+         */
         resendCodeBtn.addEventListener('click', async () => {
             clearMessage();
             resendCodeBtn.disabled = true;
@@ -148,6 +183,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // חזרה לעריכת פרטים בהרשמה
     if (editDetailsBtn) {
+        /**
+         * מחזיר את המשתמש לעריכת פרטי ההרשמה.
+         * @returns {void} מנווט בחזרה לטופס ההרשמה.
+         */
         editDetailsBtn.addEventListener('click', () => {
             window.location.href = '/register.html';
         });

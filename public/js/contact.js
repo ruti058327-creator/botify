@@ -1,3 +1,7 @@
+/**
+ * מאתחל את טופס הפנייה, מצב ההתחברות, ספירת המילים ושליחת ההודעה.
+ * @returns {void} מתקין מאזיני DOM ומעדכן את ממשק הפנייה.
+ */
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   const userString = localStorage.getItem('user');
@@ -26,6 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <button id="logout-btn-nav" class="btn-secondary" style="background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer;">התנתקות</button>
         `;
+        /**
+         * מסיר פרטי התחברות ומחזיר את המשתמש לעמוד הבית הציבורי.
+         * @returns {void} מנקה את האחסון המקומי ומבצע ניווט.
+         */
         document.getElementById('logout-btn-nav')?.addEventListener('click', () => {
           localStorage.removeItem('user');
           localStorage.removeItem('token');
@@ -61,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. ספירת מילים
   if (messageInput) {
+    /**
+     * סופר מילים בזמן הקלדה ואוכף את מגבלת 200 המילים.
+     * @returns {void} מעדכן מונה מילים ומקצר טקסט החורג מהמגבלה.
+     */
     messageInput.addEventListener('input', () => {
       const text = messageInput.value.trim();
       const words = text === '' ? [] : text.split(/\s+/);
@@ -84,6 +96,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4. שליחת הטופס לשרת
   if (contactForm) {
+    /**
+     * מאמת ושולח את טופס הפנייה, ומציג את תוצאת השליחה למשתמש.
+     * @param {SubmitEvent} e אירוע שליחת טופס הפנייה.
+     * @returns {Promise<void>} שולח את הפנייה ומעדכן מצב טעינה/תוצאה.
+     */
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -139,12 +156,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /**
+   * מציג הודעת הצלחה או שגיאה זמנית בטופס הפנייה.
+   * @param {string} msg הטקסט שיוצג.
+   * @param {boolean} isSuccess האם מדובר בהודעת הצלחה.
+   * @returns {void} מעדכן את רכיב המשוב ומסתירו לאחר שש שניות.
+   */
   function showFeedback(msg, isSuccess) {
     if (!feedbackMsg) return;
     feedbackMsg.textContent = msg;
     feedbackMsg.className = `feedback-message ${isSuccess ? 'feedback-success' : 'feedback-error'}`;
     feedbackMsg.style.display = 'block';
 
+    /**
+     * מסתירה את הודעת המשוב לאחר שהוצגה למשך שש שניות.
+     * @returns {void} מסתירה את רכיב המשוב.
+     */
     setTimeout(() => {
       feedbackMsg.style.display = 'none';
     }, 6000);

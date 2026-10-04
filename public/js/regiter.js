@@ -1,3 +1,7 @@
+/**
+ * מאתחל את טופס ההרשמה ואת תהליך אימות כתובת הדוא״ל.
+ * @returns {void} מחבר את פקדי ההרשמה, הטיימר ושליחת הקוד.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     let cachedUserData = null;
     let countdownTimer = null;
@@ -11,6 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const resendBtn = document.getElementById('resendBtn');
     const backToEditBtn = document.getElementById('backToEditBtn');
 
+    /**
+     * מציג הודעת מצב מעוצבת בטופס ההרשמה.
+     * @param {string} text ההודעה להצגה.
+     * @param {boolean} [isError=true] האם לסמן את ההודעה כשגיאה.
+     * @returns {void} מעדכן ומציג את אזור ההודעות.
+     */
     function showStatus(text, isError = true) {
         if (!statusMessage) return;
         statusMessage.style.display = 'block';
@@ -21,6 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
         statusMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
+    /**
+     * מסתיר ומנקה את הודעת המצב בטופס ההרשמה.
+     * @returns {void} מאפס את רכיב הודעת המצב.
+     */
     function clearStatus() {
         if (statusMessage) {
             statusMessage.style.display = 'none';
@@ -28,10 +42,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**
+     * מאתחל ספירה לאחור של חמש דקות לתוקף קוד האימות.
+     * @returns {void} מעדכן את התצוגה ומשבית אימות לאחר פקיעת הקוד.
+     */
     function startTimer() {
         clearInterval(countdownTimer);
         timeLeft = 5 * 60;
         if (verifyBtn) verifyBtn.disabled = false;
+        /**
+         * מעדכן את הזמן שנותר ומודיע כאשר קוד האימות פג.
+         * @returns {void} מרענן את הטיימר ומטפל בפקיעת הקוד.
+         */
         countdownTimer = setInterval(() => {
             const minutes = Math.floor(timeLeft / 60);
             const seconds = timeLeft % 60;
@@ -50,6 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. שלב א': שליחת קוד אימות למייל ומעבר למסך אימות
     if (sendOtpBtn) {
+        /**
+         * בודק את פרטי ההרשמה ושולח בקשה למשלוח קוד אימות.
+         * @returns {Promise<void>} עובר לשלב האימות או מציג שגיאה.
+         */
         sendOtpBtn.addEventListener('click', async () => {
             clearStatus();
             const fullName = (document.getElementById('fullName')?.value || '').trim();
@@ -105,6 +131,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. שלב ב': אימות הקוד והשלמת ההרשמה
     if (verifyBtn) {
+        /**
+         * מאמת את קוד ההרשמה ושומר את החשבון החדש בשרת.
+         * @returns {Promise<void>} משלים הרשמה או מאפשר לנסות שוב.
+         */
         verifyBtn.addEventListener('click', async () => {
             clearStatus();
             const otpCode = (document.getElementById('otpCode')?.value || '').trim();
@@ -125,6 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 clearInterval(countdownTimer);
                 showStatus('🎉 נרשמת בהצלחה! מעביר אותך לדף ההתחברות...', false);
+                /**
+                 * מעביר את המשתמש למסך ההתחברות לאחר הודעת הצלחה.
+                 * @returns {void} משנה את כתובת העמוד.
+                 */
                 setTimeout(() => {
                     window.location.href = '/login.html';
                 }, 1500);
@@ -138,6 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. שליחה חוזרת של הקוד למייל
     if (resendBtn) {
+        /**
+         * מבקש מהשרת לשלוח מחדש קוד אימות עבור ההרשמה הנוכחית.
+         * @returns {Promise<void>} מאתחל את הטיימר או מציג שגיאה.
+         */
         resendBtn.addEventListener('click', async () => {
             clearStatus();
             resendBtn.disabled = true;
@@ -165,6 +203,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. חזרה לעריכת הפרטים (שומר על מה שמולא)
     if (backToEditBtn) {
+        /**
+         * חוזר לשלב עריכת פרטי ההרשמה בלי לאבד את הנתונים שהוזנו.
+         * @returns {void} מסתיר את שלב האימות ומציג את טופס הפרטים.
+         */
         backToEditBtn.addEventListener('click', () => {
             clearStatus();
             clearInterval(countdownTimer);

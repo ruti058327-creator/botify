@@ -10,6 +10,11 @@ const { PLANS, getBotLimit } = require('../utils/plans');
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
 const LOCAL_FALLBACK_REPLY = 'מצאתי תוכן באתר, אבל אין כרגע מספיק מידע מסודר כדי לענות על השאלה.';
 
+/**
+ * מחלץ מהכתובת מזהה מוצר ורמזי מחיר המוטמעים בפרמטרים שלה.
+ * @param {string} websiteUrl כתובת האתר של הבוט.
+ * @returns {string} רמזי מוצר מופרדים בשורות, או מחרוזת ריקה.
+ */
 function extractProductSignals(websiteUrl) {
   try {
     const url = new URL(websiteUrl);
@@ -34,6 +39,11 @@ function extractProductSignals(websiteUrl) {
   }
 }
 
+/**
+ * מאתר ומנרמל מחירים גלויים בשקלים או ב-ILS מתוך טקסט.
+ * @param {string} text טקסט האתר לסריקה.
+ * @returns {number[]} מחירים חיוביים ייחודיים שנמצאו.
+ */
 function extractVisiblePrices(text) {
   const matches = [...String(text).matchAll(/(?:₪|ILS\s*)(\d+(?:[.,]\d{1,2})?)/gi)]
     .map(match => Number(match[1].replace(',', '.')))
@@ -41,6 +51,11 @@ function extractVisiblePrices(text) {
   return [...new Set(matches)];
 }
 
+/**
+ * מנתח מחירים, משלוח והנחות מתוך תוכן מסחרי.
+ * @param {string} text טקסט האתר לסריקה.
+ * @returns {{currentPrice: number|null, originalPrice: number|null, shipping: number|null, discountPercent: number|null, beforeTaxes: boolean, prices: number[]}} נתוני התמחור שחולצו.
+ */
 function extractCommercePricing(text) {
   const normalizedText = String(text);
   const prices = extractVisiblePrices(normalizedText);
@@ -65,6 +80,11 @@ function extractCommercePricing(text) {
   };
 }
 
+/**
+ * מזהה שמות של תחומי לימוד מוכרים בתוך תוכן האתר.
+ * @param {string} siteContent הטקסט שנסרק מהאתר.
+ * @returns {string[]} שמות התחומים שזוהו בעברית.
+ */
 function extractCourseNames(siteContent) {
   const coursePatterns = [
     [/Full Stack courses?/i, 'קורסי Full Stack'],
@@ -76,11 +96,23 @@ function extractCourseNames(siteContent) {
   return coursePatterns.filter(([pattern]) => pattern.test(String(siteContent))).map(([, label]) => label);
 }
 
+/**
+ * מאתר עד שני משפטים באתר הרלוונטיים למונחי השאלה באמצעות Fuse.
+ * @param {string} siteContent תוכן האתר שנסרק.
+ * @param {string} question שאלת המשתמש.
+ * @returns {string} המשפטים המתאימים או מחרוזת ריקה.
+ */
 function findRelevantSiteText(siteContent, question) {
   const sentences = String(siteContent)
     .replace(/\s+/g, ' ')
     .split(/[.!?…]+|\s+[|•]\s+/u)
-    .flatMap(sentence => {
+    .flatMap(
+      /**
+       * מחלק משפטים ארוכים למקטעים קצרים המתאימים לחיפוש.
+       * @param {string} sentence משפט מתוך תוכן האתר.
+       * @returns {string[]} מקטעים שאינם חורגים מאורך היעד.
+       */
+      sentence => {
       const parts = [];
       let remaining = sentence.trim();
       while (remaining.length > 360) {
@@ -91,7 +123,8 @@ function findRelevantSiteText(siteContent, question) {
       }
       if (remaining) parts.push(remaining);
       return parts;
-    })
+      }
+    )
     .filter(sentence => sentence.length >= 20);
   if (!sentences.length || !String(question).trim()) return '';
 
@@ -125,6 +158,13 @@ function findRelevantSiteText(siteContent, question) {
     .join(' ');
 }
 
+/**
+ * בונה תשובה מקומית על בסיס תוכן האתר וכללי זיהוי מובנים.
+ * @param {string} siteContent תוכן האתר שנסרק.
+ * @param {string} question שאלת המשתמש.
+ * @param {string} websiteUrl כתובת האתר המשמשת לבניית קישור רלוונטי.
+ * @returns {string} תשובה המבוססת על האתר או הודעת ברירת המחדל.
+ */
 function buildLocalSiteReply(siteContent, question, websiteUrl) {
   const questionText = String(question);
   const courseNames = extractCourseNames(siteContent);
@@ -145,6 +185,14 @@ function buildLocalSiteReply(siteContent, question, websiteUrl) {
   return relevantText ? `לפי התוכן שנסרק באתר: ${relevantText}` : LOCAL_FALLBACK_REPLY;
 }
 
+/**
+ * בוחר תשובת גיבוי מקומית או הודעה מתאימה כאשר שירות Gemini אינו זמין.
+ * @param {string} siteContent תוכן האתר שנסרק.
+ * @param {string} question שאלת המשתמש.
+ * @param {string} websiteUrl כתובת האתר של הבוט.
+ * @param {string} reason סיבת הכשל, למשל {@code quota}.
+ * @returns {string} תשובת הגיבוי שתוצג למשתמש.
+ */
 function buildChatFallbackReply(siteContent, question, websiteUrl, reason) {
   const localReply = buildLocalSiteReply(siteContent, question, websiteUrl);
   if (localReply !== LOCAL_FALLBACK_REPLY) return localReply;
@@ -155,6 +203,12 @@ function buildChatFallbackReply(siteContent, question, websiteUrl, reason) {
   return 'Gemini אינו זמין כרגע, והחיפוש המקומי בתוכן האתר לא מצא תשובה מתאימה. אפשר לנסות שוב בעוד כמה דקות.';
 }
 
+/**
+ * סורק את כתובת האתר ועד שמונה קישורים פנימיים ומחזיר את הטקסט הקריא.
+ * @param {string} websiteUrl כתובת HTTP(S) של האתר.
+ * @returns {Promise<string>} טקסט העמודים שנאסף ונורמל.
+ * @throws {Error} כאשר פתיחת הדפדפן או טעינת העמוד הראשי נכשלת.
+ */
 async function scrapeWebsite(websiteUrl) {
   const browser = await chromium.launch({ headless: true });
   try {
@@ -163,21 +217,50 @@ async function scrapeWebsite(websiteUrl) {
     });
     const visitedUrls = new Set();
     const pageTexts = [];
-    const extractPageText = async () => page.evaluate(() => {
+    /**
+     * מחלץ מהעמוד הפעיל טקסט גלוי ומטא-נתונים.
+     * @returns {Promise<string>} הטקסט המשולב של העמוד.
+     */
+    /**
+     * שולף מהעמוד הפעיל את הטקסט הגלוי ואת המטא-נתונים.
+     * @returns {Promise<string>} הטקסט המשולב שנשלף מהעמוד.
+     */
+    const extractPageText = async () => page.evaluate(
+      /**
+       * קורא מתוך הדפדפן את הטקסט הגלוי ואת מטא-הנתונים של העמוד.
+       * @returns {string} תוכן העמוד המשולב.
+       */
+      () => {
       const visibleText = document.body?.innerText || '';
       const metadata = [...document.querySelectorAll('title, meta[name="description"], h1, h2, h3, p, a')]
         .map(element => element.getAttribute('content') || element.textContent || '').join(' ');
       return `${visibleText} ${metadata}`;
-    });
+      }
+    );
 
     const firstUrl = new URL(websiteUrl);
     await page.goto(firstUrl.href, { timeout: 30000, waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(5000);
-    await page.waitForFunction(() => document.body && document.body.innerText.trim().length > 50, null, { timeout: 10000 }).catch(() => {});
+    await page.waitForFunction(
+      /**
+       * בודק אם העמוד מכיל די טקסט קריא להמשך הסריקה.
+       * @returns {boolean} האם תוכן הגוף מכיל יותר מחמישים תווים.
+       */
+      () => document.body && document.body.innerText.trim().length > 50,
+      null,
+      { timeout: 10000 }
+    ).catch(() => {});
     visitedUrls.add(page.url());
     pageTexts.push(await extractPageText());
 
-    const internalUrls = await page.locator('a[href]').evaluateAll((links, origin) => links
+    const internalUrls = await page.locator('a[href]').evaluateAll(
+      /**
+       * מסננת קישורים פנימיים שניתן לסרוק ומסירה כפילויות.
+       * @param {HTMLAnchorElement[]} links קישורי העמוד.
+       * @param {string} origin מקור האתר שממנו נסרקים קישורים.
+       * @returns {string[]} עד שמונה כתובות פנימיות ייחודיות.
+       */
+      (links, origin) => links
       .map(link => {
         try { return new URL(link.href, origin); } catch { return null; }
       })
@@ -185,7 +268,9 @@ async function scrapeWebsite(websiteUrl) {
       .filter(url => !/login|admin|privacy|\.js(?:$|\?)/i.test(url.pathname))
       .map(url => url.href)
       .filter((url, index, urls) => urls.indexOf(url) === index)
-      .slice(0, 8), firstUrl.origin);
+      .slice(0, 8),
+      firstUrl.origin
+    );
 
     for (const internalUrl of internalUrls) {
       if (visitedUrls.has(internalUrl)) continue;
@@ -204,10 +289,21 @@ async function scrapeWebsite(websiteUrl) {
   }
 }
 
+/**
+ * בודק אם המשתמש הוא מנהל או הבעלים של הבוט.
+ * @param {import('mongoose').HydratedDocument<object>} bot מסמך הבוט.
+ * @param {{id: string, role: string}} user פרטי המשתמש המאומת.
+ * @returns {boolean} האם מותר למשתמש לנהל את הבוט.
+ */
 function canManageBot(bot, user) {
   return user.role === 'admin' || String(bot.userId) === user.id;
 }
 
+/**
+ * ממיר מסמך בוט לאובייקט המצומצם שנחשף ללקוח.
+ * @param {import('mongoose').HydratedDocument<object>} bot מסמך הבוט.
+ * @returns {{id: unknown, websiteUrl: string, instructions: string, createdAt: Date}} פרטי הבוט הציבוריים.
+ */
 function serializeBot(bot) {
   return {
     id: bot._id,
@@ -217,6 +313,12 @@ function serializeBot(bot) {
   };
 }
 
+/**
+ * מחזיר למשתמש את הבוטים שבבעלותו, או את כל הבוטים למנהל.
+ * @param {import('express').Request} req בקשה עם משתמש מאומת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} רשימת בוטים או תשובת שגיאה.
+ */
 async function list(req, res) {
   try {
     const filter = req.user.role === 'admin' ? {} : { userId: req.user.id };
@@ -228,6 +330,12 @@ async function list(req, res) {
   }
 }
 
+/**
+ * מחזיר בוט יחיד לאחר בדיקת הרשאת הבעלות.
+ * @param {import('express').Request} req בקשה הכוללת מזהה בוט ומשתמש מאומת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} פרטי הבוט או תשובת שגיאה.
+ */
 async function getById(req, res) {
   try {
     const bot = await Bot.findById(req.params.botId);
@@ -240,6 +348,12 @@ async function getById(req, res) {
   }
 }
 
+/**
+ * מעדכן את הנחיות הבוט לאחר בדיקת קלט והרשאת בעלות.
+ * @param {import('express').Request} req בקשה עם מזהה בוט והנחיות חדשות.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} הבוט המעודכן או תשובת שגיאה.
+ */
 async function update(req, res) {
   if (typeof req.body.instructions !== 'string' || req.body.instructions.length > 5000) {
     return res.status(400).json({ success: false, message: 'ההנחיות חייבות להיות טקסט של עד 5000 תווים' });
@@ -258,6 +372,12 @@ async function update(req, res) {
   }
 }
 
+/**
+ * מוחק בוט לאחר בדיקת הרשאת בעלות.
+ * @param {import('express').Request} req בקשה עם מזהה בוט ומשתמש מאומת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function remove(req, res) {
   try {
     const bot = await Bot.findById(req.params.botId);
@@ -271,6 +391,11 @@ async function remove(req, res) {
   }
 }
 
+/**
+ * מחשב את מכסת הבוטים של משתמש לפי התשלום האחרון שהושלם.
+ * @param {string} userId מזהה המשתמש.
+ * @returns {Promise<{botCount: number, botLimit: number, planId: string, canCreate: boolean}|null>} נתוני המכסה, או {@code null} אם המשתמש לא נמצא.
+ */
 async function getBotQuota(userId) {
   const [user, botCount, completedPayment] = await Promise.all([
     User.findById(userId).select('_id'),
@@ -288,6 +413,12 @@ async function getBotQuota(userId) {
   };
 }
 
+/**
+ * מחזיר את מכסת הבוטים הנוכחית ואת המכסה של מסלול מבוקש, אם צוין.
+ * @param {import('express').Request} req בקשה מאומתת עם מזהה משתמש ואפשרות {@code planId}.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} נתוני מכסה או תשובת שגיאה.
+ */
 async function quota(req, res) {
   if (req.user.role === 'admin') {
     return res.json({ success: true, canCreate: true, requiresPayment: false });
@@ -316,6 +447,12 @@ async function quota(req, res) {
   }
 }
 
+/**
+ * סורק אתר ושומר בוט חדש, בכפוף למכסת המשתמש.
+ * @param {import('express').Request} req בקשה עם {@code websiteUrl}, הנחיות ומשתמש מאומת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} מזהה וקישור לבוט שנוצר או תשובת שגיאה.
+ */
 async function createFromWebsite(req, res) {
   try {
     if (req.user.role !== 'admin') {
@@ -367,6 +504,12 @@ async function createFromWebsite(req, res) {
   }
 }
 
+/**
+ * משיב לשאלת המשתמש על סמך תוכן האתר, תמחור מקומי ושירות Gemini.
+ * @param {import('express').Request} req בקשה עם מזהה בוט והודעת משתמש.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הבוט או הודעת שגיאה/גיבוי.
+ */
 async function chat(req, res) {
   let bot;
   let userQuestion = '';

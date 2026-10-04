@@ -3,6 +3,12 @@ const router = express.Router();
 const Message = require('../models/Message');
 
 // קבלת כל מזהי השיחות של משתמש מסוים (כדי להציג לו "המשך שיחה" או "שיחה חדשה")
+/**
+ * מחזיר את מזהי השיחות הייחודיים של משתמש לפי זמן ההודעה האחרונה.
+ * @param {import('express').Request} req בקשה עם מזהה משתמש בפרמטר הנתיב.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<void>} שולח את השיחות או תשובת שגיאה.
+ */
 router.get('/user-chats/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -19,6 +25,12 @@ router.get('/user-chats/:userId', async (req, res) => {
 });
 
 // טעינת הודעות של שיחה ספציפית לפי chatId
+/**
+ * טוען הודעות של שיחה מסוימת בסדר כרונולוגי.
+ * @param {import('express').Request} req בקשה עם מזהה שיחה בפרמטר הנתיב.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<void>} שולח את הודעות השיחה או תשובת שגיאה.
+ */
 router.get('/messages/:chatId', async (req, res) => {
   try {
     const { chatId } = req.params;
@@ -30,6 +42,12 @@ router.get('/messages/:chatId', async (req, res) => {
 });
 
 // חיפוש שיחות למנהל לפי שם לקוח (או הצגת השיחה העדכנית ביותר כברירת מחדל)
+/**
+ * מחפש הודעות לפי שם לקוח או מחזיר את כלל השיחות לממשק הניהול.
+ * @param {import('express').Request} req בקשה עם שם לקוח אופציונלי בשאילתה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<void>} שולח את ההודעות התואמות או תשובת שגיאה.
+ */
 router.get('/admin/search', async (req, res) => {
   try {
     const { clientName } = req.query;
@@ -48,6 +66,12 @@ router.get('/admin/search', async (req, res) => {
 });
 
 // שמירת הודעה חדשה בשיחה
+/**
+ * יוצר ושומר הודעה חדשה בשיחה.
+ * @param {import('express').Request} req בקשה עם פרטי ההודעה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<void>} שולח את ההודעה שנשמרה או תשובת שגיאה.
+ */
 router.post('/message', async (req, res) => {
   try {
     const { userId, clientName, chatId, sender, text } = req.body;

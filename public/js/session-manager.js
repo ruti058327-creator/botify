@@ -1,3 +1,7 @@
+/**
+ * מפעיל ניטור חוסר פעילות למשתמש מחובר ומציג אזהרת התנתקות.
+ * @returns {void} מתקין מאזינים, טיימר ואפשרויות להישאר מחובר או להתנתק.
+ */
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
@@ -13,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let warningModal = null;
     let countdownInterval = null;
 
+    /**
+     * מאפס את משך חוסר הפעילות וסוגר אזהרה קיימת.
+     * @returns {void} מאפס מונה ומסיר את חלון האזהרה, אם קיים.
+     */
     const resetTimer = () => {
         idleTime = 0;
         if (warningModal) {
@@ -27,6 +35,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', resetTimer);
     window.addEventListener('scroll', resetTimer);
 
+    /**
+     * בודק מדי שנייה את משך חוסר הפעילות ומציג אזהרה במידת הצורך.
+     * @returns {void} מעדכן את מונה חוסר הפעילות.
+     */
     setInterval(() => {
         if (!localStorage.getItem('user') && !localStorage.getItem('token')) return;
 
@@ -37,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 1000);
 
+    /**
+     * יוצר חלון אזהרה עם ספירה לאחור עד להתנתקות אוטומטית.
+     * @returns {void} מציג למשתמש אפשרות להישאר מחובר או להתנתק.
+     */
     function showBankStyleWarning() {
         let secondsLeft = 60;
 
@@ -62,14 +78,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.body.appendChild(warningModal);
 
+        /**
+         * מבטל את אזהרת ההתנתקות ומאפס את מונה חוסר הפעילות.
+         * @returns {void} סוגר את האזהרה ומחדש את זמן הפעילות.
+         */
         document.getElementById('stay-connected-btn').addEventListener('click', () => {
             resetTimer();
         });
 
+        /**
+         * מנתק את המשתמש מיד בעקבות בחירתו.
+         * @returns {void} מפעיל את פעולת ההתנתקות.
+         */
         document.getElementById('force-logout-btn').addEventListener('click', () => {
             performLogout();
         });
 
+        /**
+         * מעדכן את הספירה לאחור ומנתק כשהיא מגיעה לאפס.
+         * @returns {void} מרענן את התצוגה או מבצע התנתקות.
+         */
         countdownInterval = setInterval(() => {
             secondsLeft--;
             const timerEl = document.getElementById('countdown-timer');
@@ -82,6 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
+    /**
+     * מסיר את נתוני המשתמש והאסימון ומעביר למסך ההתחברות.
+     * @returns {void} מנקה אחסון מקומי ומנווט לעמוד ההתחברות.
+     */
     function performLogout() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');

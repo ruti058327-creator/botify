@@ -7,6 +7,11 @@ const botSchema = new mongoose.Schema({
         required: true,
         trim: true,
         validate: {
+            /**
+             * מאמת שכתובת הבוט היא כתובת HTTP או HTTPS עם שם מארח.
+             * @param {string} value כתובת האתר לבדיקה.
+             * @returns {boolean} האם הכתובת תקינה ובפרוטוקול נתמך.
+             */
             validator(value) {
                 try {
                     const url = new URL(value);

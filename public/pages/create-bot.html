@@ -121,6 +121,10 @@
             }
         }
 
+        /**
+         * בודק את מכסת הבוטים לפני הצגת טופס יצירה למשתמש מחובר.
+         * @returns {Promise<void>} מפנה לתמחור או מציג שגיאת בדיקת מכסה.
+         */
         async function checkBotQuota() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -154,6 +158,11 @@
 
         checkBotQuota();
 
+        /**
+         * שולח את כתובת האתר וההנחיות ליצירת בוט חדש.
+         * @param {SubmitEvent} e אירוע שליחת טופס יצירת הבוט.
+         * @returns {Promise<void>} מציג תוצאת סריקה או שגיאת יצירה.
+         */
         createBotForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             

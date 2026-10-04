@@ -2,6 +2,10 @@ let currentUserMessages = [];
 let currentChatId = localStorage.getItem('currentChatId') || null;
 let loggedInUsername = '';
 
+/**
+ * מאתחל את לוח המשתמש, פרופיל, שיחות, בוטים ופקדי הממשק.
+ * @returns {void} טוען מידע ראשוני ומתקין מאזיני אירועים.
+ */
 document.addEventListener('DOMContentLoaded', () => {
   const authContainer = document.getElementById('auth-buttons-container');
   const welcomeTitle = document.getElementById('userNameDisplay');
@@ -22,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 profileImagePreview.src = userData.profileImage;
                 profileImagePreview.hidden = false;
             }
+            /**
+             * מעלה תמונת פרופיל שנבחרה ושומר את כתובתה בפרטי המשתמש המקומיים.
+             * @returns {Promise<void>} מעדכן תצוגה או מציג שגיאת העלאה.
+             */
             profileImageInput?.addEventListener('change', async () => {
                 const file = profileImageInput.files?.[0];
                 if (!file) return;
@@ -93,6 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button id="logout-btn" class="btn-logout">התנתקות</button>
       `;
 
+      /**
+       * מסיר נתוני התחברות ומחזיר את המשתמש לעמוד הבית.
+       * @returns {void} מנקה אחסון מקומי ומנווט לעמוד הציבורי.
+       */
       document.getElementById('logout-btn').addEventListener('click', () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
@@ -113,6 +125,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // הפעלת מקש Enter בצ'אט הלקוח
   const chatInput = document.getElementById('chatInputDashboard');
   if (chatInput) {
+      /**
+       * שולח הודעה בלחיצה על Enter בלי להוסיף שורה חדשה.
+       * @param {KeyboardEvent} event אירוע המקלדת.
+       * @returns {void} מטפל במקש Enter בלבד.
+       */
       chatInput.addEventListener('keydown', function(event) {
           if (event.key === 'Enter') {
               event.preventDefault(); 
@@ -122,6 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+/**
+ * טוען את הודעות המשתמש המחובר ומציג את היסטוריית השיחות.
+ * @param {string} username שם המשתמש שעבורו נטענות ההודעות.
+ * @returns {Promise<void>} מעדכן את מטמון ההודעות ואת ממשק השיחות.
+ */
 async function loadUserMessages(username) {
     const container = document.getElementById('userMessagesList');
     if (!container) return;
@@ -146,6 +168,10 @@ async function loadUserMessages(username) {
     }
 }
 
+/**
+ * טוען את הבוטים שבבעלות המשתמש ואת מכסת הבוטים שלו.
+ * @returns {Promise<void>} מעדכן את רשימת הבוטים ואת נתוני המכסה.
+ */
 async function loadOwnedBots() {
     const container = document.getElementById('botsListContainer');
     if (!container) return;
@@ -192,6 +218,10 @@ async function loadOwnedBots() {
             const editButton = document.createElement('button');
             editButton.type = 'button';
             editButton.textContent = 'עריכת הנחיות';
+            /**
+             * מבקש הנחיות חדשות לבוט, שומר אותן בשרת ומרענן את הרשימה.
+             * @returns {Promise<void>} משלים את עדכון ההנחיות אם אושר.
+             */
             editButton.addEventListener('click', async () => {
                 const instructions = window.prompt('הנחיות לבוט:', bot.instructions || '');
                 if (instructions === null) return;
@@ -214,6 +244,10 @@ async function loadOwnedBots() {
             const deleteButton = document.createElement('button');
             deleteButton.type = 'button';
             deleteButton.textContent = 'מחיקה';
+            /**
+             * מבקש אישור למחיקת הבוט ומרענן את הרשימה לאחר המחיקה.
+             * @returns {Promise<void>} מוחק את הבוט לאחר אישור המשתמש.
+             */
             deleteButton.addEventListener('click', async () => {
                 if (!window.confirm('למחוק את הבוט?')) return;
                 const deleteResponse = await ApiService.request(`/api/bots/${encodeURIComponent(bot.id)}`, {
@@ -236,6 +270,10 @@ async function loadOwnedBots() {
     }
 }
 
+/**
+ * בונה את רשימת השיחות הייחודיות ומסמן את השיחה הפעילה.
+ * @returns {void} מעדכן את תיבת בחירת השיחה.
+ */
 function populateChatHistoryDropdown() {
     const selectEl = document.getElementById('chatHistorySelect');
     if (!selectEl) return;
@@ -249,6 +287,11 @@ function populateChatHistoryDropdown() {
         return;
     }
 
+    /**
+     * יוצר אפשרות בחירה עם תאריך תחילת השיחה.
+     * @param {string} chatId מזהה השיחה.
+     * @returns {void} מוסיף אפשרות לרשימת השיחות.
+     */
     uniqueChats.forEach((chatId) => {
         // מציאת ההודעה הראשונה בשיחה הזו כדי לתת לה תאריך הגיוני
         const firstMsg = currentUserMessages.find(m => (m.chatId || 'chat_old_history') === chatId);
@@ -264,6 +307,10 @@ function populateChatHistoryDropdown() {
     });
 }
 
+/**
+ * מרנדר את הודעות השיחה הפעילה או הודעת מצב מתאימה.
+ * @returns {void} מציג את השיחה הנבחרת ומגלגל לסופה.
+ */
 function renderCurrentChatWindow() {
     const container = document.getElementById('userMessagesList');
     
@@ -291,7 +338,13 @@ function renderCurrentChatWindow() {
 
     chatMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     
-    container.innerHTML = chatMessages.map(msg => {
+    container.innerHTML = chatMessages.map(
+        /**
+         * ממירה הודעה אחת לבועת צ׳אט בהתאם לזהות השולח.
+         * @param {object} msg הודעת לקוח או מנהל.
+         * @returns {string} HTML של בועת ההודעה.
+         */
+        msg => {
         let html = '';
         if (!msg.isAdmin) {
             html += `
@@ -311,13 +364,18 @@ function renderCurrentChatWindow() {
             </div>`;
         }
         return html;
-    }).join('');
+        }
+    ).join('');
 
     // ירידה אוטומטית לסוף חלון הצ'אט
     container.scrollTop = container.scrollHeight;
 }
 
 // לחיצה על הכפתור שמנקה את המסך לשיחה חדשה
+/**
+ * יוצר מזהה שיחה חדש ומנקה את תצוגת השיחה הקודמת.
+ * @returns {void} שומר את השיחה החדשה ובונה מחדש את חלון השיחה.
+ */
 window.startNewChat = function() {
     currentChatId = 'chat_' + Date.now();
     localStorage.setItem('currentChatId', currentChatId); // שומר מיד!
@@ -329,6 +387,10 @@ window.startNewChat = function() {
 };
 
 // כשבוחרים שיחה ישנה מהרשימה
+/**
+ * טוען את השיחה שנבחרה מתיבת היסטוריית השיחות.
+ * @returns {void} שומר את מזהה השיחה ומציג את תוכנה.
+ */
 window.loadSelectedChat = function() {
     const selectEl = document.getElementById('chatHistorySelect');
     if (!selectEl || !selectEl.value) return;
@@ -338,6 +400,10 @@ window.loadSelectedChat = function() {
     renderCurrentChatWindow();
 };
 
+/**
+ * שולח הודעת משתמש לצוות התמיכה בשיחה הפעילה.
+ * @returns {Promise<void>} שומר את ההודעה וטוען מחדש את ההיסטוריה.
+ */
 window.sendMessageFromDashboard = async function() {
     const input = document.getElementById('chatInputDashboard');
     const text = input.value.trim();

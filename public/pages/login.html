@@ -187,6 +187,10 @@
   <script src="../js/config.js"></script>
   <script src="../services/api-service.js"></script>
   <script>
+    /**
+     * מאתחל התחברות, שחזור סיסמה והפניה אופציונלית לאחר הכניסה.
+     * @returns {void} מחבר טפסים ומעדכן את קישור ההרשמה.
+     */
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const redirectPage = urlParams.get('redirect');
@@ -205,6 +209,11 @@
       const resetConfirmationFields = document.getElementById('reset-confirmation-fields');
       let isResetConfirmationStep = false;
 
+      /**
+       * מציג או מסתיר את טופס שחזור הסיסמה וממלא שם משתמש קיים.
+       * @param {MouseEvent} event אירוע הלחיצה על קישור שחזור הסיסמה.
+       * @returns {void} מונע ניווט קישור ומעדכן את הטופס.
+       */
       document.getElementById('forgot-password-link').addEventListener('click', (event) => {
         event.preventDefault();
         resetForm.style.display = resetForm.style.display === 'none' ? 'block' : 'none';
@@ -215,6 +224,11 @@
         }
       });
 
+      /**
+       * מנהל בקשת קוד איפוס או אישור סיסמה חדשה בשלב המתאים.
+       * @param {SubmitEvent} event אירוע שליחת טופס איפוס הסיסמה.
+       * @returns {Promise<void>} מעדכן את מצב הטופס לפי תוצאת השרת.
+       */
       resetForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         errorDiv.style.display = 'none';
@@ -297,6 +311,11 @@
       let isOtpStep = false;
       let pendingEmail = '';
 
+      /**
+       * מטפל בהתחברות בסיסמה או באימות OTP ומנתב לאחר הצלחה.
+       * @param {SubmitEvent} e אירוע שליחת טופס ההתחברות.
+       * @returns {Promise<void>} מבצע את בקשת ההתחברות או האימות.
+       */
       loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         errorDiv.style.display = 'none';

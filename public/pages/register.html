@@ -136,6 +136,10 @@
     <script src="../js/config.js"></script>
     <script src="../services/api-service.js"></script>
     <script>
+        /**
+         * מאתחל את טופס ההרשמה, שלבי האימות, ההודעות והטיימר.
+         * @returns {void} מגדיר אירועי משתמש ומכין את מסכי ההרשמה.
+         */
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectPage = urlParams.get('redirect');
@@ -160,6 +164,12 @@
         const sendOtpBtn = document.getElementById('sendOtpBtn');
         const verifyBtn = document.getElementById('verifyBtn');
 
+        /**
+         * מציג הודעת מצב בטופס ההרשמה.
+         * @param {string} text טקסט ההודעה.
+         * @param {boolean} [isError=true] האם להציג את ההודעה כשגיאה.
+         * @returns {void} מעדכן את הודעת המצב ואת העיצוב שלה.
+         */
         function showStatus(text, isError = true) {
             statusMessage.style.display = 'block';
             statusMessage.textContent = text;
@@ -168,16 +178,28 @@
             statusMessage.style.border = isError ? '1px solid #f87171' : '1px solid #86efac';
         }
 
+        /**
+         * מסתיר ומנקה את הודעת המצב הנוכחית.
+         * @returns {void} מאפס את רכיב ההודעה.
+         */
         function clearStatus() {
             statusMessage.style.display = 'none';
             statusMessage.textContent = '';
         }
 
+        /**
+         * מתחיל מחדש טיימר בן חמש דקות לקוד אימות ההרשמה.
+         * @returns {void} מעדכן את תצוגת הזמן ומודיע כשהקוד פג.
+         */
         function startTimer() {
             clearInterval(countdownTimer);
             timeLeft = 5 * 60;
             verifyBtn.disabled = false;
 
+            /**
+             * מציג את הזמן שנותר ומשבית אימות לאחר פקיעת הקוד.
+             * @returns {void} מעדכן טיימר ומצב אימות.
+             */
             countdownTimer = setInterval(() => {
                 const minutes = Math.floor(timeLeft / 60);
                 const seconds = timeLeft % 60;
@@ -193,6 +215,10 @@
             }, 1000);
         }
 
+        /**
+         * בודק את פרטי המשתמש ושולח בקשה לקבלת קוד אימות בדוא״ל.
+         * @returns {Promise<void>} עובר לשלב האימות או מציג שגיאת שליחה.
+         */
         async function handleSendOtp() {
             clearStatus();
 
@@ -249,6 +275,10 @@
             }
         }
 
+        /**
+         * מאמת את קוד ה-OTP ומשלים יצירת חשבון משתמש.
+         * @returns {Promise<void>} מציג הצלחה ומנווט להתחברות או מאפשר ניסיון נוסף.
+         */
         async function handleVerifyAndRegister() {
             clearStatus();
             const otpCode = document.getElementById('otpCode').value.trim();
@@ -276,6 +306,10 @@
                 clearInterval(countdownTimer);
                 showStatus('🎉 נרשמת בהצלחה! מעביר אותך לדף ההתחברות...', false);
 
+                /**
+                 * מעביר לעמוד ההתחברות לאחר הצגת הודעת ההצלחה.
+                 * @returns {void} משנה את כתובת העמוד.
+                 */
                 setTimeout(() => {
                     window.location.href = 'login.html';
                 }, 1500);
@@ -287,6 +321,10 @@
             }
         }
 
+        /**
+         * מבקש שליחה חוזרת של קוד האימות לפרטי ההרשמה ששמורים.
+         * @returns {Promise<void>} שולח קוד חדש ומאתחל את הטיימר.
+         */
         async function handleResendCode() {
             clearStatus();
             const resendBtn = document.getElementById('resendBtn');
@@ -314,6 +352,10 @@
             }
         }
 
+        /**
+         * מחזיר את המשתמש לעריכת הפרטים לפני השלמת אימות ההרשמה.
+         * @returns {void} עוצר את טיימר האימות ומציג מחדש את שלב הפרטים.
+         */
         function handleBackToEdit() {
             clearStatus();
             clearInterval(countdownTimer);

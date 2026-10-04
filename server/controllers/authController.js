@@ -14,16 +14,32 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+/**
+ * מאתר משתמש לפי שם משתמש ללא תלות באותיות רישיות, תוך התייחסות בטוחה לתווים מיוחדים.
+ * @param {string} username שם המשתמש לחיפוש.
+ * @returns {Promise<import('mongoose').HydratedDocument<object>|null>} המשתמש שנמצא או {@code null}.
+ */
 const findUserByUsername = (username) => {
   const escapedUsername = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return User.findOne({ username: new RegExp(`^${escapedUsername}$`, 'i') });
 };
 
+/**
+ * מאתר משתמש לפי כתובת דוא״ל ללא תלות באותיות רישיות.
+ * @param {string} email כתובת הדוא״ל לחיפוש.
+ * @returns {Promise<import('mongoose').HydratedDocument<object>|null>} המשתמש שנמצא או {@code null}.
+ */
 const findUserByEmail = (email) => {
   const escapedEmail = email.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return User.findOne({ email: new RegExp(`^${escapedEmail}$`, 'i') });
 };
 
+/**
+ * בודק שכתובת הדוא״ל ושם המשתמש זמינים ושולח קוד חד-פעמי להרשמה.
+ * @param {import('express').Request} req בקשת ההרשמה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function sendRegistrationOtp(req, res) {
   const email = typeof req.body.email === 'string' ? req.body.email.trim() : '';
   const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
@@ -55,6 +71,12 @@ async function sendRegistrationOtp(req, res) {
   }
 }
 
+/**
+ * מאמת קוד הרשמה ושומר את חשבון המשתמש החדש.
+ * @param {import('express').Request} req בקשה עם פרטי המשתמש וקוד האימות.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function registerVerify(req, res) {
   const { fullName, idNumber, email, phone, businessName, username, password, otpCode } = req.body;
   const storedData = registrationOtpStore.get(email);
@@ -77,6 +99,12 @@ async function registerVerify(req, res) {
   }
 }
 
+/**
+ * יוצר חשבון משתמש באמצעות הרשמה בסיסית ללא שלב אימות קוד.
+ * @param {import('express').Request} req בקשה עם שם משתמש, דוא״ל וסיסמה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function register(req, res) {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -95,6 +123,12 @@ async function register(req, res) {
   }
 }
 
+/**
+ * מבקש קוד איפוס סיסמה ושולח אותו לכתובת המשויכת לשם המשתמש.
+ * @param {import('express').Request} req בקשה המכילה שם משתמש.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובה אחידה למניעת חשיפת קיום חשבון.
+ */
 async function requestPasswordReset(req, res) {
   const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
   if (!username) return res.status(400).json({ success: false, message: 'נא להזין שם משתמש' });
@@ -134,6 +168,12 @@ async function requestPasswordReset(req, res) {
   }
 }
 
+/**
+ * מאמת קוד איפוס ומחליף את סיסמת המשתמש.
+ * @param {import('express').Request} req בקשה המכילה שם משתמש, קוד וסיסמה חדשה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ */
 async function confirmPasswordReset(req, res) {
   const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
   const { otpCode, password } = req.body;
@@ -169,6 +209,12 @@ async function confirmPasswordReset(req, res) {
   }
 }
 
+/**
+ * מאמת פרטי התחברות ושולח קוד OTP למשתמשים הנדרשים לאימות דו-שלבי.
+ * @param {import('express').Request} req בקשה המכילה שם משתמש וסיסמה.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} פרטי משתמש/דרישת OTP או תשובת שגיאה.
+ */
 async function login(req, res) {
   const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
   const password = typeof req.body.password === 'string' ? req.body.password : '';
@@ -240,6 +286,12 @@ async function login(req, res) {
   }
 }
 
+/**
+ * מאמת קוד OTP להתחברות ומחזיר פרופיל משתמש ואסימון גישה.
+ * @param {import('express').Request} req בקשה המכילה דוא״ל וקוד חד-פעמי.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} פרופיל המשתמש ואסימון או תשובת שגיאה.
+ */
 async function loginVerify(req, res) {
   const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
   const otpCode = typeof req.body.otpCode === 'string' ? req.body.otpCode.trim() : '';

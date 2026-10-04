@@ -6,6 +6,12 @@ const User = require('../models/User');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const { PLANS, getBotLimit } = require('../utils/plans');
 
+/**
+ * שומר תשלום, מפעיל את המסלול ומסיר בוטים עודפים לאחר אישור מפורש.
+ * @param {import('express').Request} req בקשה מאומתת הכוללת מסלול ופרטי אמצעי תשלום.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<void>} שולח תוצאת הפעלה או תשובת שגיאה/אישור נדרש.
+ */
 router.post('/', authenticateToken, async (req, res) => {
   try {
     const { planId, cardholderName, cardLast4, confirmedBotCount = 0 } = req.body;

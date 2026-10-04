@@ -4,6 +4,12 @@ const User = require('../models/User');
 
 const uploadDirectory = path.resolve(__dirname, '../../public/uploads/profile-images');
 
+/**
+ * מחזיר את מספר המשתמשים הרשומים במערכת.
+ * @param {import('express').Request} req בקשת מנהל מאומתת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} מספר המשתמשים או תשובת שגיאה.
+ */
 async function countUsers(req, res) {
   try {
     const count = await User.countDocuments();
@@ -13,6 +19,12 @@ async function countUsers(req, res) {
   }
 }
 
+/**
+ * מחזיר את רשימת המשתמשים ללא שדות סיסמה.
+ * @param {import('express').Request} req בקשת מנהל מאומתת.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} רשימת המשתמשים או תשובת שגיאה.
+ */
 async function listUsers(req, res) {
   try {
     const users = await User.find({}, '-password').sort({ createdAt: -1 });
@@ -22,6 +34,13 @@ async function listUsers(req, res) {
   }
 }
 
+/**
+ * בודק שחתימת הבתים בקובץ תואמת לסוג תמונה נתמך.
+ * @param {string} filePath הנתיב לקובץ שהועלה.
+ * @param {string} mimeType סוג MIME שהתקבל בהעלאה.
+ * @returns {Promise<boolean>} האם חתימת JPEG, PNG או WebP תקינה.
+ * @throws {Error} במקרה של כשל בקריאת הקובץ.
+ */
 async function hasValidImageSignature(filePath, mimeType) {
   const contents = await fs.readFile(filePath);
   if (mimeType === 'image/jpeg') {
@@ -36,6 +55,12 @@ async function hasValidImageSignature(filePath, mimeType) {
   return false;
 }
 
+/**
+ * מאמת ושומר תמונת פרופיל למשתמש המחובר, ומסיר את התמונה הקודמת שהועלתה.
+ * @param {import('express').Request} req בקשת העלאה הכוללת {@code file} ופרטי המשתמש.
+ * @param {import('express').Response} res תגובת השרת.
+ * @returns {Promise<import('express').Response>} כתובת התמונה שנשמרה או תשובת שגיאה.
+ */
 async function uploadProfileImage(req, res) {
   if (!req.file) {
     return res.status(400).json({ success: false, message: 'יש לבחור קובץ תמונה' });

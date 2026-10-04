@@ -13,6 +13,10 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+/**
+ * שולח הודעת בדיקה לחשבון הדוא״ל שהוגדר במשתני הסביבה.
+ * @returns {Promise<void>} מדווח ביומן על הצלחה או על כשל בשליחה.
+ */
 async function sendTest() {
   try {
     console.log('\nמנסה לשלוח מייל בדיקה...');

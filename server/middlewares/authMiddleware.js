@@ -1,5 +1,12 @@
 const { verifyAuthToken } = require('../utils/jwt');
 
+/**
+ * מאמת אסימון Bearer ומצרף את פרטי המשתמש לבקשה.
+ * @param {import('express').Request} req בקשת HTTP עם כותרת Authorization.
+ * @param {import('express').Response} res תגובת HTTP.
+ * @param {import('express').NextFunction} next המשך ל-middleware הבא לאחר אימות תקין.
+ * @returns {void} ממשיך או מחזיר שגיאת 401.
+ */
 function authenticateToken(req, res, next) {
   const authorization = req.get('Authorization') || '';
   const [scheme, token] = authorization.split(' ');
@@ -21,6 +28,13 @@ function authenticateToken(req, res, next) {
   }
 }
 
+/**
+ * מגביל את המשך הטיפול למשתמשים בעלי תפקיד מנהל.
+ * @param {import('express').Request} req בקשה עם פרטי המשתמש שאומתו.
+ * @param {import('express').Response} res תגובת HTTP.
+ * @param {import('express').NextFunction} next המשך לנתיב כאשר המשתמש מנהל.
+ * @returns {void} ממשיך או מחזיר שגיאת 403.
+ */
 function requireAdmin(req, res, next) {
   if (req.user?.role !== 'admin') {
     return res.status(403).json({ success: false, message: 'אין הרשאה לבצע פעולה זו' });

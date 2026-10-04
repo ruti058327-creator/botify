@@ -188,6 +188,10 @@
         // מערך לשמירת היסטוריית השיחה עבור ה-Context
         let chatHistory = [];
 
+        /**
+         * מעדכן את כותרת הצ׳אט לפי מזהה הבוט שבכתובת.
+         * @returns {void} מציג מזהה מקוצר או כותרת צ׳אט כללית.
+         */
         window.addEventListener('DOMContentLoaded', () => {
             if (botId) {
                 document.getElementById('botTitle').innerText = `בוט פעיל (מזהה: ${botId.substring(0, 6)}...)`; // תוקן לגרש הפוך
@@ -196,6 +200,10 @@
             }
         });
 
+        /**
+         * שולח הודעת משתמש לבוט ומציג את התשובה בשיחה.
+         * @returns {Promise<void>} מציג הודעות מצב, תשובה ומעדכן את היסטוריית הצ׳אט.
+         */
         async function sendMessage() {
             const inputField = document.getElementById('userInput');
             const messageText = inputField.value.trim();
@@ -270,6 +278,11 @@
             }
         }
 
+        /**
+         * שולח את ההודעה כאשר המשתמש לוחץ Enter בשדה הצ׳אט.
+         * @param {KeyboardEvent} e אירוע המקלדת.
+         * @returns {void} מפעיל את שליחת ההודעה עבור Enter.
+         */
         document.getElementById('userInput').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 sendMessage();
