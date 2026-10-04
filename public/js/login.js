@@ -1,11 +1,5 @@
 let pendingLoginEmail = '';
 
-const ADMIN_CREDENTIALS = {
-    "NOA": "578621",
-    "RUTY": "578621",
-    "MIRYAM": "578621"
-};
-
 document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -40,13 +34,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             if (data.user) {
                 localStorage.setItem('user', JSON.stringify(data.user));
             }
-            localStorage.setItem('token', data.token || 'botify_session_active');
-
-            const loggedUser = data.user ? (data.user.username || data.user.fullName) : '';
+            if (data.token) localStorage.setItem('token', data.token);
             
             if (data.redirectUrl) {
                 window.location.href = data.redirectUrl;
-            } else if (data.role === 'admin' || ADMIN_CREDENTIALS[loggedUser.toUpperCase()]) {
+            } else if (data.role === 'admin') {
                 window.location.href = 'admin.html';
             } else {
                 window.location.href = 'dashboard.html';
@@ -55,27 +47,6 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         } else {
             const usernameInput = document.getElementById('username').value.trim();
             const passwordInput = document.getElementById('password').value.trim();
-            const upperUsername = usernameInput.toUpperCase();
-
-            // מנהלות
-            if (ADMIN_CREDENTIALS[upperUsername]) {
-                if (ADMIN_CREDENTIALS[upperUsername] === passwordInput) {
-                    const adminUser = {
-                        username: upperUsername,
-                        role: 'admin'
-                    };
-                    localStorage.setItem('user', JSON.stringify(adminUser));
-                    localStorage.setItem('token', 'botify_admin_session_active');
-                    window.location.href = 'admin.html';
-                    return;
-                } else {
-                    if (messageEl) {
-                        messageEl.style.color = 'red';
-                        messageEl.textContent = 'סיסמת מנהל שגויה';
-                    }
-                    return;
-                }
-            }
 
             // משתמשים רגילים
             const response = await fetch('/api/login', {
@@ -100,7 +71,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             if (data.user) {
                 localStorage.setItem('user', JSON.stringify(data.user));
             }
-            localStorage.setItem('token', data.token || 'botify_session_active');
+            if (data.token) localStorage.setItem('token', data.token);
 
             if (data.redirectUrl && !data.requireOtp) {
                 window.location.href = data.redirectUrl;

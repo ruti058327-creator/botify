@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
-const https = require('https');
-const { chromium } = require('playwright');
-const Bot = require('../models/Bot');
+const botController = require('../controllers/botController');
+const { authenticateToken } = require('../middlewares/authMiddleware');
 
+<<<<<<< HEAD
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
 
 async function scrapeWebsite(websiteUrl) {
@@ -108,5 +107,13 @@ ${message}`;
         res.status(500).json({ success: false, message: 'שגיאה בתקשורת עם מודל הבינה' });
     }
 });
+=======
+router.get('/', authenticateToken, botController.list);
+router.get('/:botId', authenticateToken, botController.getById);
+router.post('/create-bot', authenticateToken, botController.createFromWebsite);
+router.put('/:botId', authenticateToken, botController.update);
+router.delete('/:botId', authenticateToken, botController.remove);
+router.post('/:botId/chat', botController.chat);
+>>>>>>> b2bfc2d14049709ceeea182d0b1c06118eefbe3c
 
 module.exports = router;

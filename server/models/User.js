@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -27,6 +28,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  profileImage: {
+    type: String,
+    default: ''
+  },
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -41,5 +46,22 @@ const userSchema = new mongoose.Schema({
     default: Date.now
   }
 }, { timestamps: true });
+
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+userSchema.statics.comparePassword = function (candidatePassword, passwordHash) {
+  return bcrypt.compare(candidatePassword, passwordHash);
+};
+
+userSchema.set('toJSON', {
+  transform(document, returnedObject) {
+    delete returnedObject.password;
+    delete returnedObject.__v;
+    return returnedObject;
+  }
+});
 
 module.exports = mongoose.model('User', userSchema);

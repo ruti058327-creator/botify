@@ -20,8 +20,10 @@ const connectDB = async () => {
 connectDB();
 
 const app = express();
+const requestLogger = require('./middlewares/requestLogger');
 
 // 3. מידלוורים וקבצים סטטיים
+app.use(requestLogger);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.static(path.join(__dirname, '../public/pages')));
@@ -37,9 +39,15 @@ app.use('/api/bots', botRoutes);
 // 5. שכבת טיפול בשגיאות
 app.use((err, req, res, next) => {
   console.error('🔥 Server Route Error:', err.message);
-  res.status(500).json({ 
+  const statusCode = err.code === 'LIMIT_FILE_SIZE' ? 413 : err.statusCode || 500;
+  const message = err.code === 'LIMIT_FILE_SIZE'
+    ? 'הקובץ גדול מדי (מקסימום 5MB)'
+    : statusCode < 500
+      ? err.message
+      : 'שגיאה פנימית בשרת';
+  res.status(statusCode).json({
     success: false, 
-    message: 'שגיאה פנימית בשרת' 
+    message
   });
 });
 
