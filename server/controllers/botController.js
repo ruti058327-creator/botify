@@ -210,7 +210,16 @@ function buildChatFallbackReply(siteContent, question, websiteUrl, reason) {
  * @throws {Error} כאשר פתיחת הדפדפן או טעינת העמוד הראשי נכשלת.
  */
 async function scrapeWebsite(websiteUrl) {
-  const browser = await chromium.launch({ headless: true });
+  let browser;
+  try {
+    browser = await chromium.launch({ headless: true });
+  } catch (error) {
+    const message = error?.message || 'Playwright failed to launch';
+    if (/Executable doesn't exist|Please run the following command to download new browsers|browserType\.launch/i.test(message)) {
+      throw new Error('דפדפן הסריקה לא מותקן על השרת. הפעל: node node_modules/playwright/cli.js install chromium');
+    }
+    throw error;
+  }
   try {
     const page = await browser.newPage({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
@@ -500,7 +509,11 @@ async function createFromWebsite(req, res) {
     });
   } catch (error) {
     console.error('Scraping error:', error.message);
-    return res.status(500).json({ success: false, message: 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה.' });
+    const isBrowserMissing = /דפדפן הסריקה לא מותקן|Executable doesn't exist|download new browsers|browserType\.launch/i.test(error.message || '');
+    const message = isBrowserMissing
+      ? 'הסקריפט סריקה לא יכול להתחיל בגלל דפדפן חסר. יש להתקין את Chromium של Playwright: node node_modules/playwright/cli.js install chromium'
+      : 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה.';
+    return res.status(isBrowserMissing ? 503 : 500).json({ success: false, message });
   }
 }
 

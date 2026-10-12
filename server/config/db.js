@@ -1,21 +1,27 @@
 const mongoose = require('mongoose');
-const dns = require('dns');
-
-dns.setServers(['8.8.8.8', '8.8.4.4']);
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 /**
- * מתחבר למסד Botify המקומי ומסיים את התהליך במקרה של כשל.
+ * מתחבר למסד Botify באמצעות MONGO_URI המוגדר בסביבת השרת.
  * @returns {Promise<void>} מתעד הצלחה או מסיים את השרת בשגיאה.
  */
 const connectDB = async () => {
-  // מחרוזת החיבור מוגדרת פה ישירות - ללא תלות ב-process.env
-  const dbURI = 'mongodb://localhost:27017/botify';
+  const dbURI = process.env.MONGO_URI;
+
+  if (!dbURI) {
+    console.error('❌ MONGO_URI is missing. Create server/.env from server/.env.example and set your MongoDB connection string.');
+    process.exit(1);
+  }
 
   try {
-    await mongoose.connect(dbURI);
-    console.log("Connected to MongoDB successfully! 🎉");
+    await mongoose.connect(dbURI, {
+      serverSelectionTimeoutMS: 15000,
+      retryWrites: true
+    });
+    console.log('Connected to MongoDB successfully! 🎉');
   } catch (error) {
-    console.log("Error connecting to MongoDB: ", error.message);
+    console.error('Error connecting to MongoDB: ', error.message);
     process.exit(1);
   }
 };

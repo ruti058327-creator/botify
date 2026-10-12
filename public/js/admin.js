@@ -63,13 +63,29 @@ async function loadMessages() {
         const response = await ApiService.request('/api/messages', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
         });
-        if (!response.ok) throw new Error('שגיאה בשליפת הודעות');
 
-        const data = await response.json();
+        let data = {};
+        try {
+            data = await response.json();
+        } catch (_) {}
+
+        if (!response.ok) {
+            const serverMessage = data?.message || 'שגיאה בשליפת הודעות';
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                container.innerHTML = `<p class="status-msg error">${serverMessage}. נא להתחבר מחדש.</p>`;
+                setTimeout(() => window.location.href = 'login.html', 1200);
+                return;
+            }
+            throw new Error(serverMessage);
+        }
+
         allMessagesCache = data.messages || [];
         renderAdminChats(allMessagesCache, true);
     } catch (err) {
-        container.innerHTML = '<p class="status-msg error">שגיאה בטעינת השיחות מהשרת</p>';
+        const message = err?.message || 'שגיאה בטעינת השיחות מהשרת';
+        container.innerHTML = `<p class="status-msg error">${message}</p>`;
     }
 }
 

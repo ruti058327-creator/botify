@@ -5,20 +5,29 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 
-// 1. הגדרת מחרוזת חיבור עם גיבוי קשיח
-const dbURI = process.env.MONGO_URI || 'mongodb://localhost:27017/botify';
+// 1. איפוס מדויק של מחרוזת החיבור; אין fallback אוטומטי ל-localhost
+const dbURI = process.env.MONGO_URI;
+
+if (!dbURI) {
+  console.error('❌ MONGO_URI is missing. Create server/.env from server/.env.example and set your MongoDB connection string.');
+  process.exit(1);
+}
 
 // 2. חיבור יחיד למסד הנתונים
-/**
- * מתחבר למסד הנתונים באמצעות כתובת החיבור המוגדרת בסביבה או ברירת המחדל.
+/** 
+ * מתחבר למסד הנתונים באמצעות כתובת החיבור המוגדרת בסביבה.
  * @returns {Promise<void>} מתעד הצלחה או כשל בחיבור ביומן השרת.
  */
 const connectDB = async () => {
   try {
-    await mongoose.connect(dbURI);
+    await mongoose.connect(dbURI, {
+      serverSelectionTimeoutMS: 15000,
+      retryWrites: true
+    });
     console.log('🍃 Connected to MongoDB successfully! 🎉');
   } catch (err) {
     console.error('🔥 Error connecting to MongoDB:', err.message);
+    process.exit(1);
   }
 };
 connectDB();
