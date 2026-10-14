@@ -120,3 +120,72 @@ async function bookAppointment(req, res) {
     return res.status(500).json({ success: false, message: 'שגיאה בקביעת התור' });
   }
 }
+
+/**
+ * בעל העסק מגיש בקשה לחופשה פתאומית ושולח מייל ללקוחות המושפעים.
+ */
+async function requestEmergencyVacation(req, res) {
+  try {
+    const { botId } = req.params;
+    const { vacationDate, customMessage } = req.body;
+
+    const bot = await SecretaryBot.findById(botId);
+    if (!bot || String(bot.userId) !== req.user.id) {
+      return res.status(404).json({ success: false, message: 'הבוט אינו קיים או שאין הרשאה' });
+    }
+
+    // איתור תורים שנקבעו לאותו תאריך של חופשה
+    const affectedAppointments = bot.appointments.filter(app => app.date === vacationDate && app.status === 'confirmed');
+
+    const clientConfirmations = [];
+
+    // שליחת מיילים ללקוחות המושפעים
+    for (const app of affectedAppointments) {
+      const token = crypto.randomBytes(20).toString('hex');
+      clientConfirmations.push({
+        clientEmail: app.email,
+        confirmedRead: false,
+        confirmationToken: token
+      });
+
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        const confirmUrl = `http://localhost:3000/api/secretary/confirm-read/${token}`;
+        await transporter.sendMail({
+          from: `"ניהול תורים - Botify" <${process.env.EMAIL_USER}>`,
+          to: app.email,
+          subject: 'עדכון דחוף לגבי התור שלך / בקשת חופשה',
+          html: `
+            <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">
+              <h3>שלום ${app.clientName},</h3>
+              <p>${customMessage || 'עקב נסיבות דחופות, בעל העסק נאלץ לצאת לחופשה בתאריך שנקבע.'}</p>
+              <p>אנא לחץ על הכפתור שלהלן כדי לאשר שקראת הודעה זו:</p>
+              <a href="${confirmUrl}" style="background: #2563eb; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">אשר קריאת הודעה</a>
+            </div>
+          `
+        });
+      }
+    }
+
+    bot.emergencyVacations.push({
+      date: vacationDate,
+      messageSent: true,
+      clientConfirmations
+    });
+
+    await bot.save();
+
+    return res.json({
+      success: true,
+      message: `בקשת החופשה נקלטה ונשלחו הודעות ל-${affectedAppointments.length} לקוחות.`
+    });
+  } catch (error) {
+    console.error('Emergency vacation error:', error.message);
+    return res.status(500).json({ success: false, message: 'שגיאה בטיפול בחופשה הפתאומית' });
+  }
+}
+
+module.exports = {
+  setupSecretary,
+  bookAppointment,
+  requestEmergencyVacation
+};
