@@ -41,3 +41,25 @@ async function setupSecretary(req, res) {
   }
 }
 
+/**
+ * בודק האם תאריך לועזי מסוים נופל על חג יהודי או שבת באמצעות @hebcal/core.
+ */
+function isHolidayOrShabbat(dateString) {
+  try {
+    const dateObj = new Date(dateString);
+    const hdate = new HDate(dateObj);
+    // בדיקה האם מדובר בשבת (יום 6 ב-JS, או שבת ב-hebcal)
+    if (dateObj.getDay() === 6) return true;
+
+    // בדיקת חגים באותו יום
+    const events = HebrewCalendar.calcFy(hdate.getFullYear()).filter(ev => {
+      const evDate = greg.fromLocaleDate(ev.getDate().greg());
+      return evDate.toDateString() === dateObj.toDateString();
+    });
+
+    // מחזיר true אם יש חג מרכזי
+    return events.some(ev => ev.getFlags() & (HebrewCalendar.CHAG | HebrewCalendar.YOM_TOV));
+  } catch (err) {
+    return false;
+  }
+}
