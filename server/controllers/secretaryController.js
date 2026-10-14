@@ -63,3 +63,60 @@ function isHolidayOrShabbat(dateString) {
     return false;
   }
 }
+
+/**
+ * לקוח קובע תור חדש דרך הקישור של הבוט.
+ */
+async function bookAppointment(req, res) {
+  try {
+    const { botUrlKey } = req.params;
+    const { clientName, phone, email, date, time } = req.body;
+
+    if (!clientName || !phone || !email || !date || !time) {
+      return res.status(400).json({ success: false, message: 'נא למלא את כל פרטי הלקוח והתור' });
+    }
+
+    const bot = await SecretaryBot.findOne({ botUrlKey });
+    if (!bot) {
+      return res.status(404).json({ success: false, message: 'בוט המזכירה לא נמצא' });
+    }
+
+    // בדיקה האם התאריך הוא שבת או חג
+    if (isHolidayOrShabbat(date)) {
+      return res.status(400).json({ success: false, message: 'לא ניתן לקבוע תורים בשבתות וחגים' });
+    }
+
+    // בדיקה האם התאריך נפגש עם יום החופש הקבוע של העסק
+    const dayOfWeek = new Date(date).toLocaleDateString('he-IL', { weekday: 'long' });
+    if (dayOfWeek === bot.dayOff) {
+      return res.status(400).json({ success: false, message: `העסק סגור בימי ${bot.dayOff}` });
+    }
+
+    // בדיקה האם השעה תפוסה כבר
+    const existingAppointment = bot.appointments.find(app => app.date === date && app.time === time && app.status === 'confirmed');
+    if (existingAppointment) {
+      return res.status(400).json({ success: false, message: 'השעה שנבחרה כבר תפוסה, נא לבחור שעה אחרת' });
+    }
+
+    // הוספת התור לרשימה
+    bot.appointments.push({
+      clientName,
+      phone,
+      email,
+      date,
+      time,
+      status: 'confirmed'
+    });
+
+    await bot.save();
+
+    return res.json({
+      success: true,
+      message: 'התור נקבע בהצלחה!',
+      priceToPay: bot.defaultPrice
+    });
+  } catch (error) {
+    console.error('Book appointment error:', error.message);
+    return res.status(500).json({ success: false, message: 'שגיאה בקביעת התור' });
+  }
+}
