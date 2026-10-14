@@ -1,7 +1,14 @@
 const SecretaryBot = require('../models/SecretaryBot');
-const { HDate, HebrewCalendar, greg } = require('@hebcal/core');// ייבוא מודול hebcal-core לעבודה עם תאריכים עבריים
 const nodemailer = require('nodemailer'); // ייבוא מודול nodemailer לשליחת מיילים
 const crypto = require('crypto'); // ייבוא מודול crypto ליצירת טוקנים אקראיים
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 /**
  * יוצר או מעדכן את הגדרות בוט המזכירה הראשוניות של בעל העסק.
@@ -44,22 +51,28 @@ async function setupSecretary(req, res) {
 /**
  * בודק האם תאריך לועזי מסוים נופל על חג יהודי או שבת באמצעות @hebcal/core.
  */
-function isHolidayOrShabbat(dateString) {
+async function isHolidayOrShabbat(dateString) {
   try {
+    // טעינה דינמית שפתרה את שגיאת התאימות של Node.js
+    const { HDate, HebrewCalendar, greg } = await import('@hebcal/core');
+
+    // המרת התאריך הלועזי לאובייקט HDate
     const dateObj = new Date(dateString);
     const hdate = new HDate(dateObj);
-    // בדיקה האם מדובר בשבת (יום 6 ב-JS, או שבת ב-hebcal)
+
+    // בדיקה אם התאריך הוא שבת (יום 6 בשבוע)
     if (dateObj.getDay() === 6) return true;
 
-    // בדיקת חגים באותו יום
+    // חישוב אירועים יהודיים עבור השנה של התאריך הנתון
     const events = HebrewCalendar.calcFy(hdate.getFullYear()).filter(ev => {
       const evDate = greg.fromLocaleDate(ev.getDate().greg());
       return evDate.toDateString() === dateObj.toDateString();
     });
 
-    // מחזיר true אם יש חג מרכזי
+    // בדיקה אם יש אירועים שהם חגים או ימי טוב
     return events.some(ev => ev.getFlags() & (HebrewCalendar.CHAG | HebrewCalendar.YOM_TOV));
   } catch (err) {
+    console.error('Hebcal error:', err.message);
     return false;
   }
 }

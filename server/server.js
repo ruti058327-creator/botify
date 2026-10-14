@@ -51,6 +51,10 @@ app.use('/api/bots', botRoutes);
 const paymentRoutes = require('./routes/paymentRoutes');
 app.use('/api/payments', paymentRoutes);
 
+// ---> ראוטים עבור בוט המזכירה <---
+const secretaryRoutes = require('./routes/secretaryRoutes');
+app.use('/api/secretary', secretaryRoutes);
+
 // 5. שכבת טיפול בשגיאות
 /**
  * ממפה שגיאות middleware לתשובות HTTP אחידות.
