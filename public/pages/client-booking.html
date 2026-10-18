@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>קביעת תור - בוט מזכירה</title>
+  <link rel="stylesheet" href="../css/client-booking.css">
+</head>
+<body>
+
+  <div class="booking-container">
+    <div class="header">
+      <h1 id="businessTitle">קביעת תור</h1>
+      <p id="businessSubtitle">ניהול זימון פגישות מתקדם</p>
+    </div>
+
+    <!-- ================= שלב 1: מילוי פרטי הלקוח ================= -->
+    <div id="step1" class="booking-step">
+      <h2>שלב 1: פרטים אישיים</h2>
+      <form id="clientDetailsForm">
+        <div class="form-group">
+          <label for="clientIdNumber">מספר תעודת זהות:</label>
+          <input type="text" id="clientIdNumber" placeholder="הכנס 9 ספרות" pattern="[0-9]{9}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="clientName">שם מלא:</label>
+          <input type="text" id="clientName" placeholder="הכנס שם מלא" required>
+        </div>
+
+        <div class="form-group">
+          <label for="clientPhone">מספר טלפון:</label>
+          <input type="tel" id="clientPhone" placeholder="050-0000000" required>
+        </div>
+
+        <div class="form-group">
+          <label for="clientEmail">כתובת אימייל:</label>
+          <input type="email" id="clientEmail" placeholder="your@email.com" required>
+        </div>
+
+        <button type="submit" class="primary-btn">המשך לבחירת תאריך ושעה</button>
+      </form>
+    </div>
+
+    <!-- ================= שלב 2: בחירת תאריך ושעה ================= -->
+    <div id="step2" class="booking-step" style="display: none;">
+      <div class="step2-header">
+        <button type="button" id="backToStep1" class="back-link">⟵ חזרה לפרטים אישיים</button>
+        <h2>למתי תרצה לקבוע תור?</h2>
+      </div>
+
+      <div class="calendar-booking-grid">
+        <!-- צד ימין: לוח שנה חודשי ויזואלי -->
+        <div class="calendar-section">
+          <div class="calendar-nav">
+            <button type="button" id="prevMonth">❮</button>
+            <h3 id="calendarMonthTitle">אוקטובר 2026</h3>
+            <button type="button" id="nextMonth">❯</button>
+          </div>
+          <div class="hebrew-subtitle" id="hebrewMonthSubtitle">לוח שנה עברי-לועזי</div>
+          
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- ימי השבוע -->
+            <div class="day-name">א'</div>
+            <div class="day-name">ב'</div>
+            <div class="day-name">ג'</div>
+            <div class="day-name">ד'</div>
+            <div class="day-name">ה'</div>
+            <div class="day-name">ו'</div>
+            <div class="day-name">ש'</div>
+            <!-- ימים יטענו דינמית דרך JavaScript -->
+          </div>
+        </div>
+
+        <!-- צד שמאל: בחירת שעה מתוך כפתורים -->
+        <div class="slots-section">
+          <label>שעות פנויות ביום הנבחר:</label>
+          <div id="slotsContainer" class="slots-container">
+            <span class="placeholder-text">בחר תאריך מלוח השנה מימין...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- סיכום מחיר ואישור סופי -->
+      <div class="final-approval-box">
+        <div class="price-summary">
+          <span>מחיר השירות:</span>
+          <strong id="displayPrice">-- ₪</strong>
+        </div>
+        <button type="button" id="confirmBookingBtn" class="primary-btn" disabled>אשר וקבע תור סופית</button>
+      </div>
+    </div>
+
+    <div id="bookingMessage"></div>
+  </div>
+
+  <script src="../js/client-booking.js"></script>
+</body>
+</html>
