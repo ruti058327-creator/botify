@@ -84,7 +84,7 @@
             throw new Error('הסיסמאות אינן תואמות');
           }
 
-          const response = await window.ApiService.request(endpoint, {
+          const response = await ApiService.request(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -163,7 +163,7 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'מאמת קוד...';
 
-            const response = await window.ApiService.request('/api/login-verify', {
+            const response = await ApiService.request('/api/login-verify', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ email: pendingEmail, otpCode })
@@ -203,7 +203,7 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'מתחבר...';
 
-            const response = await window.ApiService.request('/api/login', {
+            const response = await ApiService.request('/api/login', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ username, password })
@@ -268,3 +268,4 @@
         }
       });
     });
+import { ApiService } from '../services/api-service.js';

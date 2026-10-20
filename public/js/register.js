@@ -1,3 +1,5 @@
+import { ApiService } from '../services/api-service.js';
+
 /**
  * מאתחל את טופס ההרשמה, שלבי האימות, ההודעות והטיימר.
  * @returns {void} מגדיר אירועי משתמש ומכין את מסכי ההרשמה.
@@ -233,3 +235,6 @@ function handleBackToEdit() {
     step2Container.style.display = 'none';
     step1Container.style.display = 'block';
 }
+
+window.handleResendCode = handleResendCode;
+window.handleBackToEdit = handleBackToEdit;

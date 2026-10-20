@@ -1,3 +1,6 @@
+import { ApiService } from '../services/api-service.js';
+import { parseJwtPayload } from './navbar-auth.js';
+
 let currentUserMessages = [];
 let currentChatId = localStorage.getItem('currentChatId') || null;
 let loggedInUsername = '';
@@ -7,17 +10,31 @@ let loggedInUsername = '';
  * @returns {void} טוען מידע ראשוני ומתקין מאזיני אירועים.
  */
 document.addEventListener('DOMContentLoaded', () => {
-  const authContainer = document.getElementById('auth-buttons-container');
+  const token = localStorage.getItem('token');
+  if (!token) {
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const tokenPayload = parseJwtPayload(token);
+  if (!tokenPayload) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = 'login.html';
+    return;
+  }
+  if (tokenPayload.role === 'admin') {
+    window.location.href = 'admin.html';
+    return;
+  }
+
   const welcomeTitle = document.getElementById('userNameDisplay');
-
-  if (!authContainer) return;
-
   const storedUser = localStorage.getItem('user');
 
-  if (storedUser) {
+  if (token) {
     try {
-      const userData = JSON.parse(storedUser);
-      loggedInUsername = userData.username || userData.fullName || 'משתמש';
+      const userData = storedUser ? JSON.parse(storedUser) : {};
+      loggedInUsername = tokenPayload.username || userData.username || userData.fullName || 'משתמש';
 
             const profileImagePreview = document.getElementById('profileImagePreview');
             const profileImageInput = document.getElementById('profileImageInput');
@@ -93,33 +110,9 @@ document.addEventListener('DOMContentLoaded', () => {
       loadUserMessages(loggedInUsername);
     loadOwnedBots();
 
-      authContainer.innerHTML = `
-                <div class="user-greeting">
-          <span>👤</span>
-          <span>${loggedInUsername}</span>
-        </div>
-                <button id="logout-btn" class="btn-logout">התנתקות</button>
-      `;
-
-      /**
-       * מסיר נתוני התחברות ומחזיר את המשתמש לעמוד הבית.
-       * @returns {void} מנקה אחסון מקומי ומנווט לעמוד הציבורי.
-       */
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('currentChatId');
-        // חזרה לדף הבית הציבורי שנמצא בתיקיית השורש
-        window.location.href = '../index.html';
-      });
-
     } catch (e) {
       console.error('Error parsing session data', e);
     }
-  } else {
-    // בדיקה: אם אין נתוני משתמש אך יש טוקן פעיל, לא זורקים החוצה
-    const token = localStorage.getItem('token');
-    if (!token) window.location.href = 'login.html';
   }
 
   // הפעלת מקש Enter בצ'אט הלקוח
@@ -217,7 +210,11 @@ async function loadOwnedBots() {
 
             const editButton = document.createElement('button');
             editButton.type = 'button';
-            editButton.textContent = 'עריכת הנחיות';
+            editButton.textContent = 'עריכת בוט';
+            editButton.addEventListener('click', event => {
+                event.stopImmediatePropagation();
+                window.location.href = `create-bot.html?id=${encodeURIComponent(bot.id)}`;
+            });
             /**
              * מבקש הנחיות חדשות לבוט, שומר אותן בשרת ומרענן את הרשימה.
              * @returns {Promise<void>} משלים את עדכון ההנחיות אם אושר.
@@ -427,6 +424,7 @@ window.sendMessageFromDashboard = async function() {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ 
+                subject: 'אחר',
                 username: loggedInUsername, 
                 message: text,
                 chatId: activeChatToKeep 

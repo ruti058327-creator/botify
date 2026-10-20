@@ -83,9 +83,8 @@ export const contactSchemas = {
       'בקשה להתאמה אישית',
       'הצעת ייעול ומשוב',
       'אחר'
-    ).required().messages({
-      'any.only': 'יש לבחור נושא פנייה תקין',
-      'any.required': 'יש לבחור נושא פנייה'
+    ).default('אחר').messages({
+      'any.only': 'יש לבחור נושא פנייה תקין'
     }),
     message: Joi.string().trim().min(1).max(5000).custom((value, helpers) => {
       if (value.split(/\s+/).length > 200) return helpers.error('string.maxWords');

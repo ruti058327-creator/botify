@@ -1,9 +1,9 @@
 import '../config/env.js';
-import nodemailer from 'nodemailer';
 import __cjsImport0 from 'node:crypto';
 import User from '../models/User.js';
 import __cjsImport1 from '../utils/jwt.js';
 import httpError from '../utils/httpError.js';
+import { sendEmail } from '../utils/mailer.js';
 
 const { randomInt } = __cjsImport0;
 const { signAuthToken } = __cjsImport1;
@@ -12,13 +12,6 @@ const { signAuthToken } = __cjsImport1;
 const loginOtpStore = new Map();
 const registrationOtpStore = new Map();
 const passwordResetStore = new Map();
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 /**
  * מאתר משתמש לפי שם משתמש ללא תלות באותיות רישיות, תוך התייחסות בטוחה לתווים מיוחדים.
@@ -59,8 +52,7 @@ async function sendRegistrationOtp(req, res) {
 
   const otpCode = randomInt(100000, 1000000).toString();
   registrationOtpStore.set(email, { otpCode, expires: Date.now() + 5 * 60 * 1000 });
-  await transporter.sendMail({
-    from: `"Botify Security" <${process.env.EMAIL_USER}>`,
+  await sendEmail({
     to: email,
     subject: 'קוד אימות להרשמה - Botify',
     html: `<div dir="rtl" style="font-family:Arial,sans-serif;padding:25px;max-width:500px;margin:auto"><h2>ברוכים הבאים ל-Botify!</h2><p>שלום <strong>${username}</strong>, קוד האימות שלך הוא:</p><p style="font-size:32px;font-weight:bold;letter-spacing:6px;text-align:center">${otpCode}</p><p>הקוד בתוקף ל-5 דקות בלבד.</p></div>`
@@ -128,8 +120,7 @@ async function requestPasswordReset(req, res) {
     maskedEmail = `${'*'.repeat(Math.max(1, emailName.length - 3))}${emailName.slice(-3)}@${emailDomain}`;
     passwordResetStore.set(resetKey, { otpCode, expires: Date.now() + 5 * 60 * 1000, attempts: 0 });
     try {
-      await transporter.sendMail({
-        from: `"Botify Security" <${process.env.EMAIL_USER}>`,
+      await sendEmail({
         to: user.email,
         subject: 'קוד לאיפוס סיסמה - Botify',
         html: `<div dir="rtl" style="font-family:Arial,sans-serif;padding:25px;max-width:500px;margin:auto"><h2>איפוס סיסמה ל-Botify</h2><p>קוד האימות שלך הוא:</p><p style="font-size:32px;font-weight:bold;letter-spacing:6px;text-align:center">${otpCode}</p><p>הקוד בתוקף ל-5 דקות בלבד.</p><p>אם לא ביקשת לאפס את הסיסמה, אפשר להתעלם מהודעה זו.</p></div>`
@@ -207,8 +198,7 @@ async function login(req, res) {
   loginOtpStore.set(otpKey, { otpCode, expires: Date.now() + 5 * 60 * 1000, attempts: 0 });
 
   try {
-    await transporter.sendMail({
-      from: `"Botify Security" <${process.env.EMAIL_USER}>`,
+    await sendEmail({
       to: user.email,
       subject: 'קוד אימות התחברות - Botify',
       html: `

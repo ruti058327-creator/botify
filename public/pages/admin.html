@@ -54,26 +54,25 @@
             <h2 class="section-title" style="margin: 0;">רשימת לקוחות</h2>
             <input type="text" id="adminSearchUsers" placeholder="🔍 חפש לקוח לפי שם או אימייל..." oninput="filterAdminUsers()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 280px; font-size: 14px;">
         </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>שם משתמש</th>
-                    <th>אימייל</th>
-                    <th>סוג מנוי</th>
-                    <th>תאריך הרשמה</th>
-                    <th>היסטוריית שיחות</th>
-                </tr>
-            </thead>
-            <tbody id="usersTableBody">
-                <tr><td colspan="6" class="status-msg">טוען נתונים...</td></tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>שם משתמש</th>
+                        <th>אימייל</th>
+                        <th>סוג מנוי</th>
+                        <th>תאריך הרשמה</th>
+                        <th>היסטוריית שיחות</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                    <tr><td colspan="6" class="status-msg">טוען נתונים...</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <script src="../js/config.js"></script>
-    <script src="../services/api-service.js"></script>
-    <script src="../js/admin.js"></script>
-    <script src="../js/navbar-auth.js"></script>
+    <script type="module" src="../js/admin.js"></script>
 </body>
 </html>

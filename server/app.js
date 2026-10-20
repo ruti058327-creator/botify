@@ -6,6 +6,7 @@ import errorHandler from './middlewares/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import botRoutes from './routes/botRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import httpError from './utils/httpError.js';
 
 const app = express();
 
@@ -17,11 +18,7 @@ app.use('/api', authRoutes);
 app.use('/api/bots', botRoutes);
 app.use('/api/payments', paymentRoutes);
 
-app.use((req, res, next) => {
-  const error = new Error('הנתיב המבוקש לא נמצא');
-  error.statusCode = 404;
-  next(error);
-});
+app.use((req, res, next) => next(httpError(404, 'הנתיב המבוקש לא נמצא')));
 app.use(errorHandler);
 
 export default app;

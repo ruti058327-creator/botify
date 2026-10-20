@@ -1,3 +1,6 @@
+import { ApiService } from '../services/api-service.js';
+import { parseJwtPayload } from './navbar-auth.js';
+
 let allMessagesCache = [];
 let allUsersCache = [];
 
@@ -6,22 +9,22 @@ let allUsersCache = [];
  * @returns {void} טוען מונים, פניות ומשתמשים עבור מנהל מורשה.
  */
 document.addEventListener('DOMContentLoaded', () => {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) {
+    const token = localStorage.getItem('token');
+    if (!token) {
         window.location.href = 'login.html';
         return;
     }
 
-    let userData;
-    try {
-        userData = JSON.parse(storedUser);
-    } catch (e) {
+    const tokenPayload = parseJwtPayload(token);
+    if (!tokenPayload) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         window.location.href = 'login.html';
         return;
     }
 
-    const username = String(userData.username || userData.name || '').toUpperCase().trim();
-    if (userData.role !== 'admin' || !localStorage.getItem('token')) {
+    const username = String(tokenPayload.username || 'ADMIN').toUpperCase().trim();
+    if (tokenPayload.role !== 'admin') {
         alert('אין לך הרשאה לגשת לעמוד הניהול');
         window.location.href = 'dashboard.html';
         return;
@@ -31,6 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (adminInfoEl) {
         adminInfoEl.textContent = username;
     }
+
+    document.querySelector('.logout-link')?.addEventListener('click', event => {
+        event.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('currentChatId');
+        window.location.href = '../index.html';
+    });
 
     loadSubscriberCount();
     loadMessages();

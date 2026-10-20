@@ -87,7 +87,7 @@
 <body class="quota-checking">
 
     <div class="container">
-        <h2>מחולל הבוטים של Botify</h2>
+        <h2 id="form-title">מחולל הבוטים של Botify</h2>
         <a class="dashboard-link" href="dashboard.html">חזרה לאזור האישי</a>
         <form id="createBotForm">
             <div class="form-group">
@@ -100,18 +100,23 @@
                 <textarea id="instructions" name="instructions" placeholder="לדוגמה: ענה על שאלות לקוחות מתוך אתר החברה בלבד..."></textarea>
             </div>
 
-            <button type="submit">צור בוט אישי</button>
+            <button type="submit" id="submit-bot-btn">צור בוט אישי</button>
         </form>
         <div id="result"></div>
     </div>
 
-    <script src="../js/config.js"></script>
-    <script src="../services/api-service.js"></script>
-    <script>
+    <script type="module">
+        import { ApiService } from '../services/api-service.js';
+
         const createBotForm = document.getElementById('createBotForm');
         const resultDiv = document.getElementById('result');
+        const formTitle = document.getElementById('form-title');
+        const submitBotBtn = document.getElementById('submit-bot-btn');
+        const websiteUrlInput = document.getElementById('websiteUrl');
+        const instructionsInput = document.getElementById('instructions');
+        const editBotId = new URLSearchParams(window.location.search).get('id');
         const pendingDraft = sessionStorage.getItem('botify_pending_bot_draft');
-        if (pendingDraft) {
+        if (!editBotId && pendingDraft) {
             try {
                 const draft = JSON.parse(pendingDraft);
                 document.getElementById('websiteUrl').value = draft.websiteUrl || '';
@@ -119,6 +124,37 @@
             } catch {
                 sessionStorage.removeItem('botify_pending_bot_draft');
             }
+        }
+
+        async function initializeForm() {
+            const token = localStorage.getItem('token');
+            if (editBotId) {
+                formTitle.textContent = 'עריכת הגדרות והנחיות הבוט';
+                submitBotBtn.textContent = 'שמור שינויים בבוט';
+                if (!token) {
+                    resultDiv.textContent = 'יש להתחבר כדי לערוך בוט.';
+                    document.body.classList.remove('quota-checking');
+                    return;
+                }
+
+                try {
+                    const response = await ApiService.request(`/api/bots/${encodeURIComponent(editBotId)}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || 'לא ניתן לטעון את פרטי הבוט');
+                    websiteUrlInput.value = data.bot.websiteUrl;
+                    websiteUrlInput.readOnly = true;
+                    instructionsInput.value = data.bot.instructions || '';
+                } catch (error) {
+                    resultDiv.textContent = error.message;
+                    resultDiv.style.color = 'red';
+                } finally {
+                    document.body.classList.remove('quota-checking');
+                }
+                return;
+            }
+            checkBotQuota();
         }
 
         /**
@@ -156,7 +192,7 @@
             document.body.classList.remove('quota-checking');
         }
 
-        checkBotQuota();
+        initializeForm();
 
         /**
          * שולח את כתובת האתר וההנחיות ליצירת בוט חדש.
@@ -173,6 +209,32 @@
             if (!token) {
                 resultDiv.style.color = 'red';
                 resultDiv.innerHTML = 'כדי ליצור ולשמור בוט, יש <a href="login.html">להתחבר</a> תחילה.';
+                return;
+            }
+
+            if (editBotId) {
+                resultDiv.style.color = '#333';
+                resultDiv.textContent = 'שומר עדכונים...';
+                submitBotBtn.disabled = true;
+                try {
+                    const response = await ApiService.request(`/api/bots/${encodeURIComponent(editBotId)}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ instructions: instructionsInput.value })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message || 'שגיאה בעדכון הבוט');
+                    resultDiv.style.color = 'green';
+                    resultDiv.textContent = 'הבוט עודכן בהצלחה! מעביר לאזור האישי...';
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+                } catch (error) {
+                    resultDiv.style.color = 'red';
+                    resultDiv.textContent = error.message;
+                    submitBotBtn.disabled = false;
+                }
                 return;
             }
             
