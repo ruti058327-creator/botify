@@ -117,7 +117,6 @@
         <li><a href="../index.html">בית</a></li>
         <li><a href="about.html">אודות</a></li>
         <li><a href="pricing.html">מחירון</a></li>
-        <li><a href="demo.html">דמו</a></li>
         <li><a href="contact.html">צור קשר</a></li>
       </ul>
 
@@ -132,21 +131,21 @@
     <div class="login-card">
       <h2>התחברות ל-Botify</h2>
 
-      <div id="login-error" class="error-msg"></div>
+      <div id="login-error" class="error-msg" role="alert" aria-live="polite"></div>
 
       <form id="login-form">
         <div class="form-group" id="group-username">
-          <input type="text" id="username" placeholder="שם משתמש / אימייל">
+          <input type="text" id="username" placeholder="שם משתמש / אימייל" aria-label="שם משתמש או אימייל" autocomplete="username" required>
         </div>
 
         <div class="form-group" id="group-password">
-          <input type="password" id="password" placeholder="סיסמה">
+          <input type="password" id="password" placeholder="סיסמה" aria-label="סיסמה" autocomplete="current-password" required>
         </div>
         <a href="#password-reset" class="forgot-password" id="forgot-password-link">שכחת סיסמה?</a>
 
         <!-- שדה קוד אימות שיופיע אוטומטית בשלב השני -->
         <div class="form-group" id="group-otp" style="display: none;">
-          <input type="text" id="otpCode" placeholder="הכנס קוד אימות בן 6 ספרות" maxlength="6" style="text-align: center; font-size: 18px; letter-spacing: 4px;">
+          <input type="text" id="otpCode" placeholder="הכנס קוד אימות בן 6 ספרות" aria-label="קוד אימות בן 6 ספרות" inputmode="numeric" maxlength="6" disabled required style="text-align: center; font-size: 18px; letter-spacing: 4px;">
         </div>
 
         <button type="submit" class="btn-primary btn-submit" id="btn-login">התחבר</button>
@@ -156,17 +155,17 @@
         <h3>יצירת סיסמה חדשה</h3>
         <p id="reset-description">אם שם המשתמש קיים, יישלח קוד לכתובת האימייל המשויכת לחשבון.</p>
         <div class="form-group" id="reset-username-group">
-          <input type="text" id="reset-username" placeholder="שם משתמש" autocomplete="username">
+          <input type="text" id="reset-username" placeholder="שם משתמש" aria-label="שם משתמש לאיפוס סיסמה" autocomplete="username">
         </div>
         <div id="reset-confirmation-fields" style="display: none;">
           <div class="form-group">
-            <input type="text" id="reset-code" placeholder="קוד אימות בן 6 ספרות" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+            <input type="text" id="reset-code" placeholder="קוד אימות בן 6 ספרות" aria-label="קוד איפוס סיסמה" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
           </div>
           <div class="form-group">
-            <input type="password" id="new-password" placeholder="סיסמה חדשה" autocomplete="new-password">
+            <input type="password" id="new-password" placeholder="סיסמה חדשה" aria-label="סיסמה חדשה" minlength="8" maxlength="128" autocomplete="new-password">
           </div>
           <div class="form-group">
-            <input type="password" id="confirm-password" placeholder="אימות סיסמה חדשה" autocomplete="new-password">
+            <input type="password" id="confirm-password" placeholder="אימות סיסמה חדשה" aria-label="אימות סיסמה חדשה" minlength="8" maxlength="128" autocomplete="new-password">
           </div>
         </div>
         <button type="submit" class="btn-primary btn-submit" id="reset-submit">שליחת קוד</button>

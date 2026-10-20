@@ -185,10 +185,20 @@ function renderAdminChats(messages, pendingOnly = false) {
                                  */
                                 m => {
                                 let html = '';
+                                const subject = !m.isAdmin && m.subject
+                                    ? `<div class="admin-chat-meta">נושא הפנייה: ${String(m.subject).replace(/[&<>"']/g, character => ({
+                                        '&': '&amp;',
+                                        '<': '&lt;',
+                                        '>': '&gt;',
+                                        '"': '&quot;',
+                                        "'": '&#39;'
+                                    })[character])}</div>`
+                                    : '';
                                 if (!m.isAdmin) {
                                     html += `
                                     <div class="admin-chat-bubble admin-chat-bubble-client">
                                         <div class="admin-chat-meta">${new Date(m.createdAt).toLocaleString('he-IL')} - <strong>לקוח</strong></div>
+                                        ${subject}
                                         <div class="admin-chat-text">${m.message}</div>
                                     </div>`;
                                 } else {

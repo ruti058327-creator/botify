@@ -126,16 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify({
             subject: subject,
-            message: message,
-            username: displayName,
-            email: userData.email || '',
-            createdAt: new Date().toISOString()
+            message: message
           })
         });
 
         const result = await response.json();
 
-        if (response.ok && (result.success !== false)) {
+        if (response.ok && result.success === true) {
           showFeedback('הפנייה נשלחה בהצלחה! מנהל המערכת קיבל את פרטיך ויחזור אליך בהקדם.', true);
           contactForm.reset();
           if (wordCountDisplay) wordCountDisplay.textContent = `0 / ${MAX_WORDS} מילים`;
@@ -144,9 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (err) {
         console.error('Error sending contact message:', err);
-        showFeedback('הפנייה נקלטה בהצלחה במערכת!', true);
-        contactForm.reset();
-        if (wordCountDisplay) wordCountDisplay.textContent = `0 / ${MAX_WORDS} מילים`;
+        showFeedback('לא ניתן לשלוח את הפנייה כרגע. בדקו את החיבור ונסו שוב.', false);
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;

@@ -5,11 +5,11 @@ Botify is a Node.js and Express application for account management, website-scan
 ## Run locally
 
 1. Install the server dependencies: `cd server` followed by `npm install`.
-2. Copy `.env.example` to `.env`. Set `MONGO_URI` and `JWT_SECRET`; add the email and Gemini settings for those features.
+2. Copy `.env.example` to `.env`. Set `MONGO_URI` to the connection string from your MongoDB Atlas cluster and set `JWT_SECRET`; add the email and Gemini settings for those features.
 3. Start the server with `npm start` from `server/`, or run `npm start` from the repository root.
 4. Open `http://localhost:3000`.
 
-The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` from `server/.env`. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
+The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` from `server/.env`. `MONGO_URI` must point to the project's MongoDB Atlas database. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
 
 ## Structure
 
@@ -32,3 +32,5 @@ See [docs/project-design.md](docs/project-design.md) for the screen-flow diagram
 ## Important implementation note
 
 The payment flow currently records a selected plan and safe card metadata in MongoDB. It does not connect to a payment processor and does not charge a card. The stored card data is limited to the cardholder name and last four digits; a full card number and CVV must not be stored by this application.
+
+To grant administrator access, promote a registered user's `role` field to `admin` in the Atlas `users` collection. Administrator login uses the same bcrypt password check and email verification flow as other accounts; do not add administrator credentials to source code.

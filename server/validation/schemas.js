@@ -77,9 +77,23 @@ export const authSchemas = {
 
 export const contactSchemas = {
   create: Joi.object({
-    message: Joi.string().trim().min(1).max(5000).required().messages({
+    subject: Joi.string().valid(
+      'תמיכה טכנית',
+      'שאלות בנושא תשלום ומנויים',
+      'בקשה להתאמה אישית',
+      'הצעת ייעול ומשוב',
+      'אחר'
+    ).required().messages({
+      'any.only': 'יש לבחור נושא פנייה תקין',
+      'any.required': 'יש לבחור נושא פנייה'
+    }),
+    message: Joi.string().trim().min(1).max(5000).custom((value, helpers) => {
+      if (value.split(/\s+/).length > 200) return helpers.error('string.maxWords');
+      return value;
+    }).required().messages({
       'string.empty': 'יש להזין תוכן להודעה',
-      'any.required': 'יש להזין תוכן להודעה'
+      'any.required': 'יש להזין תוכן להודעה',
+      'string.maxWords': 'ההודעה יכולה להכיל עד 200 מילים'
     }),
     chatId: chatId.optional()
   }).unknown(true),

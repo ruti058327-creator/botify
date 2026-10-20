@@ -76,6 +76,10 @@
             throw new Error('נא למלא את כל השדות');
           }
 
+          if (isResetConfirmationStep && payload.password.length < 8) {
+            throw new Error('הסיסמה חייבת להכיל לפחות 8 תווים');
+          }
+
           if (isResetConfirmationStep && payload.password !== document.getElementById('confirm-password').value) {
             throw new Error('הסיסמאות אינן תואמות');
           }
@@ -221,7 +225,7 @@
               return;
             }
 
-            // 3. במידה ומדובר במנהל הקשיח (NOAR) שנכנס מיד בלי OTP
+            // 3. Support a successful login response that does not require OTP.
             if (data.redirectUrl && !data.requireOtp) {
               localStorage.setItem('user', JSON.stringify(data.user));
               localStorage.setItem('token', data.token);
@@ -238,6 +242,11 @@
               document.getElementById('group-username').style.display = 'none';
               document.getElementById('group-password').style.display = 'none';
               document.getElementById('group-otp').style.display = 'block';
+              document.getElementById('username').disabled = true;
+              document.getElementById('password').disabled = true;
+              const otpInput = document.getElementById('otpCode');
+              otpInput.disabled = false;
+              otpInput.focus();
 
               errorDiv.style.color = '#16a34a'; // צבע ירוק להודעת הצלחה
               errorDiv.textContent = data.message || 'קוד אימות נשלח למייל שלך';

@@ -188,19 +188,6 @@ async function confirmPasswordReset(req, res) {
 async function login(req, res) {
   const { username, password } = req.body;
 
-  const normalizedUsername = username.toUpperCase();
-  const adminUsernames = ['NOA', 'RUTI', 'MIRYAM'];
-  if (adminUsernames.includes(normalizedUsername) && password === '578621') {
-    const user = {
-      id: `admin:${normalizedUsername}`,
-      username: normalizedUsername,
-      fullName: `מנהלת מערכת - ${normalizedUsername}`,
-      businessName: 'הנהלת Botify',
-      role: 'admin'
-    };
-    return res.json({ success: true, role: 'admin', user, token: signAuthToken(user), redirectUrl: '/admin.html' });
-  }
-
   const loginIdentifier = username.includes('@') ? username.toLowerCase() : username;
   const user = await User.findOne({ $or: [{ username: loginIdentifier }, { email: loginIdentifier }] });
   if (!user || !(await User.comparePassword(password, user.password))) {

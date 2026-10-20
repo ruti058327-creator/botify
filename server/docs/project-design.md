@@ -15,7 +15,7 @@ flowchart TD
     Pricing[Pricing]
     Payment[Payment record]
     Admin[Admin panel]
-    PublicPages[About, demo, contact, privacy, terms, accessibility, analytics]
+    PublicPages[About, contact, privacy, terms, accessibility, analytics]
 
     Home --> Register
     Home --> Login

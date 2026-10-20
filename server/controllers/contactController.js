@@ -30,9 +30,10 @@ async function listMine(req, res) {
  * @returns {Promise<import('express').Response>} Confirmation response.
  */
 async function create(req, res) {
-  const { message, chatId } = req.body;
+  const { subject, message, chatId } = req.body;
   await new Contact({
     username: req.user.username,
+    subject,
     message,
     chatId: chatId || 'chat_old_history',
     isAdmin: false

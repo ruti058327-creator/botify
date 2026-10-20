@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 
 const contactSchema = new mongoose.Schema({
     username: { type: String },
+    subject: { type: String, default: '' },
     message: { type: String },
     reply: { type: String, default: '' }, 
     chatId: { type: String, default: 'chat_default' }, // <--- הוספת chatId כדי שהמידע יישמר
