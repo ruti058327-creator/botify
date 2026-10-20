@@ -1,23 +1,19 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+
 
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String
   },
   idNumber: {
-    type: String,
-    minlength: [9, 'מספר תעודת הזהות חייב להכיל 9 ספרות'],
-    maxlength: [9, 'מספר תעודת הזהות חייב להכיל 9 ספרות'],
-    match: [/^\d{9}$/, 'מספר תעודת הזהות חייב להכיל 9 ספרות']
+    type: String
   },
   email: {
     type: String,
-    required: true,
     unique: true,
     trim: true,
-    lowercase: true,
-    match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'יש להזין כתובת אימייל תקינה']
+    lowercase: true
   },
   phone: {
     type: String
@@ -27,12 +23,10 @@ const userSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    required: true,
     unique: true
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   profileImage: {
     type: String,
@@ -40,7 +34,6 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
     default: 'user'
   },
   plan: {
@@ -87,4 +80,4 @@ userSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

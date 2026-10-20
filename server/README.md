@@ -5,11 +5,11 @@ Botify is a Node.js and Express application for account management, website-scan
 ## Run locally
 
 1. Install the server dependencies: `cd server` followed by `npm install`.
-2. Copy `.env.example` to `.env` and configure the values required for the features you use.
+2. Copy `.env.example` to `.env`. Set `MONGO_URI` and `JWT_SECRET`; add the email and Gemini settings for those features.
 3. Start the server with `npm start` from `server/`, or run `npm start` from the repository root.
 4. Open `http://localhost:3000`.
 
-The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` from `server/.env`. Configure a stable `JWT_SECRET`; tokens become invalid after a restart if it is omitted. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
+The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` from `server/.env`. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
 
 ## Structure
 
@@ -18,7 +18,10 @@ The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KE
 - `models/` contains the Mongoose schemas.
 - `routes/` contains Express route definitions.
 - `utils/` contains shared helpers, including the plan limits.
+- `validation/` contains Joi request schemas. Route validation runs before controllers, and unhandled errors are serialized by `middlewares/errorHandler.js`.
 - `../public/services/api-service.js` centralizes browser API requests; `../public/js/config.js` defines the API origin.
+
+Server JavaScript uses native ES modules. The browser uses one login form for every role; the server returns a role-bearing token and the client displays the corresponding destination link. Authorization is enforced by the server, not by client-side menu visibility.
 
 The request logger is created by `middlewares/requestLogger.js` and registered in `server.js` as a configurable middleware creator.
 

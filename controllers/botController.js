@@ -1,1 +1,2 @@
-module.exports = require('../server/controllers/botController');
+
+export { default } from '../server/controllers/botController.js';

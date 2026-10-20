@@ -1,1 +1,2 @@
-module.exports = require('../server/controllers/authController');
+
+export { default } from '../server/controllers/authController.js';

@@ -1,82 +1,60 @@
-const Contact = require('../models/Contact');
+import Contact from '../models/Contact.js';
+
 
 /**
- * מחזיר למנהל את כל הודעות הפנייה, מהחדשה לישנה.
- * @param {import('express').Request} req בקשת API מאומתת.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} רשימת ההודעות או תשובת שגיאה.
+ * Returns all contact messages to an administrator, newest first.
+ * @param {import('express').Request} req Authenticated API request.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} JSON message list.
  */
 async function listAll(req, res) {
-  try {
-    const messages = await Contact.find().sort({ createdAt: -1 });
-    return res.json({ success: true, messages });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'שגיאה בשליפת ההודעות' });
-  }
+  const messages = await Contact.find().sort({ createdAt: -1 });
+  return res.json({ success: true, messages });
 }
 
 /**
- * מחזיר את הודעות הפנייה של המשתמש המחובר.
- * @param {import('express').Request} req בקשה עם המשתמש המחובר.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} הודעות המשתמש או תשובת שגיאה.
+ * Returns the signed-in user's contact messages, newest first.
+ * @param {import('express').Request} req Authenticated request.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} JSON message list.
  */
 async function listMine(req, res) {
-  try {
-    const messages = await Contact.find({ username: req.user.username }).sort({ createdAt: -1 });
-    return res.json({ success: true, messages });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'שגיאה בשליפת הודעות הלקוח' });
-  }
+  const messages = await Contact.find({ username: req.user.username }).sort({ createdAt: -1 });
+  return res.json({ success: true, messages });
 }
 
 /**
- * שומר הודעת פנייה חדשה עבור המשתמש המחובר.
- * @param {import('express').Request} req בקשה עם תוכן ההודעה ומזהה השיחה האופציונלי.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ * Saves a contact message for the signed-in user.
+ * @param {import('express').Request} req Validated message and authenticated user.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} Confirmation response.
  */
 async function create(req, res) {
   const { message, chatId } = req.body;
-  if (typeof message !== 'string' || !message.trim()) {
-    return res.status(400).json({ success: false, message: 'יש להזין תוכן להודעה' });
-  }
-  try {
-    const newMessage = new Contact({
-      username: req.user.username,
-      message: message.trim(),
-      chatId: chatId || 'chat_old_history',
-      isAdmin: false
-    });
-    await newMessage.save();
-    return res.json({ success: true, message: 'ההודעה נשלחה בהצלחה' });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'שגיאה בשליחת ההודעה' });
-  }
+  await new Contact({
+    username: req.user.username,
+    message,
+    chatId: chatId || 'chat_old_history',
+    isAdmin: false
+  }).save();
+  return res.json({ success: true, message: 'ההודעה נשלחה בהצלחה' });
 }
 
 /**
- * שומר תגובת מנהל כהודעה חדשה בשיחת הלקוח.
- * @param {import('express').Request} req בקשה עם שם משתמש, מזהה שיחה ותוכן תגובה.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
+ * Saves an administrator response as a new message in the customer's conversation.
+ * @param {import('express').Request} req Validated reply, username, and optional chat identifier.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} Confirmation response.
  */
 async function reply(req, res) {
   const { username, chatId, reply: replyText } = req.body;
-  if (!username || typeof replyText !== 'string' || !replyText.trim()) {
-    return res.status(400).json({ success: false, message: 'חסרים נתונים לשליחת התגובה' });
-  }
-  try {
-    await new Contact({
-      username,
-      chatId: chatId || 'chat_old_history',
-      message: replyText.trim(),
-      isAdmin: true
-    }).save();
-    return res.json({ success: true, message: 'התגובה נשמרה בהצלחה כהודעה חדשה בשיחה' });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'שגיאה בשמירת התגובה' });
-  }
+  await new Contact({
+    username,
+    chatId: chatId || 'chat_old_history',
+    message: replyText,
+    isAdmin: true
+  }).save();
+  return res.json({ success: true, message: 'התגובה נשמרה בהצלחה כהודעה חדשה בשיחה' });
 }
 
-module.exports = { listAll, listMine, create, reply };
+export default { listAll, listMine, create, reply };

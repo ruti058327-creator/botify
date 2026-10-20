@@ -1,8 +1,9 @@
-require('dotenv').config();
-const nodemailer = require('nodemailer');
+import './config/env.js';
+import nodemailer from 'nodemailer';
+
 
 console.log('בודק משתני סביבה:');
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
+console.log('EMAIL_USER מוגדר?', Boolean(process.env.EMAIL_USER));
 console.log('EMAIL_PASS קיים?', Boolean(process.env.EMAIL_PASS));
 
 const transporter = nodemailer.createTransport({

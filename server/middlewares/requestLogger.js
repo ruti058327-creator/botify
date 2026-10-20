@@ -1,9 +1,10 @@
+
 /**
  * יוצר middleware המתעד שיטה, נתיב, קוד סטטוס ומשך טיפול לכל בקשה.
  * @param {string} [label='HTTP'] תווית מקור היומן.
  * @returns {import('express').RequestHandler} middleware שמודד בקשה עד אירוע הסיום.
  */
-module.exports = function createRequestLogger(label = 'HTTP') {
+export default function createRequestLogger(label = 'HTTP') {
   /**
    * מתעד את תחילת משך הבקשה וממשיך ל-middleware הבא.
    * @param {import('express').Request} req בקשת HTTP.
