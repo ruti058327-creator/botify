@@ -63,6 +63,8 @@ The route paths below are mounted by `server.js`. `Bearer token` means the reque
 
 `routes/chatRoutes.js` and `routes/analyticsRoutes.js` exist in the repository but are not mounted by `server.js`; their endpoints are therefore not part of the active API listed above.
 
+The contact form requires one of its listed subjects and limits messages to 200 words; both constraints are checked by the server.
+
 ## Database schemas
 
 ```mermaid
