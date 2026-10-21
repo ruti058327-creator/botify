@@ -1,4 +1,8 @@
-const { verifyAuthToken } = require('../utils/jwt');
+import __cjsImport0 from '../utils/jwt.js';
+import httpError from '../utils/httpError.js';
+
+const { verifyAuthToken } = __cjsImport0;
+
 
 /**
  * מאמת אסימון Bearer ומצרף את פרטי המשתמש לבקשה.
@@ -7,12 +11,12 @@ const { verifyAuthToken } = require('../utils/jwt');
  * @param {import('express').NextFunction} next המשך ל-middleware הבא לאחר אימות תקין.
  * @returns {void} ממשיך או מחזיר שגיאת 401.
  */
-function authenticateToken(req, res, next) {
+export function authenticateToken(req, res, next) {
   const authorization = req.get('Authorization') || '';
   const [scheme, token] = authorization.split(' ');
 
   if (scheme !== 'Bearer' || !token) {
-    return res.status(401).json({ success: false, message: 'נדרשת התחברות כדי לבצע פעולה זו' });
+    return next(httpError(401, 'נדרשת התחברות כדי לבצע פעולה זו'));
   }
 
   try {
@@ -24,7 +28,7 @@ function authenticateToken(req, res, next) {
     };
     return next();
   } catch {
-    return res.status(401).json({ success: false, message: 'אסימון ההתחברות אינו תקף או שפג תוקפו' });
+    return next(httpError(401, 'אסימון ההתחברות אינו תקף או שפג תוקפו'));
   }
 }
 
@@ -35,11 +39,11 @@ function authenticateToken(req, res, next) {
  * @param {import('express').NextFunction} next המשך לנתיב כאשר המשתמש מנהל.
  * @returns {void} ממשיך או מחזיר שגיאת 403.
  */
-function requireAdmin(req, res, next) {
+export function requireAdmin(req, res, next) {
   if (req.user?.role !== 'admin') {
-    return res.status(403).json({ success: false, message: 'אין הרשאה לבצע פעולה זו' });
+    return next(httpError(403, 'אין הרשאה לבצע פעולה זו'));
   }
   return next();
 }
 
-module.exports = { authenticateToken, requireAdmin };
+export default { authenticateToken, requireAdmin };

@@ -1,11 +1,9 @@
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
+import '../config/env.js';
+import jwt from 'jsonwebtoken';
 
-const jwtSecret = process.env.JWT_SECRET || crypto.randomBytes(64).toString('hex');
 
-if (!process.env.JWT_SECRET) {
-  console.warn('JWT_SECRET is not configured; login tokens will be invalidated when the server restarts.');
-}
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) throw new Error('JWT_SECRET is missing. Set it in server/.env using server/.env.example.');
 
 /**
  * חותם אסימון JWT למשתמש עם מזהה, שם, תפקיד ותוקף של שעתיים.
@@ -20,7 +18,7 @@ function signAuthToken(user) {
   );
 }
 
-module.exports = {
+export default {
   signAuthToken,
   /**
    * מאמת אסימון JWT ומפענח את המטען החתום.

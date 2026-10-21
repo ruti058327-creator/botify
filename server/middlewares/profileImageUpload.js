@@ -1,7 +1,11 @@
-const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
-const multer = require('multer');
+import { dirname as __dirnameOf } from 'node:path';
+import { fileURLToPath as __fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
+import multer from 'multer';
+
+const __dirname = __dirnameOf(__fileURLToPath(import.meta.url));
 
 const uploadDirectory = path.resolve(__dirname, '../../public/uploads/profile-images');
 fs.mkdirSync(uploadDirectory, { recursive: true });
@@ -26,7 +30,7 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({
+export default multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024, files: 1 },
   /**

@@ -1,17 +1,10 @@
-require('dotenv').config();
-const nodemailer = require('nodemailer');
+import './config/env.js';
+import { sendEmail } from './utils/mailer.js';
+
 
 console.log('בודק משתני סביבה:');
-console.log('EMAIL_USER:', process.env.EMAIL_USER);
+console.log('EMAIL_USER מוגדר?', Boolean(process.env.EMAIL_USER));
 console.log('EMAIL_PASS קיים?', Boolean(process.env.EMAIL_PASS));
-
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 /**
  * שולח הודעת בדיקה לחשבון הדוא״ל שהוגדר במשתני הסביבה.
@@ -20,11 +13,11 @@ const transporter = nodemailer.createTransport({
 async function sendTest() {
   try {
     console.log('\nמנסה לשלוח מייל בדיקה...');
-    const info = await transporter.sendMail({
-      from: `"Botify Test" <${process.env.EMAIL_USER}>`,
+    const info = await sendEmail({
       to: process.env.EMAIL_USER, // שולח מייל לעצמך לבדיקה
       subject: 'בדיקת שליחת מייל מ-Botify',
-      text: 'שלום! אם קיבלת מייל זה, מנגנון השליחה מחובר ועובד מצוין!'
+      text: 'שלום! אם קיבלת מייל זה, מנגנון השליחה מחובר ועובד מצוין!',
+      fromName: 'Botify Test'
     });
     console.log('✅ המייל נשלח בהצלחה! מזהה הודעה:', info.messageId);
   } catch (error) {

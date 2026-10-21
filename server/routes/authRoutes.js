@@ -1,18 +1,23 @@
-const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/authController');
-const userController = require('../controllers/userController');
-const contactController = require('../controllers/contactController');
-const { authenticateToken, requireAdmin } = require('../middlewares/authMiddleware');
-const profileImageUpload = require('../middlewares/profileImageUpload');
+import express from 'express';
+import authController from '../controllers/authController.js';
+import userController from '../controllers/userController.js';
+import contactController from '../controllers/contactController.js';
+import __cjsImport0 from '../middlewares/authMiddleware.js';
+import profileImageUpload from '../middlewares/profileImageUpload.js';
+import validateRequest from '../middlewares/validateRequest.js';
+import { authSchemas, contactSchemas } from '../validation/schemas.js';
 
-router.post('/send-otp', authController.sendRegistrationOtp);
-router.post('/register-verify', authController.registerVerify);
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.post('/login-verify', authController.loginVerify);
-router.post('/password-reset/request', authController.requestPasswordReset);
-router.post('/password-reset/confirm', authController.confirmPasswordReset);
+const { authenticateToken, requireAdmin } = __cjsImport0;
+
+const router = express.Router();
+
+router.post('/send-otp', validateRequest(authSchemas.sendOtp), authController.sendRegistrationOtp);
+router.post('/register-verify', validateRequest(authSchemas.registerVerify), authController.registerVerify);
+router.post('/register', validateRequest(authSchemas.register), authController.register);
+router.post('/login', validateRequest(authSchemas.login), authController.login);
+router.post('/login-verify', validateRequest(authSchemas.loginVerify), authController.loginVerify);
+router.post('/password-reset/request', validateRequest(authSchemas.passwordResetRequest), authController.requestPasswordReset);
+router.post('/password-reset/confirm', validateRequest(authSchemas.passwordResetConfirm), authController.confirmPasswordReset);
 
 router.get('/users/count', authenticateToken, requireAdmin, userController.countUsers);
 router.get('/users', authenticateToken, requireAdmin, userController.listUsers);
@@ -25,7 +30,7 @@ router.post(
 
 router.get('/messages', authenticateToken, requireAdmin, contactController.listAll);
 router.get('/user-messages', authenticateToken, contactController.listMine);
-router.post('/contact', authenticateToken, contactController.create);
-router.post('/reply', authenticateToken, requireAdmin, contactController.reply);
+router.post('/contact', authenticateToken, validateRequest(contactSchemas.create), contactController.create);
+router.post('/reply', authenticateToken, requireAdmin, validateRequest(contactSchemas.reply), contactController.reply);
 
-module.exports = router;
+export default router;

@@ -1,45 +1,39 @@
-const fs = require('fs/promises');
-const path = require('path');
-const User = require('../models/User');
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import User from '../models/User.js';
+import httpError from '../utils/httpError.js';
 
-const uploadDirectory = path.resolve(__dirname, '../../public/uploads/profile-images');
+
+const uploadDirectory = fileURLToPath(new URL('../../public/uploads/profile-images', import.meta.url));
 
 /**
- * מחזיר את מספר המשתמשים הרשומים במערכת.
- * @param {import('express').Request} req בקשת מנהל מאומתת.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} מספר המשתמשים או תשובת שגיאה.
+ * Returns the number of registered users.
+ * @param {import('express').Request} req Authenticated administrator request.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} JSON user count.
  */
 async function countUsers(req, res) {
-  try {
-    const count = await User.countDocuments();
-    return res.json({ success: true, count });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'שגיאה בספירת המשתמשים' });
-  }
+  const count = await User.countDocuments();
+  return res.json({ success: true, count });
 }
 
 /**
- * מחזיר את רשימת המשתמשים ללא שדות סיסמה.
- * @param {import('express').Request} req בקשת מנהל מאומתת.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} רשימת המשתמשים או תשובת שגיאה.
+ * Returns users without password hashes.
+ * @param {import('express').Request} req Authenticated administrator request.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} JSON user list.
  */
 async function listUsers(req, res) {
-  try {
-    const users = await User.find({}, '-password').sort({ createdAt: -1 });
-    return res.json({ success: true, users });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: 'שגיאה בשליפת המשתמשים' });
-  }
+  const users = await User.find({}, '-password').sort({ createdAt: -1 });
+  return res.json({ success: true, users });
 }
 
 /**
- * בודק שחתימת הבתים בקובץ תואמת לסוג תמונה נתמך.
- * @param {string} filePath הנתיב לקובץ שהועלה.
- * @param {string} mimeType סוג MIME שהתקבל בהעלאה.
- * @returns {Promise<boolean>} האם חתימת JPEG, PNG או WebP תקינה.
- * @throws {Error} במקרה של כשל בקריאת הקובץ.
+ * Verifies that file bytes match a supported image type.
+ * @param {string} filePath Uploaded file path.
+ * @param {string} mimeType MIME type reported by Multer.
+ * @returns {Promise<boolean>} Whether the file has a valid JPEG, PNG, or WebP signature.
  */
 async function hasValidImageSignature(filePath, mimeType) {
   const contents = await fs.readFile(filePath);
@@ -55,43 +49,50 @@ async function hasValidImageSignature(filePath, mimeType) {
   return false;
 }
 
+async function removeFile(filePath) {
+  try {
+    await fs.unlink(filePath);
+  } catch (error) {
+    if (error.code !== 'ENOENT') throw error;
+  }
+}
+
 /**
- * מאמת ושומר תמונת פרופיל למשתמש המחובר, ומסיר את התמונה הקודמת שהועלתה.
- * @param {import('express').Request} req בקשת העלאה הכוללת {@code file} ופרטי המשתמש.
- * @param {import('express').Response} res תגובת השרת.
- * @returns {Promise<import('express').Response>} כתובת התמונה שנשמרה או תשובת שגיאה.
+ * Validates and saves a profile image for the signed-in user.
+ * @param {import('express').Request} req Multipart upload and authenticated user.
+ * @param {import('express').Response} res HTTP response.
+ * @returns {Promise<import('express').Response>} Saved image URL.
  */
 async function uploadProfileImage(req, res) {
-  if (!req.file) {
-    return res.status(400).json({ success: false, message: 'יש לבחור קובץ תמונה' });
-  }
+  if (!req.file) throw httpError(400, 'יש לבחור קובץ תמונה');
+  let imageSaved = false;
 
   try {
     if (!(await hasValidImageSignature(req.file.path, req.file.mimetype))) {
-      await fs.unlink(req.file.path).catch(() => {});
-      return res.status(400).json({ success: false, message: 'תוכן הקובץ אינו תמונה תקינה' });
+      await removeFile(req.file.path);
+      throw httpError(400, 'תוכן הקובץ אינו תמונה תקינה');
     }
 
     const user = await User.findById(req.user.id);
     if (!user) {
-      await fs.unlink(req.file.path).catch(() => {});
-      return res.status(404).json({ success: false, message: 'המשתמש לא נמצא' });
+      await removeFile(req.file.path);
+      throw httpError(404, 'המשתמש לא נמצא');
     }
 
     const previousImage = user.profileImage;
     user.profileImage = `/uploads/profile-images/${req.file.filename}`;
     await user.save();
+    imageSaved = true;
 
     if (typeof previousImage === 'string' && /^\/uploads\/profile-images\/[^/]+$/.test(previousImage)) {
-      await fs.unlink(path.join(uploadDirectory, path.basename(previousImage))).catch(() => {});
+      await removeFile(path.join(uploadDirectory, path.basename(previousImage)));
     }
 
     return res.json({ success: true, profileImage: user.profileImage });
   } catch (error) {
-    await fs.unlink(req.file.path).catch(() => {});
-    console.error('Profile image upload error:', error.message);
-    return res.status(500).json({ success: false, message: 'לא ניתן לשמור את תמונת הפרופיל כרגע' });
+    if (!imageSaved) await removeFile(req.file.path);
+    throw error;
   }
 }
 
-module.exports = { countUsers, listUsers, uploadProfileImage };
+export default { countUsers, listUsers, uploadProfileImage };

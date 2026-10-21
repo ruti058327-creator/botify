@@ -15,7 +15,7 @@ flowchart TD
     Pricing[Pricing]
     Payment[Payment record]
     Admin[Admin panel]
-    PublicPages[About, demo, contact, privacy, terms, accessibility, analytics]
+    PublicPages[About, contact, privacy, terms, accessibility, analytics]
 
     Home --> Register
     Home --> Login
@@ -61,7 +61,9 @@ The route paths below are mounted by `server.js`. `Bearer token` means the reque
 | POST | `/api/bots/:botId/chat` | Public | Send a message to a bot |
 | POST | `/api/payments` | Bearer token | Save a payment/plan record and update the plan |
 
-`routes/chatRoutes.js` and `routes/analyticsRoutes.js` exist in the repository but are not mounted by `server.js`; their endpoints are therefore not part of the active API listed above.
+`routes/chatRoutes.js` exists in the repository but is not mounted by `server.js`; its endpoints are therefore not part of the active API listed above.
+
+The contact form defaults an omitted subject to "אחר" and limits messages to 200 words; both constraints are checked by the server.
 
 ## Database schemas
 
@@ -125,4 +127,3 @@ erDiagram
 - `Contact` associates conversations by the `username` string and `chatId`; it does not currently store a `User` ObjectId reference.
 - `Bot.userId` is optional because admin-created bots are not assigned to a regular user.
 - `Message` has a Mongoose schema, but the routes in `chatRoutes.js` are not mounted by the current server entry point.
-- `models/Lead.js` is empty and does not define a database entity.

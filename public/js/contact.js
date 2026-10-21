@@ -2,6 +2,8 @@
  * מאתחל את טופס הפנייה, מצב ההתחברות, ספירת המילים ושליחת ההודעה.
  * @returns {void} מתקין מאזיני DOM ומעדכן את ממשק הפנייה.
  */
+import { ApiService } from '../services/api-service.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   const userString = localStorage.getItem('user');
@@ -13,40 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const wordCountDisplay = document.getElementById('word-count-display');
   const feedbackMsg = document.getElementById('feedback-msg');
   const submitBtn = document.getElementById('btn-submit-contact');
-  const navAuthContainer = document.getElementById('nav-auth-container');
-
   const MAX_WORDS = 200;
 
-  // 1. עדכון סרגל הניווט (Navbar) למצב מחובר
-  if (userString || token) {
-    try {
-      const userData = userString ? JSON.parse(userString) : {};
-      const username = userData.username || userData.fullName || 'משתמש';
-      if (navAuthContainer) {
-        navAuthContainer.innerHTML = `
-          <div class="user-greeting" style="display: inline-flex; align-items: center; gap: 8px; font-weight: bold; margin-left: 10px;">
-            <span>👤</span>
-            <span>${username}</span>
-          </div>
-          <button id="logout-btn-nav" class="btn-secondary" style="background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer;">התנתקות</button>
-        `;
-        /**
-         * מסיר פרטי התחברות ומחזיר את המשתמש לעמוד הבית הציבורי.
-         * @returns {void} מנקה את האחסון המקומי ומבצע ניווט.
-         */
-        document.getElementById('logout-btn-nav')?.addEventListener('click', () => {
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          window.location.href = '../index.html';
-        });
-      }
-    } catch (e) {
-      console.error('Error rendering navbar user', e);
-    }
-  }
-
-  // 2. בדיקת הרשאה לטופס
-  if (!userString && !token) {
+  if (!token) {
     if (unauthBox) unauthBox.style.display = 'block';
     if (contactForm) contactForm.style.display = 'none';
     return;
@@ -67,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
     userDisplay.textContent = `${displayName} (${userData.email || 'אימייל שמור במערכת'})`;
   }
 
-  // 3. ספירת מילים
   if (messageInput) {
     /**
      * סופר מילים בזמן הקלדה ואוכף את מגבלת 200 המילים.
@@ -94,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. שליחת הטופס לשרת
   if (contactForm) {
     /**
      * מאמת ושולח את טופס הפנייה, ומציג את תוצאת השליחה למשתמש.
@@ -126,16 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           body: JSON.stringify({
             subject: subject,
-            message: message,
-            username: displayName,
-            email: userData.email || '',
-            createdAt: new Date().toISOString()
+            message: message
           })
         });
 
         const result = await response.json();
 
-        if (response.ok && (result.success !== false)) {
+        if (response.ok && result.success === true) {
           showFeedback('הפנייה נשלחה בהצלחה! מנהל המערכת קיבל את פרטיך ויחזור אליך בהקדם.', true);
           contactForm.reset();
           if (wordCountDisplay) wordCountDisplay.textContent = `0 / ${MAX_WORDS} מילים`;
@@ -144,9 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (err) {
         console.error('Error sending contact message:', err);
-        showFeedback('הפנייה נקלטה בהצלחה במערכת!', true);
-        contactForm.reset();
-        if (wordCountDisplay) wordCountDisplay.textContent = `0 / ${MAX_WORDS} מילים`;
+        showFeedback('לא ניתן לשלוח את הפנייה כרגע. בדקו את החיבור ונסו שוב.', false);
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;

@@ -1,3 +1,4 @@
+
 const PLANS = Object.freeze({
   starter: { price: 49, botLimit: 2 },
   pro: { price: 149, botLimit: 3 },
@@ -14,4 +15,5 @@ function getBotLimit(planId) {
   return PLANS[planId]?.botLimit ?? 1;
 }
 
-module.exports = { PLANS, getBotLimit };
+export { PLANS, getBotLimit };
+export default { PLANS, getBotLimit };

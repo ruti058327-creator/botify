@@ -1,2 +1,5 @@
-/** @type {string} כתובת הבסיס שממנה נטענת אפליקציית Botify. */
-window.API_BASE_URL = window.location.origin;
+export const API_BASE_URL = window.location.origin;
+
+window.API_BASE_URL = API_BASE_URL;
+
+export default API_BASE_URL;

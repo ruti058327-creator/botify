@@ -5,11 +5,11 @@ Botify is a Hebrew, right-to-left website for creating website-aware customer-se
 ## Run locally
 
 1. Install server dependencies: `cd server` and run `npm install`.
-2. Configure `server/.env` using the variable names in `server/.env.example`.
+2. Configure `server/.env` using the variable names in `server/.env.example`. Set `MONGO_URI` to the connection string for your MongoDB Atlas cluster.
 3. From the repository root, run `npm start`.
 4. Open `http://localhost:3000`.
 
-The server uses `MONGO_URI` for MongoDB, `EMAIL_USER` and `EMAIL_PASS` for email verification, `JWT_SECRET` for signed sessions, and `GEMINI_API_KEY` for AI answers. Do not commit `.env` or share its values.
+The server uses `MONGO_URI` for MongoDB Atlas, `EMAIL_USER` and `EMAIL_PASS` for email verification, `JWT_SECRET` for signed sessions, and `GEMINI_API_KEY` for AI answers. Do not commit `.env` or share its values.
 
 ## Project layout
 

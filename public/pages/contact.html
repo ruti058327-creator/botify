@@ -22,7 +22,6 @@
         <li><a href="dashboard.html">בית</a></li>
         <li><a href="about.html">אודות</a></li>
         <li><a href="pricing.html">מחירון</a></li>
-        <li><a href="demo.html">דמו</a></li>
         <li><a href="contact.html" class="active">צור קשר</a></li>
       </ul>
 
@@ -63,7 +62,7 @@
 
         <div class="form-group">
           <label for="contact-message">תוכן ההודעה *</label>
-          <textarea id="contact-message" placeholder="פרטו כאן את פנייתכם בצורה ברורה..." required></textarea>
+          <textarea id="contact-message" placeholder="פרטו כאן את פנייתכם בצורה ברורה..." maxlength="5000" required></textarea>
           
           <div class="word-counter-wrapper">
             <span>מקסימום 200 מילים</span>
@@ -75,7 +74,7 @@
           שליחת פנייה לצוות
         </button>
 
-        <div id="feedback-msg" class="feedback-message"></div>
+        <div id="feedback-msg" class="feedback-message" role="status" aria-live="polite"></div>
       </form>
     </div>
   </main>
@@ -84,9 +83,7 @@
     <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
-  <script src="../js/config.js"></script>
-  <script src="../services/api-service.js"></script>
-  <script src="../js/contact.js"></script>
-  <script src="../js/navbar-auth.js"></script>
+  <script type="module" src="../js/contact.js"></script>
+  <script type="module" src="../js/navbar-auth.js"></script>
 </body>
 </html>

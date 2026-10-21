@@ -1,11 +1,17 @@
-const Bot = require('../models/Bot');
-const Payment = require('../models/Payment');
-const User = require('../models/User');
-const axios = require('axios');
-const https = require('https');
-const { chromium } = require('playwright');
-const Fuse = require('fuse.js');
-const { PLANS, getBotLimit } = require('../utils/plans');
+import '../config/env.js';
+import Bot from '../models/Bot.js';
+import Payment from '../models/Payment.js';
+import User from '../models/User.js';
+import axios from 'axios';
+import https from 'node:https';
+import __cjsImport0 from 'playwright';
+import Fuse from 'fuse.js';
+import __cjsImport1 from '../utils/plans.js';
+import httpError from '../utils/httpError.js';
+
+const { chromium } = __cjsImport0;
+const { PLANS, getBotLimit } = __cjsImport1;
+
 
 const geminiHttpsAgent = new https.Agent({ rejectUnauthorized: false });
 const LOCAL_FALLBACK_REPLY = 'מצאתי תוכן באתר, אבל אין כרגע מספיק מידע מסודר כדי לענות על השאלה.';
@@ -329,14 +335,9 @@ function serializeBot(bot) {
  * @returns {Promise<import('express').Response>} רשימת בוטים או תשובת שגיאה.
  */
 async function list(req, res) {
-  try {
-    const filter = req.user.role === 'admin' ? {} : { userId: req.user.id };
-    const bots = await Bot.find(filter).sort({ createdAt: -1 });
-    return res.json({ success: true, bots: bots.map(serializeBot) });
-  } catch (error) {
-    console.error('List bots error:', error.message);
-    return res.status(500).json({ success: false, message: 'לא ניתן לטעון את הבוטים כרגע' });
-  }
+  const filter = req.user.role === 'admin' ? {} : { userId: req.user.id };
+  const bots = await Bot.find(filter).sort({ createdAt: -1 });
+  return res.json({ success: true, bots: bots.map(serializeBot) });
 }
 
 /**
@@ -346,15 +347,9 @@ async function list(req, res) {
  * @returns {Promise<import('express').Response>} פרטי הבוט או תשובת שגיאה.
  */
 async function getById(req, res) {
-  try {
-    const bot = await Bot.findById(req.params.botId);
-    if (!bot || !canManageBot(bot, req.user)) {
-      return res.status(404).json({ success: false, message: 'הבוט לא נמצא' });
-    }
-    return res.json({ success: true, bot: serializeBot(bot) });
-  } catch (error) {
-    return res.status(400).json({ success: false, message: 'מזהה הבוט אינו תקין' });
-  }
+  const bot = await Bot.findById(req.params.botId);
+  if (!bot || !canManageBot(bot, req.user)) throw httpError(404, 'הבוט לא נמצא');
+  return res.json({ success: true, bot: serializeBot(bot) });
 }
 
 /**
@@ -364,21 +359,11 @@ async function getById(req, res) {
  * @returns {Promise<import('express').Response>} הבוט המעודכן או תשובת שגיאה.
  */
 async function update(req, res) {
-  if (typeof req.body.instructions !== 'string' || req.body.instructions.length > 5000) {
-    return res.status(400).json({ success: false, message: 'ההנחיות חייבות להיות טקסט של עד 5000 תווים' });
-  }
-
-  try {
-    const bot = await Bot.findById(req.params.botId);
-    if (!bot || !canManageBot(bot, req.user)) {
-      return res.status(404).json({ success: false, message: 'הבוט לא נמצא' });
-    }
-    bot.instructions = req.body.instructions;
-    await bot.save();
-    return res.json({ success: true, bot: serializeBot(bot) });
-  } catch (error) {
-    return res.status(400).json({ success: false, message: 'לא ניתן לעדכן את הבוט' });
-  }
+  const bot = await Bot.findById(req.params.botId);
+  if (!bot || !canManageBot(bot, req.user)) throw httpError(404, 'הבוט לא נמצא');
+  bot.instructions = req.body.instructions;
+  await bot.save();
+  return res.json({ success: true, bot: serializeBot(bot) });
 }
 
 /**
@@ -388,16 +373,10 @@ async function update(req, res) {
  * @returns {Promise<import('express').Response>} תשובת הצלחה או שגיאה.
  */
 async function remove(req, res) {
-  try {
-    const bot = await Bot.findById(req.params.botId);
-    if (!bot || !canManageBot(bot, req.user)) {
-      return res.status(404).json({ success: false, message: 'הבוט לא נמצא' });
-    }
-    await bot.deleteOne();
-    return res.json({ success: true, message: 'הבוט נמחק בהצלחה' });
-  } catch (error) {
-    return res.status(400).json({ success: false, message: 'לא ניתן למחוק את הבוט' });
-  }
+  const bot = await Bot.findById(req.params.botId);
+  if (!bot || !canManageBot(bot, req.user)) throw httpError(404, 'הבוט לא נמצא');
+  await bot.deleteOne();
+  return res.json({ success: true, message: 'הבוט נמחק בהצלחה' });
 }
 
 /**
@@ -433,27 +412,18 @@ async function quota(req, res) {
     return res.json({ success: true, canCreate: true, requiresPayment: false });
   }
 
-  try {
-    const requestedPlanId = req.query.planId;
-    if (requestedPlanId && !PLANS[requestedPlanId]) {
-      return res.status(400).json({ success: false, message: 'המסלול שנבחר אינו תקין' });
-    }
-
-    const userQuota = await getBotQuota(req.user.id);
-    if (!userQuota) return res.status(401).json({ success: false, message: 'יש להתחבר מחדש כדי ליצור בוט' });
-    const targetBotLimit = requestedPlanId ? getBotLimit(requestedPlanId) : userQuota.botLimit;
-    return res.json({
-      success: true,
-      ...userQuota,
-      targetBotLimit,
-      botsToDelete: Math.max(0, userQuota.botCount - targetBotLimit),
-      requiresPayment: !userQuota.canCreate,
-      pricingUrl: '/pages/pricing.html?required=bot'
-    });
-  } catch (error) {
-    console.error('Bot quota check error:', error.message);
-    return res.status(500).json({ success: false, message: 'לא ניתן לבדוק את מכסת הבוטים כרגע' });
-  }
+  const requestedPlanId = req.validatedQuery?.planId;
+  const userQuota = await getBotQuota(req.user.id);
+  if (!userQuota) throw httpError(401, 'יש להתחבר מחדש כדי ליצור בוט');
+  const targetBotLimit = requestedPlanId ? getBotLimit(requestedPlanId) : userQuota.botLimit;
+  return res.json({
+    success: true,
+    ...userQuota,
+    targetBotLimit,
+    botsToDelete: Math.max(0, userQuota.botCount - targetBotLimit),
+    requiresPayment: !userQuota.canCreate,
+    pricingUrl: '/pages/pricing.html?required=bot'
+  });
 }
 
 /**
@@ -466,32 +436,27 @@ async function createFromWebsite(req, res) {
   try {
     if (req.user.role !== 'admin') {
       const userQuota = await getBotQuota(req.user.id);
-      if (!userQuota) return res.status(401).json({ success: false, message: 'יש להתחבר מחדש כדי ליצור בוט' });
+      if (!userQuota) throw httpError(401, 'יש להתחבר מחדש כדי ליצור בוט');
       if (!userQuota.canCreate) {
-        return res.status(403).json({
-          success: false,
-          code: 'BOT_LIMIT_REACHED',
-          message: 'הגעת למכסת הבוטים במסלול שלך. יש לבחור מסלול בתשלום כדי ליצור בוטים נוספים.',
-          pricingUrl: '/pages/pricing.html?required=bot'
-        });
+        throw httpError(
+          403,
+          'הגעת למכסת הבוטים במסלול שלך. יש לבחור מסלול בתשלום כדי ליצור בוטים נוספים.',
+          { code: 'BOT_LIMIT_REACHED', pricingUrl: '/pages/pricing.html?required=bot' }
+        );
       }
     }
 
     let { websiteUrl, instructions } = req.body;
-    if (!websiteUrl) return res.status(400).json({ success: false, message: 'נא להזין כתובת אתר' });
     if (!/^[a-z][a-z\d+.-]*:\/\//i.test(websiteUrl)) websiteUrl = `https://${websiteUrl}`;
 
-    let requestedUrl;
-    try { requestedUrl = new URL(websiteUrl); } catch {
-      return res.status(400).json({ success: false, message: 'כתובת האתר אינה תקינה' });
-    }
+    const requestedUrl = new URL(websiteUrl);
     if (/safepage\.etrog\.net\.il/i.test(requestedUrl.hostname)) {
-      return res.status(403).json({ success: false, message: 'הרשת חסמה את האתר, ולכן לא ניתן לסרוק את תוכנו. יש לבחור אתר שנגיש מהרשת הנוכחית.' });
+      throw httpError(403, 'הרשת חסמה את האתר, ולכן לא ניתן לסרוק את תוכנו. יש לבחור אתר שנגיש מהרשת הנוכחית.');
     }
 
     const scrapedText = await scrapeWebsite(websiteUrl);
     if (!scrapedText || scrapedText.length < 20) {
-      return res.status(422).json({ success: false, message: 'לא נמצא באתר מספיק תוכן קריא לסריקה. ייתכן שהאתר נטען באופן דינמי או חסם את הסריקה.' });
+      throw httpError(422, 'לא נמצא באתר מספיק תוכן קריא לסריקה. ייתכן שהאתר נטען באופן דינמי או חסם את הסריקה.');
     }
 
     const newBot = new Bot({
@@ -508,12 +473,12 @@ async function createFromWebsite(req, res) {
       botUrl: `/pages/chat.html?botId=${newBot._id}`
     });
   } catch (error) {
-    console.error('Scraping error:', error.message);
+    if (error.statusCode) throw error;
     const isBrowserMissing = /דפדפן הסריקה לא מותקן|Executable doesn't exist|download new browsers|browserType\.launch/i.test(error.message || '');
     const message = isBrowserMissing
       ? 'הסקריפט סריקה לא יכול להתחיל בגלל דפדפן חסר. יש להתקין את Chromium של Playwright: node node_modules/playwright/cli.js install chromium'
       : 'שגיאה בסריקת האתר או ביצירת הבוט. ודאי שהכתובת תקינה.';
-    return res.status(isBrowserMissing ? 503 : 500).json({ success: false, message });
+    throw httpError(isBrowserMissing ? 503 : 500, message);
   }
 }
 
@@ -531,7 +496,7 @@ async function chat(req, res) {
     const { message } = req.body;
     userQuestion = String(message || '');
     bot = await Bot.findById(botId);
-    if (!bot) return res.status(404).json({ success: false, message: 'הבוט לא נמצא' });
+    if (!bot) throw httpError(404, 'הבוט לא נמצא');
     if (!bot.scrapedContent || !bot.scrapedContent.trim()) {
       return res.json({ success: true, reply: 'לא נשמר תוכן מהאתר. נסי ליצור את הבוט מחדש עם קישור ישיר לעמוד ציבורי ונגיש.' });
     }
@@ -599,7 +564,7 @@ async function chat(req, res) {
     ${message}
     ---`;
     const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) return res.status(500).json({ success: false, message: 'מפתח API של גוגל לא הוגדר בקובץ הסביבה' });
+    if (!apiKey) throw httpError(503, 'מפתח API של גוגל לא הוגדר בקובץ הסביבה');
 
     const geminiResponse = await axios.post(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
@@ -609,7 +574,7 @@ async function chat(req, res) {
     const replyText = geminiResponse.data?.candidates?.[0]?.content?.parts?.[0]?.text || 'לא התקבלה תשובה תקינה מהמודל.';
     return res.json({ success: true, reply: replyText });
   } catch (error) {
-    console.error('AI Chat error:', error.response?.data || error.message);
+    if (error.statusCode) throw error;
     const apiMessage = error.response?.data?.error?.message;
     const isQuotaError = error.response?.status === 429 || error.response?.data?.error?.status === 'RESOURCE_EXHAUSTED';
     const isModelUnavailable = error.response?.status === 503 || error.response?.data?.error?.status === 'UNAVAILABLE';
@@ -624,8 +589,8 @@ async function chat(req, res) {
         : error.response?.status === 503
           ? 'מודל הבינה אינו זמין כרגע. נסי שוב בעוד רגע.'
           : apiMessage || 'שגיאה בתקשורת עם מודל הבינה המלאכותית';
-    return res.status(500).json({ success: false, message });
+    throw httpError(503, message);
   }
 }
 
-module.exports = { list, getById, update, remove, quota, createFromWebsite, chat, findRelevantSiteText, buildChatFallbackReply };
+export default { list, getById, update, remove, quota, createFromWebsite, chat, findRelevantSiteText, buildChatFallbackReply };

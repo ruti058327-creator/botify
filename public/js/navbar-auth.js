@@ -1,56 +1,70 @@
-/**
- * מעדכן את סרגל הניווט לפי המשתמש המחובר ומקשר פעולות התנתקות.
- * @returns {void} מציג פרטי משתמש ומשנה קישורי בית בהתאם למצב.
- */
+export function parseJwtPayload(token) {
+  try {
+    const encodedPayload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const paddedPayload = encodedPayload.padEnd(Math.ceil(encodedPayload.length / 4) * 4, '=');
+    const binaryPayload = atob(paddedPayload);
+    const bytes = Uint8Array.from(binaryPayload, character => character.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch (error) {
+    console.error('Could not read the current session token:', error);
+    return null;
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    // בדיקת שני המזהים האפשריים בסרגל
-    const authContainer = document.getElementById('nav-auth-container') || document.getElementById('auth-buttons-container');
-    if (!authContainer) return;
+  const authContainer = document.getElementById('nav-auth-container')
+    || document.getElementById('auth-buttons-container')
+    || document.querySelector('.auth-buttons');
+  if (!authContainer) return;
 
-    const storedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
+  if (!token) return;
 
-    if (storedUser || token) {
-        try {
-            const userData = storedUser ? JSON.parse(storedUser) : {};
-            const username = userData.username || userData.fullName || userData.name || 'משתמש';
+  const payload = parseJwtPayload(token);
+  if (!payload) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    return;
+  }
 
-            // החלפה מוחלטת של תוכן ה-container (מסיר את התחברות והרשמה)
-            authContainer.innerHTML = `
-                <div class="user-greeting" style="display: flex; align-items: center; gap: 8px; font-weight: bold; margin-left: 10px;">
-                    <span>👤</span>
-                    <span>${username}</span>
-                </div>
-                <button id="global-logout-btn" class="btn-secondary" style="background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold;">התנתקות</button>
-            `;
+  let user = {};
+  try {
+    user = JSON.parse(localStorage.getItem('user') || '{}');
+  } catch (error) {
+    console.error('Could not read the saved user profile:', error);
+  }
 
-            // טיפול בלחיצה על התנתקות
-            /**
-             * מנקה פרטי התחברות ומחזיר את המשתמש לעמוד הציבורי.
-             * @returns {void} מסיר פרטי משתמש ואסימון מהאחסון המקומי.
-             */
-            document.getElementById('global-logout-btn')?.addEventListener('click', () => {
-                localStorage.removeItem('user');
-                localStorage.removeItem('token');
-                window.location.href = '../index.html';
-            });
+  const role = payload.role || user.role || 'user';
+  const username = payload.username || user.username || user.fullName || 'משתמש';
+  const isPagesDirectory = window.location.pathname.includes('/pages/');
 
-            // עדכון קישורי הבית כך שיפנו לדשבורד
-            /**
-             * מעדכן קישורי בית כך שיובילו ללוח המשתמש המחובר.
-             * @param {HTMLAnchorElement} link קישור ניווט או לוגו לבדיקה.
-             * @returns {void} משנה את היעד רק לקישורים המייצגים את דף הבית.
-             */
-            document.querySelectorAll('.nav-links a, .navbar .logo').forEach(link => {
-                const text = link.textContent.trim();
-                const href = link.getAttribute('href') || '';
-                if (text === 'בית' || href.includes('index.html')) {
-                    link.setAttribute('href', 'dashboard.html');
-                }
-            });
+  const greeting = document.createElement('span');
+  greeting.className = 'user-greeting';
+  greeting.textContent = `👤 ${username} (${role === 'admin' ? 'מנהל' : 'לקוח'})`;
 
-        } catch (e) {
-            console.error('Error updating navbar session:', e);
-        }
-    }
+  const logoutButton = document.createElement('button');
+  logoutButton.id = 'global-logout-btn';
+  logoutButton.className = 'btn-secondary';
+  logoutButton.textContent = 'התנתקות';
+  logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('currentChatId');
+    window.location.href = isPagesDirectory ? '../index.html' : './index.html';
+  });
+  authContainer.replaceChildren(greeting, logoutButton);
+
+  const navLinks = document.querySelector('.nav-links');
+  if (!navLinks || navLinks.querySelector('[data-role-menu="true"]')) return;
+
+  const roleLink = document.createElement('a');
+  roleLink.href = `${isPagesDirectory ? '' : './pages/'}${role === 'admin' ? 'admin.html' : 'dashboard.html'}`;
+  roleLink.dataset.roleMenu = 'true';
+  roleLink.textContent = role === 'admin' ? 'ניהול מערכת' : 'האזור האישי';
+  const activePage = role === 'admin' ? 'admin.html' : 'dashboard.html';
+  if (window.location.pathname.endsWith(activePage)) roleLink.classList.add('active');
+
+  const listItem = document.createElement('li');
+  listItem.append(roleLink);
+  navLinks.append(listItem);
 });

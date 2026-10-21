@@ -179,9 +179,9 @@
         </div>
     </div>
 
-    <script src="../js/config.js"></script>
-    <script src="../services/api-service.js"></script>
-    <script>
+    <script type="module">
+        import { ApiService } from '../services/api-service.js';
+
         const urlParams = new URLSearchParams(window.location.search);
         const botId = urlParams.get('botId');
 
@@ -216,6 +216,8 @@
                 document.getElementById('chatMessages').appendChild(errorMsg);
                 return;
             }
+
+            window.sendMessage = sendMessage;
 
             const messagesContainer = document.getElementById('chatMessages');
 

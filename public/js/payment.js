@@ -128,3 +128,4 @@ document.addEventListener('DOMContentLoaded', () => {
     submitPayment(confirmedBotCount);
   });
 });
+import { ApiService } from '../services/api-service.js';
