@@ -53,27 +53,108 @@ async function setupSecretary(req, res) {
  */
 async function isHolidayOrShabbat(dateString) {
   try {
-    // טעינה דינמית שפתרה את שגיאת התאימות של Node.js
+    // טעינה דינמית של הספריה
     const { HDate, HebrewCalendar, greg } = await import('@hebcal/core');
-
-    // המרת התאריך הלועזי לאובייקט HDate
+    
     const dateObj = new Date(dateString);
     const hdate = new HDate(dateObj);
 
-    // בדיקה אם התאריך הוא שבת (יום 6 בשבוע)
     if (dateObj.getDay() === 6) return true;
 
-    // חישוב אירועים יהודיים עבור השנה של התאריך הנתון
     const events = HebrewCalendar.calcFy(hdate.getFullYear()).filter(ev => {
       const evDate = greg.fromLocaleDate(ev.getDate().greg());
       return evDate.toDateString() === dateObj.toDateString();
     });
 
-    // בדיקה אם יש אירועים שהם חגים או ימי טוב
     return events.some(ev => ev.getFlags() & (HebrewCalendar.CHAG | HebrewCalendar.YOM_TOV));
   } catch (err) {
     console.error('Hebcal error:', err.message);
     return false;
+  }
+}
+
+/**
+ * מחזיר את כל ימי החודש הלועזי כולל תאריך עברי, שבתות וחגים עבור לוח השנה.
+ */
+async function getMonthCalendar(req, res) {
+  try {
+    const { year, month } = req.query;
+
+    if (!year || !month) {
+      return res.status(400).json({ error: 'Year and month are required' });
+    }
+
+    const y = parseInt(year);
+    const m = parseInt(month);
+
+    console.log(`Fetching calendar for Year: ${y}, Month: ${m}`);
+
+    // ייבוא דינמי של Hebcal
+    const { HDate, HebrewCalendar, greg } = await import('@hebcal/core');
+
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const calendarDays = [];
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      // 1. יצירת התאריך המקומי ליום הנוכחי בלולאה
+      const localDate = new Date(y, m - 1, day);
+      const hdate = new HDate(localDate);
+      
+      // 2. בדיקת שבת מדויקת לפי היום בשבוע (6 = שבת)
+      const dayOfWeek = localDate.getDay();
+      const isShabbat = (dayOfWeek === 6);
+
+      let isHoliday = false;
+      let holidayName = null;
+      
+      try {
+        // 3. בדיקת חגים בצורה נקייה ומדויקת
+        const events = HebrewCalendar.calcFy(hdate.getFullYear()).filter(ev => {
+          const evDate = greg.fromLocaleDate(ev.getDate().greg());
+          return evDate.getFullYear() === localDate.getFullYear() &&
+                 evDate.getMonth() === localDate.getMonth() &&
+                 evDate.getDate() === localDate.getDate();
+        });
+
+        const holidayEvent = events.find(ev => ev.getFlags() & (HebrewCalendar.CHAG | HebrewCalendar.YOM_TOV));
+        if (holidayEvent) {
+          isHoliday = true;
+          holidayName = holidayEvent.render('he');
+        }
+      } catch (err) {
+        console.error('Hebcal event calculation error:', err.message);
+      }
+
+      // 4. חסימה רק אם זה שבת ממש או חג ממש
+      const isBlocked = isShabbat || isHoliday;
+
+      const yearStr = localDate.getFullYear();
+      const monthStr = String(localDate.getMonth() + 1).padStart(2, '0');
+      const dayStr = String(localDate.getDate()).padStart(2, '0');
+      const dateString = `${yearStr}-${monthStr}-${dayStr}`;
+
+      calendarDays.push({
+        dayNumber: day,
+        dateString,
+        dayOfWeek,
+        isShabbat,
+        isHoliday,
+        holidayName,
+        hebrewDate: hdate.render('he'),
+        isBlocked
+      });
+    }
+
+    return res.json({
+      success: true,
+      year: y,
+      month: m,
+      calendarDays
+    });
+
+  } catch (error) {
+    console.error("Error in getMonthCalendar:", error);
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -83,7 +164,10 @@ async function isHolidayOrShabbat(dateString) {
 async function bookAppointment(req, res) {
   try {
     const { botUrlKey } = req.params;
-    const { clientName, phone, email, date, time } = req.body;
+    // הוספנו את idNumber לחילוץ מה-body
+    const { clientName, phone, email, date, time, idNumber } = req.body;
+
+    console.log("Incoming booking request:", req.body); // לוג לבדיקה
 
     if (!clientName || !phone || !email || !date || !time) {
       return res.status(400).json({ success: false, message: 'נא למלא את כל פרטי הלקוח והתור' });
@@ -94,30 +178,20 @@ async function bookAppointment(req, res) {
       return res.status(404).json({ success: false, message: 'בוט המזכירה לא נמצא' });
     }
 
-    // בדיקה האם התאריך הוא שבת או חג
-    if (isHolidayOrShabbat(date)) {
-      return res.status(400).json({ success: false, message: 'לא ניתן לקבוע תורים בשבתות וחגים' });
-    }
-
-    // בדיקה האם התאריך נפגש עם יום החופש הקבוע של העסק
-    const dayOfWeek = new Date(date).toLocaleDateString('he-IL', { weekday: 'long' });
-    if (dayOfWeek === bot.dayOff) {
-      return res.status(400).json({ success: false, message: `העסק סגור בימי ${bot.dayOff}` });
-    }
-
     // בדיקה האם השעה תפוסה כבר
     const existingAppointment = bot.appointments.find(app => app.date === date && app.time === time && app.status === 'confirmed');
     if (existingAppointment) {
       return res.status(400).json({ success: false, message: 'השעה שנבחרה כבר תפוסה, נא לבחור שעה אחרת' });
     }
 
-    // הוספת התור לרשימה
+    // הוספת התור לרשימה (כולל idNumber אם צריך)
     bot.appointments.push({
       clientName,
       phone,
       email,
       date,
       time,
+      idNumber: idNumber || '',
       status: 'confirmed'
     });
 
@@ -129,9 +203,88 @@ async function bookAppointment(req, res) {
       priceToPay: bot.defaultPrice
     });
   } catch (error) {
-    console.error('Book appointment error:', error.message);
-    return res.status(500).json({ success: false, message: 'שגיאה בקביעת התור' });
+    console.error('Book appointment error:', error); // הדפסת השגיאה המלאה לטרמינל
+    return res.status(500).json({ success: false, message: 'שגיאה בקביעת התור: ' + error.message });
   }
+}
+
+/**
+ * מחזיר את שעות הפעילות והשעות הפנויות ליום מסוים עבור הלקוח.
+ */
+async function getAvailableSlots(req, res) {
+  try {
+    const { botUrlKey } = req.params;
+    const { date } = req.query; // תאריך נבחר בפורמט YYYY-MM-DD
+
+    if (!date) {
+      return res.status(400).json({ success: false, message: 'נא לספק תאריך בדיקה' });
+    }
+
+    const bot = await SecretaryBot.findOne({ botUrlKey });
+    if (!bot) {
+      return res.status(404).json({ success: false, message: 'בוט המזכירה לא נמצא' });
+    }
+
+    // 1. בדיקה האם התאריך הוא שבת או חג (שימוש ב-await כדי שהפונקציה האסינכרונית תעבוד נכון)
+    const isHolidayOrRest = await isHolidayOrShabbat(date);
+    if (isHolidayOrRest) {
+      return res.json({ success: true, availableSlots: [], message: 'העסק סגור בשבתות וחגים' });
+    }
+
+    // 2. בדיקה האם התאריך נפגש עם יום החופש הקבוע של העסק
+    const dayOfWeek = new Date(date).toLocaleDateString('he-IL', { weekday: 'long' });
+    if (dayOfWeek === bot.dayOff) {
+      return res.json({ success: true, availableSlots: [], message: `העסק סגור בימי ${bot.dayOff}` });
+    }
+
+    // 3. חישוב רשת השעות בהתאם לשעות הפתיחה, אורך התור וההפסקות
+    const slots = [];
+    let currentTimeMinutes = timeToMinutes(bot.openTime);
+    const closeTimeMinutes = timeToMinutes(bot.closeTime);
+    const duration = bot.appointmentDurationMinutes || 30;
+    const breakTime = bot.breakDurationMinutes || 10;
+
+    // שליפת התורים שכבר קיימים באותו יום בבסיס הנתונים
+    const bookedTimes = bot.appointments
+      .filter(app => app.date === date && app.status === 'confirmed')
+      .map(app => app.time);
+
+    while (currentTimeMinutes + duration <= closeTimeMinutes) {
+      const timeString = minutesToTime(currentTimeMinutes);
+      
+      // בדיקה האם השעה כבר תפוסה בבסיס הנתונים המקומי
+      const isBooked = bookedTimes.includes(timeString);
+
+      if (!isBooked) {
+        slots.push(timeString);
+      }
+
+      // התקדמות לשעה הבאה כולל אורך התור וההפסקה
+      currentTimeMinutes += duration + breakTime;
+    }
+
+    return res.json({
+      success: true,
+      availableSlots: slots,
+      price: bot.defaultPrice
+    });
+
+  } catch (error) {
+    console.error('Get available slots error:', error.message);
+    return res.status(500).json({ success: false, message: 'שגיאה בחישוב השעות הפנויות' });
+  }
+}
+
+// פונקציות עזר להמרת דקות לשעות ולהפך
+function timeToMinutes(timeStr) {
+  const [hours, minutes] = timeStr.split(':').map(Number);
+  return hours * 60 + minutes;
+}
+
+function minutesToTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60).toString().padStart(2, '0');
+  const minutes = (totalMinutes % 60).toString().padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
 /**
@@ -200,5 +353,10 @@ async function requestEmergencyVacation(req, res) {
 module.exports = {
   setupSecretary,
   bookAppointment,
-  requestEmergencyVacation
+  requestEmergencyVacation,
+  getAvailableSlots,
+  getMonthCalendar,
+  isHolidayOrShabbat,
+  timeToMinutes,
+  minutesToTime
 };

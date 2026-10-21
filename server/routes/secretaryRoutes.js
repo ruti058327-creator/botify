@@ -3,13 +3,28 @@ const router = express.Router();
 const secretaryController = require('../controllers/secretaryController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 
-// 1. הגדרה או עדכון ראשוני של בוט המזכירה (דורש אימות של בעל העסק)
+// הגדרה או עדכון ראשוני של בוט המזכירה (דורש אימות של בעל העסק)
 router.post('/setup', authenticateToken, secretaryController.setupSecretary);
 
-// 2. קביעת תור חדש על ידי לקוח (פתוח לציבור דרך הקישור הייחודי של הבוט)
+// נתיב לשליפת לוח שנה חודשי של הבוט (פתוח לציבור דרך הקישור הייחודי של הבוט)
+router.get('/:botUrlKey/calendar-month', secretaryController.getMonthCalendar);
+
+// נתיב לבדיקה אם תאריך מסוים הוא חופשה או שבת (פתוח לציבור דרך הקישור הייחודי של הבוט)
+router.get('/:botUrlKey/is-holiday-or-shabbat', secretaryController.isHolidayOrShabbat);
+
+// נתיב להמרת זמן למספר דקות (פתוח לציבור דרך הקישור הייחודי של הבוט)
+router.get('/:botUrlKey/time-to-minutes', secretaryController.timeToMinutes);
+
+// נתיב להמרת מספר דקות לזמן (פתוח לציבור דרך הקישור הייחודי של הבוט)
+router.get('/:botUrlKey/minutes-to-time', secretaryController.minutesToTime);
+
+// קביעת תור חדש על ידי לקוח (פתוח לציבור דרך הקישור הייחודי של הבוט)
 router.post('/:botUrlKey/book', secretaryController.bookAppointment);
 
-// 3. בקשת חופשה פתאומית על ידי בעל העסק (דורש אימות)
+// נתיב לשליפת שעות פנויות ללקוח לפי תאריך
+router.get('/:botUrlKey/slots', secretaryController.getAvailableSlots);
+
+// בקשת חופשה פתאומית על ידי בעל העסק (דורש אימות)
 router.post('/:botId/emergency-vacation', authenticateToken, secretaryController.requestEmergencyVacation);
 
 module.exports = router;
