@@ -2,13 +2,14 @@ document.getElementById('secretaryForm').addEventListener('submit', async (e) =>
   e.preventDefault();
   const messageDiv = document.getElementById('message');
   
-  const payload = {
-    botUrlKey: document.getElementById('botUrlKey').value.trim(),
-    dayOff: document.getElementById('dayOff').value,
-    openTime: document.getElementById('openTime').value,
-    closeTime: document.getElementById('closeTime').value,
-    defaultPrice: Number(document.getElementById('defaultPrice').value)
-  };
+const payload = {
+  botUrlKey: document.getElementById('botUrlKey').value.trim(),
+  dayOff: document.getElementById('dayOff').value,
+  openTime: document.getElementById('openTime').value,
+  closeTime: document.getElementById('closeTime').value,
+  defaultPrice: Number(document.getElementById('defaultPrice').value),
+  appointmentDurationMinutes: Number(document.getElementById('appointmentDurationMinutes').value)
+};
 
   // שליפת הטוקן של המשתמש המחובר מתוך ה-Local Storage
   const token = localStorage.getItem('token') || localStorage.getItem('jwtToken');
