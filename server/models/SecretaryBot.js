@@ -35,11 +35,10 @@ const secretaryBotSchema = new mongoose.Schema({
   closeTime: { type: String, required: true, default: '16:00' }, // שעת סיום
   defaultPrice: { type: Number, required: true, default: 150 }, // מחיר ברירת מחדל לפגישה
 
-  // פרמטרים מתקדמים של מרווחי הפסקות בין פגישות.
-  breakDurationMinutes: { type: Number, default: 10 }, // אורך הפסקה בדקות
-  breakEveryXAppointments: { type: Number, default: 3 }, // כל כמה פגישות תהיה הפסקה
-
-  // רשימות מוטמעות כדי לטעון יחד את התורים והחופשות השייכים לבוט.
+  // הגדרות עריכה מתקדמות
+  appointmentDurationMinutes: { type: Number, required: true, default: 30 }, // אורך כל תור בדקות
+  breakDurationMinutes: { type: Number, default: 10 }, // אורך הפסקה בין תורים בדקות
+  // רשימות נתונים
   appointments: [appointmentSchema],
   emergencyVacations: [emergencyVacationSchema]
 
