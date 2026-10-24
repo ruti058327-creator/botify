@@ -5,11 +5,11 @@ Botify is a Node.js and Express application for account management, website-scan
 ## Run locally
 
 1. Install the server dependencies: `cd server` followed by `npm install`.
-2. Copy `.env.example` to `.env`. Set `MONGO_URI` to the connection string from your MongoDB Atlas cluster and set `JWT_SECRET`; add the email and Gemini settings for those features.
+2. Copy `.env.example` to `.env`. Set `MONGO_URI` to the connection string from your MongoDB Atlas cluster and set a stable `JWT_SECRET` of at least 32 characters; set `APP_URL` to the public application URL and add the email and Gemini settings for those features.
 3. Start the server with `npm start` from `server/`, or run `npm start` from the repository root.
 4. Open `http://localhost:3000`.
 
-The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` from `server/.env`. `MONGO_URI` must point to the project's MongoDB Atlas database. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
+The server validates `MONGO_URI`, `PORT`, `APP_URL`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` at startup from `server/.env`. `MONGO_URI` must point to the project's MongoDB Atlas database. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs both email settings. AI responses need `GEMINI_API_KEY`.
 
 ## Structure
 

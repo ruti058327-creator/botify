@@ -9,7 +9,7 @@ Botify is a Hebrew, right-to-left website for creating website-aware customer-se
 3. From the repository root, run `npm start`.
 4. Open `http://localhost:3000`.
 
-The server uses `MONGO_URI` for MongoDB Atlas, `EMAIL_USER` and `EMAIL_PASS` for email verification, `JWT_SECRET` for signed sessions, and `GEMINI_API_KEY` for AI answers. Do not commit `.env` or share its values.
+The server validates `MONGO_URI`, `JWT_SECRET`, `PORT`, `APP_URL`, `EMAIL_USER`, `EMAIL_PASS`, and `GEMINI_API_KEY` from `server/.env` at startup. Set `APP_URL` to the public application URL. Do not commit `.env` or share its values.
 
 ## Project layout
 

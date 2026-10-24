@@ -8,10 +8,6 @@ import mongoose from 'mongoose';
  */
 export default async function connectDB() {
   const dbURI = process.env.MONGO_URI;
-  if (!dbURI) {
-    throw new Error('MONGO_URI is missing. Create server/.env from server/.env.example and set your MongoDB connection string.');
-  }
-
   await mongoose.connect(dbURI, {
     serverSelectionTimeoutMS: 15000,
     retryWrites: true

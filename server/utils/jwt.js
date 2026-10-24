@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 
 
 const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) throw new Error('JWT_SECRET is missing. Set it in server/.env using server/.env.example.');
 
 /**
  * חותם אסימון JWT למשתמש עם מזהה, שם, תפקיד ותוקף של שעתיים.

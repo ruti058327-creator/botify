@@ -16,7 +16,7 @@ export default function errorHandler(error, req, res, next) {
     : error.code === 11000
       ? 409
       : error.statusCode
-        || (['CastError', 'ValidationError', 'SyntaxError'].includes(error.name) ? 400 : 500);
+        || (error.name === 'SyntaxError' ? 400 : 500);
   const message = error.code === 'LIMIT_FILE_SIZE'
     ? 'הקובץ גדול מדי (מקסימום 5MB)'
     : error.code === 11000
