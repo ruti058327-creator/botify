@@ -30,3 +30,6 @@ router.post('/:botId/emergency-vacation', authenticateToken, secretaryController
 
 // מחזיר את הנתב לשימוש באפליקציה הראשית.
 module.exports = router;
+
+
+
