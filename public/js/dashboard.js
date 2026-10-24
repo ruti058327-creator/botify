@@ -208,57 +208,7 @@ async function loadOwnedBots() {
             openLink.href = `chat.html?botId=${encodeURIComponent(bot.id)}`;
             openLink.textContent = 'פתיחת צ׳אט';
 
-            const editButton = document.createElement('button');
-            editButton.type = 'button';
-            editButton.textContent = 'עריכת בוט';
-            editButton.addEventListener('click', event => {
-                event.stopImmediatePropagation();
-                window.location.href = `create-bot.html?id=${encodeURIComponent(bot.id)}`;
-            });
-            /**
-             * מבקש הנחיות חדשות לבוט, שומר אותן בשרת ומרענן את הרשימה.
-             * @returns {Promise<void>} משלים את עדכון ההנחיות אם אושר.
-             */
-            editButton.addEventListener('click', async () => {
-                const instructions = window.prompt('הנחיות לבוט:', bot.instructions || '');
-                if (instructions === null) return;
-
-                const updateResponse = await ApiService.request(`/api/bots/${encodeURIComponent(bot.id)}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
-                    },
-                    body: JSON.stringify({ instructions })
-                });
-                if (!updateResponse.ok) {
-                    alert('לא ניתן לעדכן את הנחיות הבוט');
-                    return;
-                }
-                await loadOwnedBots();
-            });
-
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.textContent = 'מחיקה';
-            /**
-             * מבקש אישור למחיקת הבוט ומרענן את הרשימה לאחר המחיקה.
-             * @returns {Promise<void>} מוחק את הבוט לאחר אישור המשתמש.
-             */
-            deleteButton.addEventListener('click', async () => {
-                if (!window.confirm('למחוק את הבוט?')) return;
-                const deleteResponse = await ApiService.request(`/api/bots/${encodeURIComponent(bot.id)}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
-                });
-                if (!deleteResponse.ok) {
-                    alert('לא ניתן למחוק את הבוט');
-                    return;
-                }
-                await loadOwnedBots();
-            });
-
-            actions.append(openLink, editButton, deleteButton);
+            actions.append(openLink);
             row.append(title, actions);
             container.appendChild(row);
         }

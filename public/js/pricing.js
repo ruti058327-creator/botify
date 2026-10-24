@@ -33,7 +33,9 @@ function continueToPlan(planId, price, planName, returnToCreate, confirmedBotCou
   // 2. בדיקה האם המשתמש כבר מחובר (יש לו Token)
   const token = localStorage.getItem('token');
   if (token) {
-    const returnParam = returnToCreate ? '&return=create-bot' : '';
+    const required = new URLSearchParams(window.location.search).get('required');
+    const returnTarget = returnToCreate ? 'create-bot' : required === 'secretary-bot' ? 'secretary-bots' : '';
+    const returnParam = returnTarget ? `&return=${returnTarget}` : '';
     const deletionParam = confirmedBotCount ? `&confirmedBotCount=${confirmedBotCount}` : '';
     window.location.href = `payment.html?plan=${planId}&price=${price}${returnParam}${deletionParam}`;
   } else {
