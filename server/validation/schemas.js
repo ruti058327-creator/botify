@@ -186,3 +186,99 @@ export const chatSchemas = {
     text: Joi.string().trim().min(1).max(5000).required()
   }).unknown(true)
 };
+
+const botUrlKey = Joi.string().trim().pattern(/^[a-zA-Z0-9-]+$/).min(1).max(100);
+const dateString = Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/).custom((value, helpers) => {
+  const [year, month, day] = value.split('-').map(Number);
+  if (year < 100) return helpers.error('date.invalid');
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.toISOString().slice(0, 10) !== value) return helpers.error('date.invalid');
+  return value;
+}).messages({
+  'string.pattern.base': 'יש להזין תאריך בפורמט YYYY-MM-DD',
+  'date.invalid': 'יש להזין תאריך לועזי תקין'
+});
+const timeString = Joi.string().pattern(/^([01]\d|2[0-3]):[0-5]\d$/);
+const secretarySettings = {
+  dayOff: Joi.string().valid('ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי').messages({
+    'any.only': 'יש לבחור יום חופש תקין'
+  }),
+  openTime: timeString.messages({ 'string.pattern.base': 'יש להזין שעת פתיחה תקינה' }),
+  closeTime: timeString.messages({ 'string.pattern.base': 'יש להזין שעת סגירה תקינה' }),
+  defaultPrice: Joi.number().min(0).messages({ 'number.min': 'המחיר חייב להיות אפס או יותר' }),
+  appointmentDurationMinutes: Joi.number().integer().min(5).messages({
+    'number.base': 'משך התור חייב להיות מספר שלם',
+    'number.min': 'משך התור חייב להיות לפחות 5 דקות'
+  }),
+  breakDurationMinutes: Joi.number().integer().min(0).messages({
+    'number.base': 'משך ההפסקה חייב להיות מספר שלם',
+    'number.min': 'משך ההפסקה אינו יכול להיות שלילי'
+  })
+};
+const withValidSecretaryHours = schema => schema.custom((value, helpers) => {
+  if (value.openTime && value.closeTime && value.openTime >= value.closeTime) {
+    return helpers.error('settings.timeRange');
+  }
+  return value;
+}).messages({
+  'settings.timeRange': 'שעת הסגירה חייבת להיות מאוחרת משעת הפתיחה'
+});
+
+export const secretarySchemas = {
+  botParams: Joi.object({ botUrlKey: botUrlKey.required() }).unknown(true),
+  tokenParams: Joi.object({
+    token: Joi.string().hex().length(40).required()
+  }).unknown(true),
+  setup: withValidSecretaryHours(Joi.object({
+    botUrlKey: botUrlKey.required(),
+    ...secretarySettings,
+    dayOff: secretarySettings.dayOff.required(),
+    openTime: secretarySettings.openTime.required(),
+    closeTime: secretarySettings.closeTime.required(),
+    defaultPrice: secretarySettings.defaultPrice.default(150),
+    appointmentDurationMinutes: secretarySettings.appointmentDurationMinutes.default(30),
+    breakDurationMinutes: secretarySettings.breakDurationMinutes.default(10)
+  }).unknown(true)),
+  settings: withValidSecretaryHours(Joi.object({
+    botUrlKey: botUrlKey.optional(),
+    ...secretarySettings
+  }).min(1).or(
+    'botUrlKey',
+    'dayOff',
+    'openTime',
+    'closeTime',
+    'defaultPrice',
+    'appointmentDurationMinutes',
+    'breakDurationMinutes'
+  ).unknown(true)),
+  booking: Joi.object({
+    clientName: Joi.string().trim().min(1).max(150).required(),
+    phone: Joi.string().trim().min(1).max(30).required(),
+    email: Joi.string().trim().email().max(254).lowercase().required(),
+    date: dateString.required(),
+    time: timeString.required(),
+    idNumber: Joi.string().pattern(/^\d{9}$/).allow('').optional().messages({
+      'string.pattern.base': 'מספר תעודת הזהות חייב להכיל 9 ספרות'
+    })
+  }).unknown(true),
+  dateQuery: Joi.object({ date: dateString.required() }).unknown(true),
+  calendarQuery: Joi.object({
+    year: Joi.number().integer().min(100).max(9999).required(),
+    month: Joi.number().integer().min(1).max(12).required()
+  }).unknown(true),
+  appointmentQuery: Joi.object({
+    year: Joi.number().integer().min(100).max(9999),
+    month: Joi.number().integer().min(1).max(12)
+  }).with('year', 'month').with('month', 'year').unknown(true),
+  emergencyVacation: Joi.object({
+    vacationDate: dateString.required(),
+    customMessage: Joi.string().trim().min(1).max(1000).required().messages({
+      'string.empty': 'יש להזין הודעה',
+      'string.max': 'ההודעה יכולה להכיל עד 1000 תווים'
+    })
+  }).unknown(true),
+  timeQuery: Joi.object({ time: timeString.required() }).unknown(true),
+  minutesQuery: Joi.object({
+    minutes: Joi.number().integer().min(0).max(1439).required()
+  }).unknown(true)
+};

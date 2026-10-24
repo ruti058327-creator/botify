@@ -7,8 +7,7 @@ import connectDB from './config/db.js';
 // מודל המנהלים משמש לסנכרון רשימת המנהלים בכל אתחול.
 import Administrator from './models/Administrator.js';
 
-// משתמשים בפורט שהוגדר בסביבה, ואם אינו קיים בוחרים בפורט המקומי 3000.
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT);
 
 try {
   // ממתינים למסד הנתונים כדי לא להפעיל שרת שאינו יכול לשרת בקשות.
