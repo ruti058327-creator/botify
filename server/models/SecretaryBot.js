@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const appointmentSchema = new mongoose.Schema({
   clientName: { type: String, required: true },
+  idNumber: { type: String, default: '' },
   phone: { type: String, required: true },
   email: { type: String, required: true },
   date: { type: String, required: true }, // פורמט YYYY-MM-DD
@@ -12,6 +13,7 @@ const appointmentSchema = new mongoose.Schema({
 
 const emergencyVacationSchema = new mongoose.Schema({
   date: { type: String, required: true },
+  customMessage: { type: String, default: '' },
   messageSent: { type: Boolean, default: false },
   clientConfirmations: [{
     clientEmail: String,
@@ -39,4 +41,4 @@ const secretaryBotSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-module.exports = mongoose.model('SecretaryBot', secretaryBotSchema);
+export default mongoose.model('SecretaryBot', secretaryBotSchema);
