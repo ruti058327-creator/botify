@@ -1,7 +1,9 @@
-// מודל המזכירה שומר הגדרות עסקיות, תורים ורישומי חופשות.
-const SecretaryBot = require('../models/SecretaryBot');
-const nodemailer = require('nodemailer'); // ייבוא מודול nodemailer לשליחת מיילים
-const crypto = require('crypto'); // ייבוא מודול crypto ליצירת טוקנים אקראיים
+import SecretaryBot from '../models/SecretaryBot.js';
+import Payment from '../models/Payment.js';
+import nodemailer from 'nodemailer'; // ייבוא מודול nodemailer לשליחת מיילים
+import crypto from 'node:crypto'; // ייבוא מודול crypto ליצירת טוקנים אקראיים
+import { getBotLimit } from '../utils/plans.js';
+const HEBREW_WEEKDAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
 // יוצר חיבור Gmail שבו משתמשים לשליחת עדכוני חופשה ללקוחות.
 const transporter = nodemailer.createTransport({
@@ -12,48 +14,124 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+async function getSecretaryBotQuota(userId) {
+  const [botCount, completedPayment] = await Promise.all([
+    SecretaryBot.countDocuments({ userId }),
+    Payment.findOne({ userId, status: 'completed' }).sort({ createdAt: -1 }).select('planId')
+  ]);
+  const botLimit = completedPayment ? getBotLimit(completedPayment.planId) : 1;
+  return {
+    botCount,
+    botLimit,
+    planId: completedPayment?.planId || 'בסיסי',
+    canCreate: botCount < botLimit
+  };
+}
+
 /**
  * יוצר או מעדכן את הגדרות בוט המזכירה הראשוניות של בעל העסק.
  */
 async function setupSecretary(req, res) {
   try {
-    // קורא מהבקשה את כתובת הבוט ואת הגדרות שעות הפעילות והתמחור.
-    const { botUrlKey, dayOff, openTime, closeTime, defaultPrice } = req.body;
+    const {
+      botUrlKey,
+      dayOff,
+      openTime,
+      closeTime,
+      defaultPrice,
+      appointmentDurationMinutes,
+      breakDurationMinutes
+    } = req.body;
     
     // מונע שמירה של הגדרות בסיסיות חלקיות.
     if (!botUrlKey || !dayOff || !openTime || !closeTime) {
       return res.status(400).json({ success: false, message: 'נא למלא את כל שדות החובה' });
     }
 
-    // מאתר את בוט המזכירה של המשתמש המחובר כדי לעדכן או ליצור אותו.
-    let bot = await SecretaryBot.findOne({ userId: req.user.id });
-    if (bot) {
-      // מעדכן את ההגדרות הקיימות ושומר מחיר ברירת מחדל כשלא נשלח מחיר.
-      bot.botUrlKey = botUrlKey;
-      bot.dayOff = dayOff;
-      bot.openTime = openTime;
-      bot.closeTime = closeTime;
-      bot.defaultPrice = defaultPrice || 150;
-      await bot.save();
-    } else {
-      // אם זו הגדרה ראשונה, יוצר מסמך חדש המשויך למשתמש המאומת.
-      bot = new SecretaryBot({
-        userId: req.user.id,
-        botUrlKey,
-        dayOff,
-        openTime,
-        closeTime,
-        defaultPrice: defaultPrice || 150
-      });
-      await bot.save();
+    const price = defaultPrice === undefined ? 150 : Number(defaultPrice);
+    const appointmentDuration = appointmentDurationMinutes === undefined ? 30 : Number(appointmentDurationMinutes);
+    const breakDuration = breakDurationMinutes === undefined ? 10 : Number(breakDurationMinutes);
+    if (!/^[a-zA-Z0-9-]+$/.test(botUrlKey) ||
+        !HEBREW_WEEKDAYS.slice(0, 6).includes(dayOff) ||
+        !/^([01]\d|2[0-3]):[0-5]\d$/.test(openTime) ||
+        !/^([01]\d|2[0-3]):[0-5]\d$/.test(closeTime) ||
+        openTime >= closeTime ||
+        !Number.isFinite(price) || price < 0 ||
+        !Number.isInteger(appointmentDuration) || appointmentDuration < 5 ||
+        !Number.isInteger(breakDuration) || breakDuration < 0) {
+      return res.status(400).json({ success: false, message: 'נא לבדוק את מזהה הבוט, יום החופש ושעות הפעילות' });
     }
 
-    // מחזיר ללקוח אישור ואת ההגדרות שנשמרו.
+    const existingBot = await SecretaryBot.findOne({ userId: req.user.id, botUrlKey });
+    if (!existingBot && req.user.role !== 'admin') {
+      const quota = await getSecretaryBotQuota(req.user.id);
+      if (!quota.canCreate) {
+        return res.status(403).json({
+          success: false,
+          code: 'SECRETARY_BOT_LIMIT_REACHED',
+          message: 'הגעת למכסת בוטי המזכירה במסלול שלך. יש לבחור מסלול בתשלום כדי להוסיף בוט.',
+          pricingUrl: '/pages/pricing.html?required=secretary-bot'
+        });
+      }
+    }
+
+    const bot = await SecretaryBot.findOneAndUpdate(
+      { userId: req.user.id, botUrlKey },
+      {
+        $set: {
+          dayOff,
+          openTime,
+          closeTime,
+          defaultPrice: price,
+          appointmentDurationMinutes: appointmentDuration,
+          breakDurationMinutes: breakDuration
+        },
+        $setOnInsert: { userId: req.user.id, botUrlKey }
+      },
+      { new: true, upsert: true, runValidators: true }
+    );
+
     return res.json({ success: true, message: 'הגדרות בוט המזכירה נשמרו בהצלחה', bot });
   } catch (error) {
     // שומר את פרטי הכשל ביומן, אך מחזיר ללקוח הודעה כללית.
     console.error('Setup secretary error:', error.message);
+    if (error.code === 11000) {
+      return res.status(409).json({ success: false, message: 'מזהה קישור זה כבר בשימוש' });
+    }
     return res.status(500).json({ success: false, message: 'שגיאה בשמירת הגדרות המזכירה' });
+  }
+}
+
+async function getOwnedSecretaryBots(req, res) {
+  try {
+    const [bots, quota] = await Promise.all([
+      SecretaryBot.find({ userId: req.user.id })
+        .select('botUrlKey dayOff openTime closeTime defaultPrice appointmentDurationMinutes breakDurationMinutes')
+        .sort({ createdAt: 1 })
+        .lean(),
+      getSecretaryBotQuota(req.user.id)
+    ]);
+
+    return res.json({ success: true, bots, quota });
+  } catch (error) {
+    console.error('Get owned secretary bots error:', error);
+    return res.status(500).json({ success: false, message: 'שגיאה בטעינת בוטי המזכירה' });
+  }
+}
+
+async function deleteSecretaryBot(req, res) {
+  try {
+    const bot = await SecretaryBot.findOneAndDelete({
+      botUrlKey: req.params.botUrlKey,
+      userId: req.user.id
+    });
+    if (!bot) {
+      return res.status(404).json({ success: false, message: 'הבוט לא נמצא או שאין הרשאה למחוק אותו' });
+    }
+    return res.json({ success: true, message: 'בוט המזכירה נמחק בהצלחה' });
+  } catch (error) {
+    console.error('Delete secretary bot error:', error);
+    return res.status(500).json({ success: false, message: 'שגיאה במחיקת בוט המזכירה' });
   }
 }
 
@@ -63,19 +141,17 @@ async function setupSecretary(req, res) {
 async function isHolidayOrShabbat(dateString) {
   try {
     // טעינה דינמית של הספריה
-    const { HDate, HebrewCalendar, greg } = await import('@hebcal/core');
+    const { HDate, HebrewCalendar } = await import('@hebcal/core');
     
-    const dateObj = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
     const hdate = new HDate(dateObj);
 
     if (dateObj.getDay() === 6) return true;
 
-    const events = HebrewCalendar.calcFy(hdate.getFullYear()).filter(ev => {
-      const evDate = greg.fromLocaleDate(ev.getDate().greg());
-      return evDate.toDateString() === dateObj.toDateString();
-    });
+    const events = HebrewCalendar.getHolidaysOnDate(hdate, true) || [];
 
-    return events.some(ev => ev.getFlags() & (HebrewCalendar.CHAG | HebrewCalendar.YOM_TOV));
+    return events.some(ev => ev.hasFlag('CHAG'));
   } catch (err) {
     // במקרה שחישוב לוח השנה נכשל, מתעדים ומאפשרים לקוד הקורא להמשיך.
     console.error('Hebcal error:', err.message);
@@ -84,23 +160,31 @@ async function isHolidayOrShabbat(dateString) {
 }
 
 /**
- * מחזיר את כל ימי החודש הלועזי כולל תאריך עברי, שבתות וחגים עבור לוח השנה.
+ * מחזיר את כל ימי החודש הלועזי, כולל שבתות, חגים וחופשות עבור לוח השנה.
  */
 async function getMonthCalendar(req, res) {
   try {
     const { year, month } = req.query;
 
     if (!year || !month) {
-      return res.status(400).json({ error: 'Year and month are required' });
+      return res.status(400).json({ success: false, message: 'Year and month are required' });
     }
 
-    const y = parseInt(year);
-    const m = parseInt(month);
+    const y = Number(year);
+    const m = Number(month);
+    if (!Number.isInteger(y) || y < 100 || y > 9999 || !Number.isInteger(m) || m < 1 || m > 12) {
+      return res.status(400).json({ success: false, message: 'Invalid year or month' });
+    }
+
+    const bot = await SecretaryBot.findOne({ botUrlKey: req.params.botUrlKey });
+    if (!bot) {
+      return res.status(404).json({ success: false, message: 'בוט המזכירה לא נמצא' });
+    }
 
     console.log(`Fetching calendar for Year: ${y}, Month: ${m}`);
 
     // ייבוא דינמי של Hebcal
-    const { HDate, HebrewCalendar, greg } = await import('@hebcal/core');
+    const { HDate, HebrewCalendar } = await import('@hebcal/core');
 
     const daysInMonth = new Date(y, m, 0).getDate();
     const calendarDays = [];
@@ -109,6 +193,10 @@ async function getMonthCalendar(req, res) {
       // 1. יצירת התאריך המקומי ליום הנוכחי בלולאה
       const localDate = new Date(y, m - 1, day);
       const hdate = new HDate(localDate);
+      const yearStr = localDate.getFullYear();
+      const monthStr = String(localDate.getMonth() + 1).padStart(2, '0');
+      const dayStr = String(localDate.getDate()).padStart(2, '0');
+      const dateString = `${yearStr}-${monthStr}-${dayStr}`;
       
       // 2. בדיקת שבת מדויקת לפי היום בשבוע (6 = שבת)
       const dayOfWeek = localDate.getDay();
@@ -119,14 +207,9 @@ async function getMonthCalendar(req, res) {
       
       try {
         // 3. בדיקת חגים בצורה נקייה ומדויקת
-        const events = HebrewCalendar.calcFy(hdate.getFullYear()).filter(ev => {
-          const evDate = greg.fromLocaleDate(ev.getDate().greg());
-          return evDate.getFullYear() === localDate.getFullYear() &&
-                 evDate.getMonth() === localDate.getMonth() &&
-                 evDate.getDate() === localDate.getDate();
-        });
+        const events = HebrewCalendar.getHolidaysOnDate(hdate, true) || [];
 
-        const holidayEvent = events.find(ev => ev.getFlags() & (HebrewCalendar.CHAG | HebrewCalendar.YOM_TOV));
+        const holidayEvent = events.find(ev => ev.hasFlag('CHAG'));
         if (holidayEvent) {
           isHoliday = true;
           holidayName = holidayEvent.render('he');
@@ -135,22 +218,20 @@ async function getMonthCalendar(req, res) {
         console.error('Hebcal event calculation error:', err.message);
       }
 
-      // 4. חסימה רק אם זה שבת ממש או חג ממש
-      const isBlocked = isShabbat || isHoliday;
-
-      const yearStr = localDate.getFullYear();
-      const monthStr = String(localDate.getMonth() + 1).padStart(2, '0');
-      const dayStr = String(localDate.getDate()).padStart(2, '0');
-      const dateString = `${yearStr}-${monthStr}-${dayStr}`;
+      // 4. חסימה רק אם זה שבת ממש או חג ממש או חופשה פתאומית
+      const isDayOff = HEBREW_WEEKDAYS[dayOfWeek] === String(bot.dayOff || '').trim();
+      const isEmergencyVacation = Array.isArray(bot.emergencyVacations) &&
+        bot.emergencyVacations.some(v => v.date === dateString);
+      const isBlocked = isShabbat || isHoliday || isDayOff || isEmergencyVacation;
 
       calendarDays.push({
         dayNumber: day,
         dateString,
         dayOfWeek,
+        isDayOff,
         isShabbat,
         isHoliday,
         holidayName,
-        hebrewDate: hdate.render('he'),
         isBlocked
       });
     }
@@ -164,7 +245,7 @@ async function getMonthCalendar(req, res) {
 
   } catch (error) {
     console.error("Error in getMonthCalendar:", error);
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ success: false, message: 'שגיאה בטעינת לוח השנה' });
   }
 }
 
@@ -241,6 +322,12 @@ async function getAvailableSlots(req, res) {
       return res.status(404).json({ success: false, message: 'בוט המזכירה לא נמצא' });
     }
 
+    const isVacation = Array.isArray(bot.emergencyVacations) &&
+      bot.emergencyVacations.some(v => v.date === date);
+    if (isVacation) {
+      return res.json({ success: true, availableSlots: [], message: 'העסק סגור בתאריך זה עקב חופשה' });
+    }
+
     // 1. בדיקה האם התאריך הוא שבת או חג (שימוש ב-await כדי שהפונקציה האסינכרונית תעבוד נכון)
     const isHolidayOrRest = await isHolidayOrShabbat(date);
     if (isHolidayOrRest) {
@@ -248,8 +335,9 @@ async function getAvailableSlots(req, res) {
     }
 
     // 2. בדיקה האם התאריך נפגש עם יום החופש הקבוע של העסק
-    const dayOfWeek = new Date(date).toLocaleDateString('he-IL', { weekday: 'long' });
-    if (dayOfWeek === bot.dayOff) {
+    const [year, month, day] = date.split('-').map(Number);
+    const dayOfWeek = new Date(year, month - 1, day).getDay();
+    if (HEBREW_WEEKDAYS[dayOfWeek] === bot.dayOff) {
       return res.json({ success: true, availableSlots: [], message: `העסק סגור בימי ${bot.dayOff}` });
     }
 
@@ -303,71 +391,217 @@ function minutesToTime(totalMinutes) {
   return `${hours}:${minutes}`;
 }
 
+/** 
+ * מראה התורים עבור בעל העסק
+*/
+async function getBusinessAppointments(req, res) {
+  try {
+    const { botUrlKey } = req.params;
+    const bot = await SecretaryBot.findOne({ botUrlKey, userId: req.user.id });
+    
+    if (!bot) {
+      return res.status(404).json({ success: false, message: 'הבוט לא נמצא או שאין הרשאה לצפות בו' });
+    }
+
+    const { year, month } = req.query;
+    if ((year && !month) || (!year && month)) {
+      return res.status(400).json({ success: false, message: 'נא לספק שנה וחודש יחד' });
+    }
+    if (year && (!/^\d{4}$/.test(year) || !/^\d{1,2}$/.test(month) || Number(month) < 1 || Number(month) > 12)) {
+      return res.status(400).json({ success: false, message: 'חודש או שנה אינם תקינים' });
+    }
+
+    const appointments = bot.appointments
+      .filter(appointment => !year || appointment.date.startsWith(`${year}-${String(month).padStart(2, '0')}-`))
+      .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+
+    return res.json({
+      success: true,
+      appointments
+    });
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    return res.status(500).json({ success: false, message: 'שגיאה בטעינת התורים' });
+  }
+}
+
+/**
+ * עדכון הגדרות הבוט עבור בעל העסק (מחיר ברירת מחדל, יום חופש וכו')
+ */
+async function updateBotSettings(req, res) {
+  try {
+    const { botUrlKey } = req.params;
+    const {
+      botUrlKey: newBotUrlKey,
+      defaultPrice,
+      dayOff,
+      openTime,
+      closeTime,
+      appointmentDurationMinutes,
+      breakDurationMinutes
+    } = req.body;
+
+    const bot = await SecretaryBot.findOne({ botUrlKey, userId: req.user.id });
+    if (!bot) {
+      return res.status(404).json({ success: false, message: 'הבוט לא נמצא או שאין הרשאה לערוך אותו' });
+    }
+
+    const nextBotUrlKey = newBotUrlKey === undefined ? bot.botUrlKey : String(newBotUrlKey).trim();
+    const nextDayOff = dayOff === undefined ? bot.dayOff : dayOff;
+    const nextOpenTime = openTime === undefined ? bot.openTime : openTime;
+    const nextCloseTime = closeTime === undefined ? bot.closeTime : closeTime;
+    if (!/^[a-zA-Z0-9-]+$/.test(nextBotUrlKey) ||
+        !HEBREW_WEEKDAYS.slice(0, 6).includes(nextDayOff) ||
+        !/^([01]\d|2[0-3]):[0-5]\d$/.test(nextOpenTime) ||
+        !/^([01]\d|2[0-3]):[0-5]\d$/.test(nextCloseTime) ||
+        nextOpenTime >= nextCloseTime ||
+        (defaultPrice !== undefined && (!Number.isFinite(Number(defaultPrice)) || Number(defaultPrice) < 0)) ||
+        (appointmentDurationMinutes !== undefined && (!Number.isInteger(Number(appointmentDurationMinutes)) || Number(appointmentDurationMinutes) < 5)) ||
+        (breakDurationMinutes !== undefined && (!Number.isInteger(Number(breakDurationMinutes)) || Number(breakDurationMinutes) < 0))) {
+      return res.status(400).json({ success: false, message: 'נא לבדוק את כל הגדרות הבוט' });
+    }
+
+    bot.botUrlKey = nextBotUrlKey;
+    bot.dayOff = nextDayOff;
+    bot.openTime = nextOpenTime;
+    bot.closeTime = nextCloseTime;
+    if (defaultPrice !== undefined) bot.defaultPrice = Number(defaultPrice);
+    if (appointmentDurationMinutes !== undefined) bot.appointmentDurationMinutes = Number(appointmentDurationMinutes);
+    if (breakDurationMinutes !== undefined) bot.breakDurationMinutes = Number(breakDurationMinutes);
+    try {
+      await bot.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        return res.status(409).json({ success: false, message: 'מזהה קישור זה כבר בשימוש' });
+      }
+      throw error;
+    }
+
+    return res.json({
+      success: true,
+      message: 'הגדרות הבוט עודכנו בהצלחה',
+      bot
+    });
+  } catch (error) {
+    console.error('Error updating bot settings:', error);
+    return res.status(500).json({ success: false, message: 'שגיאה בעדכון ההגדרות' });
+  }
+}
+
 /**
  * בעל העסק מגיש בקשה לחופשה פתאומית ושולח מייל ללקוחות המושפעים.
  */
 async function requestEmergencyVacation(req, res) {
   try {
-    // מזהה הבוט והיום המבוקש מגיעים מהנתיב ומגוף הבקשה.
-    const { botId } = req.params;
-    const { vacationDate, customMessage } = req.body;
+    const { botUrlKey } = req.params;
+    const vacationDate = typeof req.body.vacationDate === 'string' ? req.body.vacationDate : '';
+    const customMessage = typeof req.body.customMessage === 'string' ? req.body.customMessage.trim() : '';
+    const dateMatch = vacationDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!dateMatch || !customMessage || customMessage.length > 1000) {
+      return res.status(400).json({ success: false, message: 'נא לבחור תאריך תקין ולכתוב הודעה באורך של עד 1000 תווים' });
+    }
 
-    // מוודא שהבוט קיים ושהמשתמש המחובר אכן בעליו.
-    const bot = await SecretaryBot.findById(botId);
+    const [, year, month, day] = dateMatch;
+    const parsedDate = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+    if (parsedDate.toISOString().slice(0, 10) !== vacationDate) {
+      return res.status(400).json({ success: false, message: 'תאריך החופשה אינו תקין' });
+    }
+
+    const bot = await SecretaryBot.findOne({ botUrlKey, userId: req.user.id });
     if (!bot || String(bot.userId) !== req.user.id) {
       return res.status(404).json({ success: false, message: 'הבוט אינו קיים או שאין הרשאה' });
     }
 
-    // איתור תורים שנקבעו לאותו תאריך של חופשה
-    // בוחר רק תורים מאושרים בתאריך החופשה, שאותם צריך להודיע ללקוחותיהם.
+    if (Array.isArray(bot.emergencyVacations) &&
+        bot.emergencyVacations.some(vacation => vacation.date === vacationDate)) {
+      return res.status(409).json({ success: false, message: 'כבר הוגדרה חופשה לתאריך זה' });
+    }
+
     const affectedAppointments = bot.appointments.filter(app => app.date === vacationDate && app.status === 'confirmed');
+    const appointmentsByEmail = new Map();
+    for (const appointment of affectedAppointments) {
+      const email = appointment.email.trim().toLowerCase();
+      const clientAppointments = appointmentsByEmail.get(email) || [];
+      clientAppointments.push(appointment);
+      appointmentsByEmail.set(email, clientAppointments);
+    }
 
-    // אוסף פרטי אישור קריאה ואסימון ייחודי עבור כל לקוח שנפגע.
+    if (appointmentsByEmail.size > 0 && (!process.env.EMAIL_USER || !process.env.EMAIL_PASS)) {
+      return res.status(503).json({ success: false, message: 'שליחת המיילים אינה מוגדרת בשרת, לא בוצעו שינויים בתורים' });
+    }
+
+    const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]);
+    const messageHtml = escapeHtml(customMessage).replace(/\r?\n/g, '<br>');
     const clientConfirmations = [];
+    const emailErrors = [];
 
-    // שליחת מיילים ללקוחות המושפעים
-    for (const app of affectedAppointments) {
-      // מייצר אסימון אקראי שאפשר לשייך לאישור קריאת ההודעה של הלקוח.
+    for (const [email, appointments] of appointmentsByEmail) {
       const token = crypto.randomBytes(20).toString('hex');
-      clientConfirmations.push({
-        clientEmail: app.email,
-        confirmedRead: false,
-        confirmationToken: token
-      });
-
-      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-        // יוצר קישור אישי לאישור הקריאה ושולח הודעה לכתובת הלקוח.
-        const confirmUrl = `http://localhost:3000/api/secretary/confirm-read/${token}`;
+      const clientName = appointments[0].clientName;
+      const appointmentTimes = appointments
+        .map(appointment => escapeHtml(appointment.time))
+        .join(', ');
+      const appUrl = (process.env.APP_URL || 'http://localhost:3000').replace(/\/+$/, '');
+      const confirmUrl = `${appUrl}/api/secretary/confirm-read/${token}`;
+      try {
         await transporter.sendMail({
           from: `"ניהול תורים - Botify" <${process.env.EMAIL_USER}>`,
-          to: app.email,
-          subject: 'עדכון דחוף לגבי התור שלך / בקשת חופשה',
+          to: email,
+          subject: `עדכון לגבי התור שלך בתאריך ${vacationDate}`,
           html: `
             <div dir="rtl" style="font-family: Arial, sans-serif; padding: 20px;">
-              <h3>שלום ${app.clientName},</h3>
-              <p>${customMessage || 'עקב נסיבות דחופות, בעל העסק נאלץ לצאת לחופשה בתאריך שנקבע.'}</p>
+              <h3>שלום ${escapeHtml(clientName)},</h3>
+              <p>${messageHtml}</p>
+              <p>התור שלך בתאריך ${escapeHtml(vacationDate)} בשעה ${appointmentTimes} בוטל עקב החופשה.</p>
               <p>אנא לחץ על הכפתור שלהלן כדי לאשר שקראת הודעה זו:</p>
               <a href="${confirmUrl}" style="background: #2563eb; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">אשר קריאת הודעה</a>
             </div>
           `
         });
+        clientConfirmations.push({
+          clientEmail: email,
+          confirmedRead: false,
+          confirmationToken: token
+        });
+      } catch (error) {
+        console.error('Emergency vacation email failed:', error.message);
+        emailErrors.push(email);
       }
     }
 
-    // מתעד את החופשה ואת רשימת האסימונים במסמך הבוט.
+    for (const appointment of affectedAppointments) {
+      appointment.status = 'cancelled';
+    }
+
     bot.emergencyVacations.push({
       date: vacationDate,
-      messageSent: true,
+      customMessage,
+      messageSent: emailErrors.length === 0,
       clientConfirmations
     });
 
     // מתמיד את רשומת החופשה לאחר יצירת נתוני האישורים.
     await bot.save();
 
-    // מדווח כמה לקוחות היו בעלי תורים מאושרים בתאריך שנבחר.
+    const sentCount = clientConfirmations.length;
+    const failedCount = emailErrors.length;
+    const message = failedCount
+      ? `החופשה נשמרה ו-${affectedAppointments.length} תורים בוטלו. נשלחו ${sentCount} מיילים; שליחת ${failedCount} מיילים נכשלה.`
+      : affectedAppointments.length
+        ? `החופשה נשמרה ו-${affectedAppointments.length} תורים בוטלו. נשלחו מיילים ל-${sentCount} לקוחות.`
+        : 'החופשה נשמרה. לא נמצאו תורים פעילים בתאריך זה ולכן לא נשלחו מיילים.';
+
     return res.json({
       success: true,
-      message: `בקשת החופשה נקלטה ונשלחו הודעות ל-${affectedAppointments.length} לקוחות.`
+      message,
+      emailsSent: sentCount,
+      emailFailures: failedCount
     });
   } catch (error) {
     // רושם שגיאות בלתי צפויות ומחזיר הודעה כללית למבקש.
@@ -376,14 +610,55 @@ async function requestEmergencyVacation(req, res) {
   }
 }
 
-// מייצא את פעולות ההגדרה, קביעת התור וניהול החופשה לשכבת הנתיבים.
-module.exports = {
+/**
+ * קבלת אישור קריאת המייל מהלקוח
+ */
+async function confirmReadMessage(req, res) {
+  try {
+    const { token } = req.params;
+
+    // חיפוש הבוט שמכיל את אישור הקריאה עם הטוקן הזה
+    const bot = await SecretaryBot.findOne({ 'emergencyVacations.clientConfirmations.confirmationToken': token });
+    if (!bot) {
+      return res.status(404).send('<h2 dir="rtl" style="text-align:center; font-family:Arial;">הקישור שגוי או פג תוקפו.</h2>');
+    }
+
+    // עדכון הסטטוס של הלקוח הספציפי ל-true
+    for (const vacation of bot.emergencyVacations) {
+      const conf = vacation.clientConfirmations.find(c => c.confirmationToken === token);
+      if (conf) {
+        conf.confirmedRead = true;
+        break;
+      }
+    }
+
+    await bot.save();
+
+    return res.send(`
+      <div dir="rtl" style="text-align:center; font-family:Arial; margin-top:50px;">
+        <h2 style="color: #16a34a;">תודה רבה!</h2>
+        <p>אישור קריאת ההודעה נקלט בהצלחה במערכת.</p>
+      </div>
+    `);
+  } catch (error) {
+    console.error('Confirm read error:', error);
+    return res.status(500).send('<h2 dir="rtl" style="text-align:center; font-family:Arial;">שגיאה בשרת.</h2>');
+  }
+}
+
+export default {
   setupSecretary,
+  getOwnedSecretaryBots,
+  deleteSecretaryBot,
   bookAppointment,
   requestEmergencyVacation,
   getAvailableSlots,
   getMonthCalendar,
   isHolidayOrShabbat,
   timeToMinutes,
-  minutesToTime
+  minutesToTime,
+  getBusinessAppointments,
+  updateBotSettings,
+  requestEmergencyVacation,
+  confirmReadMessage
 };

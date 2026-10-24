@@ -8,7 +8,8 @@ const payload = {
   openTime: document.getElementById('openTime').value,
   closeTime: document.getElementById('closeTime').value,
   defaultPrice: Number(document.getElementById('defaultPrice').value),
-  appointmentDurationMinutes: Number(document.getElementById('appointmentDurationMinutes').value)
+  appointmentDurationMinutes: Number(document.getElementById('appointmentDurationMinutes').value),
+  breakDurationMinutes: Number(document.getElementById('breakDurationMinutes').value)
 };
 
   // שליפת הטוקן של המשתמש המחובר מתוך ה-Local Storage
@@ -32,7 +33,12 @@ const payload = {
     const data = await response.json();
     if (data.success) {
       messageDiv.style.color = '#16a34a';
-      messageDiv.textContent = 'ההגדרות נשמרו בהצלחה!';
+      messageDiv.textContent = 'ההגדרות נשמרו בהצלחה! מעביר לרשימת הבוטים...';
+      window.setTimeout(() => {
+        window.location.href = 'secretary-bots.html';
+      }, 700);
+    } else if (data.code === 'SECRETARY_BOT_LIMIT_REACHED') {
+      window.location.href = data.pricingUrl || '/pages/pricing.html?required=secretary-bot';
     } else {
       messageDiv.style.color = '#dc2626';
       messageDiv.textContent = data.message || 'שגיאה בשמירת הנתונים';

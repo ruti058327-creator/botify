@@ -13,6 +13,7 @@ import authRoutes from './routes/authRoutes.js';
 import botRoutes from './routes/botRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 // יוצר שגיאת HTTP אחידה עבור בקשות לכתובות שאינן קיימות.
+import secretaryRoutes from './routes/secretaryRoutes.js';
 import httpError from './utils/httpError.js';
 
 // יוצר יישום Express שעליו נרכיב middleware ונתיבים.
@@ -30,6 +31,7 @@ app.use(express.static(fileURLToPath(new URL('../public/pages', import.meta.url)
 app.use('/api', authRoutes);
 app.use('/api/bots', botRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/secretary', secretaryRoutes);
 
 // אם אף נתיב לא התאים, מעבירים שגיאת 404 לטיפול המרכזי.
 app.use((req, res, next) => next(httpError(404, 'הנתיב המבוקש לא נמצא')));

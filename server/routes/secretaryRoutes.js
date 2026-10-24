@@ -1,11 +1,17 @@
-// נתב המזכירה כתוב ב-CommonJS, כפי שמתאימים גם הבקר והמודל שלו.
-const express = require('express');
+import express from 'express';
+import secretaryController from '../controllers/secretaryController.js';
+import { authenticateToken } from '../middlewares/authMiddleware.js';
+
 const router = express.Router();
-const secretaryController = require('../controllers/secretaryController');
-const { authenticateToken } = require('../middlewares/authMiddleware');
 
 // הגדרה או עדכון ראשוני של בוט המזכירה (דורש אימות של בעל העסק)
 router.post('/setup', authenticateToken, secretaryController.setupSecretary);
+
+// בוטי המזכירה השייכים לבעל העסק
+router.get('/mine', authenticateToken, secretaryController.getOwnedSecretaryBots);
+
+// מחיקת בוט מזכירה על ידי בעל העסק
+router.delete('/:botUrlKey', authenticateToken, secretaryController.deleteSecretaryBot);
 
 // נתיב לשליפת לוח שנה חודשי של הבוט (פתוח לציבור דרך הקישור הייחודי של הבוט)
 router.get('/:botUrlKey/calendar-month', secretaryController.getMonthCalendar);
@@ -25,11 +31,16 @@ router.post('/:botUrlKey/book', secretaryController.bookAppointment);
 // נתיב לשליפת שעות פנויות ללקוח לפי תאריך
 router.get('/:botUrlKey/slots', secretaryController.getAvailableSlots);
 
-// בקשת חופשה פתאומית על ידי בעל העסק (דורש אימות)
-router.post('/:botId/emergency-vacation', authenticateToken, secretaryController.requestEmergencyVacation);
+// צפייה בתורים המאושרים של העסק (דורש אימות של בעל העסק)
+router.get('/:botUrlKey/appointments', authenticateToken, secretaryController.getBusinessAppointments);
 
-// מחזיר את הנתב לשימוש באפליקציה הראשית.
-module.exports = router;
+// עדכון הגדרות הבוט על ידי בעל העסק (דורש אימות)
+router.patch('/:botUrlKey/settings', authenticateToken, secretaryController.updateBotSettings);
 
+// נתיב לאישור קריאה של הלקוח על ידי לחיצה על הקישור במייל (פתוח לציבור)
+router.get('/confirm-read/:token', secretaryController.confirmReadMessage);
 
+// בקשת חופשה פתאומית ושליחת הודעה ללקוחות של הבוט
+router.post('/:botUrlKey/emergency-vacation', authenticateToken, secretaryController.requestEmergencyVacation);
 
+export default router;

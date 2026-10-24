@@ -102,8 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('user');
       }
 
-      // מחזירים את המשתמש ללוח הבקרה עם פרמטרים המציינים הצלחה והסרות שבוצעו.
-      const dashboardUrl = new URL('/pages/dashboard.html', window.location.origin);
+      const returnTo = urlParams.get('return') === 'secretary-bots'
+        ? '/pages/secretary-bots.html'
+        : '/pages/dashboard.html';
+      const dashboardUrl = new URL(returnTo, window.location.origin);
       dashboardUrl.searchParams.set('payment', 'success');
       if (data.removedBots) dashboardUrl.searchParams.set('removedBots', String(data.removedBots));
       window.location.replace(dashboardUrl);

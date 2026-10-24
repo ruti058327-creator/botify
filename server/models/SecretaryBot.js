@@ -1,9 +1,9 @@
-// קובץ זה משתמש ב-CommonJS, בהתאם למודול הישן של בוט המזכירה.
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // סכמת תור בודד שומרת את פרטי הלקוח, מועד התור ומצבו.
 const appointmentSchema = new mongoose.Schema({
   clientName: { type: String, required: true },
+  idNumber: { type: String, default: '' },
   phone: { type: String, required: true },
   email: { type: String, required: true },
   date: { type: String, required: true }, // התאריך נשמר כמחרוזת בפורמט YYYY-MM-DD
@@ -15,6 +15,7 @@ const appointmentSchema = new mongoose.Schema({
 // סכמת חופשה מתעדת הודעה שנשלחה ואסימוני אישור הקריאה של לקוחות שהושפעו.
 const emergencyVacationSchema = new mongoose.Schema({
   date: { type: String, required: true },
+  customMessage: { type: String, default: '' },
   messageSent: { type: Boolean, default: false },
   clientConfirmations: [{
     clientEmail: String,
@@ -44,5 +45,4 @@ const secretaryBotSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-// רושם את מודל המזכירה לייבוא בקבצי CommonJS התואמים.
-module.exports = mongoose.model('SecretaryBot', secretaryBotSchema);
+export default mongoose.model('SecretaryBot', secretaryBotSchema);

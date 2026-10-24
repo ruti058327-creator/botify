@@ -37,8 +37,9 @@ function continueToPlan(planId, price, planName, returnToCreate, confirmedBotCou
   // בודקים אם המשתמש מחובר כדי לבחור בין תשלום מיידי להרשמה.
   const token = localStorage.getItem('token');
   if (token) {
-    // מוסיפים פרמטרים אופציונליים כדי להחזיר את המשתמש ליצירת בוט או לשמר אישור מחיקה.
-    const returnParam = returnToCreate ? '&return=create-bot' : '';
+    const required = new URLSearchParams(window.location.search).get('required');
+    const returnTarget = returnToCreate ? 'create-bot' : required === 'secretary-bot' ? 'secretary-bots' : '';
+    const returnParam = returnTarget ? `&return=${returnTarget}` : '';
     const deletionParam = confirmedBotCount ? `&confirmedBotCount=${confirmedBotCount}` : '';
     // משתמש מחובר ממשיך לעמוד התשלום עם מזהה המסלול והמחיר.
     window.location.href = `payment.html?plan=${planId}&price=${price}${returnParam}${deletionParam}`;
