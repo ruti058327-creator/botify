@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Botify - בחירת סוג בוט</title>
+    <link rel="icon" type="image/png" href="../images/pic.png">
+    <link rel="stylesheet" href="../css/global.css">
+    <script src="../js/session-manager.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f7f6;
             margin: 0;
-            padding: 40px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            min-height: 100vh;
+        }
+        .selection-main {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            padding: 40px 20px;
         }
         h2 {
             color: #333;
@@ -68,7 +79,22 @@
     </style>
 </head>
 <body>
+    <header>
+        <nav class="navbar">
+            <a href="../index.html" class="logo" title="Botify - חזרה לדף הבית">
+                <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+            </a>
+            <ul class="nav-links">
+                <li><a href="../index.html">בית</a></li>
+                <li><a href="about.html">אודות</a></li>
+                <li><a href="pricing.html">מחירון</a></li>
+                <li><a href="contact.html">צור קשר</a></li>
+            </ul>
+            <div class="auth-buttons" id="nav-auth-container"></div>
+        </nav>
+    </header>
 
+    <main class="selection-main">
     <h2>בחר את סוג הבוט שתרצה להקים לעסק שלך</h2>
 
     <div class="cards-container">
@@ -90,6 +116,20 @@
             <a href="secretary-dashboard.html">בחר בוט זה</a>        
         </div>
     </div>
+    </main>
 
+    <footer class="site-footer">
+        <div class="footer-container">
+            <ul class="footer-links">
+                <li><a href="terms.html">תנאי שימוש</a></li>
+                <li><a href="privacy.html">מדיניות פרטיות</a></li>
+                <li><a href="accessibility.html">הצהרת נגישות</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+        </div>
+    </footer>
+    <script type="module" src="../js/navbar-auth.js"></script>
 </body>
 </html>
