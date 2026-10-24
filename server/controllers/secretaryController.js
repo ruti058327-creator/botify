@@ -41,7 +41,7 @@ async function setupSecretary(req, res) {
       appointmentDurationMinutes,
       breakDurationMinutes
     } = req.body;
-
+    
     if (!botUrlKey || !dayOff || !openTime || !closeTime) {
       return res.status(400).json({ success: false, message: 'נא למלא את כל שדות החובה' });
     }
@@ -381,14 +381,14 @@ function minutesToTime(totalMinutes) {
   return `${hours}:${minutes}`;
 }
 
-/**
+/** 
  * מראה התורים עבור בעל העסק
- */
+*/
 async function getBusinessAppointments(req, res) {
   try {
     const { botUrlKey } = req.params;
     const bot = await SecretaryBot.findOne({ botUrlKey, userId: req.user.id });
-
+    
     if (!bot) {
       return res.status(404).json({ success: false, message: 'הבוט לא נמצא או שאין הרשאה לצפות בו' });
     }
