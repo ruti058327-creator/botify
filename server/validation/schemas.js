@@ -1,23 +1,30 @@
+// Joi בונה את כללי האימות והנרמול של גוף, פרמטרים ושאילתות בבקשות.
 import Joi from 'joi';
 
 
+// כל שדות המשתמש עוברים ניקוי רווחים, הגבלת אורך והודעות שגיאה בעברית.
 const username = Joi.string().trim().min(1).max(100).required().messages({
   'string.empty': 'יש להזין שם משתמש',
   'any.required': 'יש להזין שם משתמש'
 });
+// כתובת דוא"ל מנורמלת לאותיות קטנות ונדרשת להיות תקינה ומוגבלת באורכה.
 const email = Joi.string().trim().email().max(254).lowercase().required().messages({
   'string.email': 'יש להזין כתובת אימייל תקינה',
   'any.required': 'יש להזין כתובת אימייל תקינה'
 });
+// הסיסמה אינה נחתכת, אך נדרשים לפחות שמונה תווים ומוגבל אורך הקלט.
 const password = Joi.string().min(8).max(128).required().messages({
   'string.min': 'הסיסמה חייבת להכיל לפחות 8 תווים',
   'any.required': 'יש להזין סיסמה'
 });
+// קוד חד-פעמי חייב להכיל בדיוק שש ספרות.
 const otpCode = Joi.string().trim().pattern(/^\d{6}$/).required().messages({
   'string.pattern.base': 'יש להזין קוד אימות בן 6 ספרות',
   'any.required': 'יש להזין קוד אימות בן 6 ספרות'
 });
+// מזהה שיחה אינו חובה, אך אם נשלח הוא מנוקה ומוגבל לאורך סביר.
 const chatId = Joi.string().trim().max(100).allow('');
+// פרטי הרשמה שאינם הכרחיים מוגדרים כאן כדי לשתף כללים בין תהליכי הרשמה.
 const optionalSignupFields = {
   fullName: Joi.string().trim().max(150).allow(''),
   idNumber: Joi.string().pattern(/^\d{9}$/).allow('').messages({
@@ -26,12 +33,15 @@ const optionalSignupFields = {
   phone: Joi.string().trim().max(30).allow(''),
   businessName: Joi.string().trim().max(150).allow('')
 };
+// בודק כתובת אתר גם אם נכתבה ללא פרוטוקול, בלי לשנות את הערך שנשמר בבקשה.
 const websiteUrl = Joi.string().trim().max(2048).required().custom((value, helpers) => {
   try {
+    // מוסיף HTTPS רק לצורך בדיקת הכתובת, ואז מוודא שהפרוטוקול והמארח תקינים.
     const url = new URL(/^[a-z][a-z\d+.-]*:\/\//i.test(value) ? value : `https://${value}`);
     if (!['http:', 'https:'].includes(url.protocol) || !url.hostname) return helpers.error('string.uri');
     return value;
   } catch {
+    // כתובת שלא ניתן לפרש מוחזרת כקלט URI לא תקין.
     return helpers.error('string.uri');
   }
 }).messages({
@@ -39,11 +49,14 @@ const websiteUrl = Joi.string().trim().max(2048).required().custom((value, helpe
   'any.required': 'נא להזין כתובת אתר'
 });
 
+// סכמות לכל שלבי ההרשמה, ההתחברות והחלפת הסיסמה.
 export const authSchemas = {
+  // שליחת קוד הרשמה דורשת פרטי זיהוי בסיסיים.
   sendOtp: Joi.object({
     email,
     username
   }).unknown(true),
+  // אימות ההרשמה משלב את קוד האימות, פרטי המשתמש והשדות הנוספים.
   registerVerify: Joi.object({
     ...optionalSignupFields,
     email,
@@ -51,11 +64,13 @@ export const authSchemas = {
     password,
     otpCode
   }).unknown(true),
+  // טופס ההרשמה הרגיל כולל שם, כתובת דוא"ל וסיסמה.
   register: Joi.object({
     username,
     email,
     password
   }).unknown(true),
+  // התחברות דורשת שם משתמש וסיסמה שאינה ריקה.
   login: Joi.object({
     username,
     password: Joi.string().min(1).max(128).required().messages({
@@ -63,11 +78,14 @@ export const authSchemas = {
       'string.empty': 'יש להזין סיסמה'
     })
   }).unknown(true),
+  // שלב אימות נוסף בהתחברות משתמש בקוד שנשלח לדוא"ל.
   loginVerify: Joi.object({
     email,
     otpCode
   }).unknown(true),
+  // בקשת איפוס מזהה את החשבון באמצעות שם המשתמש.
   passwordResetRequest: Joi.object({ username }).unknown(true),
+  // אישור האיפוס דורש קוד תקף וסיסמה חדשה העומדת בכללי האורך.
   passwordResetConfirm: Joi.object({
     username,
     otpCode,
@@ -75,7 +93,9 @@ export const authSchemas = {
   }).unknown(true)
 };
 
+// סכמות הודעות התמיכה קובעות נושאים, אורכים ומספר מילים סביר.
 export const contactSchemas = {
+  // הודעת פנייה מוגבלת לנושא מוכר ולתוכן באורך שאינו עולה על המגבלות.
   create: Joi.object({
     subject: Joi.string().valid(
       'תמיכה טכנית',
@@ -87,6 +107,7 @@ export const contactSchemas = {
       'any.only': 'יש לבחור נושא פנייה תקין'
     }),
     message: Joi.string().trim().min(1).max(5000).custom((value, helpers) => {
+      // מגבלת מילים נוספת נותנת הודעת שגיאה ידידותית מעבר למגבלת התווים.
       if (value.split(/\s+/).length > 200) return helpers.error('string.maxWords');
       return value;
     }).required().messages({
@@ -96,6 +117,7 @@ export const contactSchemas = {
     }),
     chatId: chatId.optional()
   }).unknown(true),
+  // תגובת מנהל משויכת לשם משתמש, עם מזהה שיחה אופציונלי.
   reply: Joi.object({
     username,
     reply: Joi.string().trim().min(1).max(5000).required().messages({
@@ -106,30 +128,37 @@ export const contactSchemas = {
   }).unknown(true)
 };
 
+// כללי קלט ליצירה, עריכה, צ'אט וזיהוי בוט.
 export const botSchemas = {
+  // יצירה דורשת אתר תקין ומקבלת הנחיות אופציונליות.
   create: Joi.object({
     websiteUrl,
     instructions: Joi.string().max(5000).allow('').optional()
   }).unknown(true),
+  // בעדכון חייבות להישלח הנחיות, גם אם הן מחרוזת ריקה תקפה.
   update: Joi.object({
     instructions: Joi.string().max(5000).required().messages({
       'any.required': 'יש להזין הנחיות לבוט'
     })
   }).unknown(true),
+  // הודעת צ'אט חייבת לכלול תוכן לא ריק באורך מוגבל.
   chat: Joi.object({
     message: Joi.string().trim().min(1).max(5000).required().messages({
       'string.empty': 'יש להזין הודעה',
       'any.required': 'יש להזין הודעה'
     })
   }).unknown(true),
+  // מזהה מסד נתונים של בוט חייב להיות ObjectId הקסדצימלי בן 24 תווים.
   id: Joi.object({
     botId: Joi.string().hex().length(24).required()
   }).unknown(true),
+  // ניתן לבקש מכסה של אחד מהמסלולים המוכרים בלבד.
   quota: Joi.object({
     planId: Joi.string().valid('starter', 'pro', 'business', 'enterprise').optional()
   }).unknown(true)
 };
 
+// בדיקת תשלום מגבילה מסלול, פרטי כרטיס חלקיים ואישור למחיקת בוטים.
 export const paymentSchema = Joi.object({
   planId: Joi.string().valid('starter', 'pro', 'business', 'enterprise').required(),
   cardholderName: Joi.string().trim().min(1).max(100).required(),
@@ -140,10 +169,15 @@ export const paymentSchema = Joi.object({
   'string.pattern.base': 'יש להזין את ארבע הספרות האחרונות בכרטיס'
 });
 
+// סכמות לצפייה בהיסטוריית שיחות, חיפוש לקוחות ושמירת הודעה.
 export const chatSchemas = {
+  // מזהה משתמש נבדק לפני ביצוע אגרגציה לפי חשבון.
   userId: Joi.object({ userId: Joi.string().hex().length(24).required() }).unknown(true),
+  // מזהה השיחה נדרש כדי להביא את הודעותיה.
   chatId: Joi.object({ chatId: Joi.string().trim().min(1).max(100).required() }).unknown(true),
+  // שם לקוח הוא מסנן אופציונלי עבור חיפוש מנהלי.
   adminSearch: Joi.object({ clientName: Joi.string().trim().max(150).allow('').optional() }).unknown(true),
+  // כל השדות הדרושים להצגת הודעה חדשה נבדקים לפני שמירה.
   createMessage: Joi.object({
     userId: Joi.string().hex().length(24).required(),
     clientName: Joi.string().trim().min(1).max(150).required(),

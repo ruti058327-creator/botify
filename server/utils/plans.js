@@ -1,4 +1,5 @@
 
+// מחיר ומכסת בוטים לכל מסלול; הקפאה מונעת שינוי מקרי בזמן ריצה.
 const PLANS = Object.freeze({
   starter: { price: 49, botLimit: 2 },
   pro: { price: 149, botLimit: 3 },
@@ -12,6 +13,7 @@ const PLANS = Object.freeze({
  * @returns {number} מספר הבוטים המותר, או {@code Infinity} במסלול ללא הגבלה.
  */
 function getBotLimit(planId) {
+  // אם מזהה המסלול אינו מוכר, המשתמש נשאר עם מכסת הבסיס של בוט אחד.
   return PLANS[planId]?.botLimit ?? 1;
 }
 

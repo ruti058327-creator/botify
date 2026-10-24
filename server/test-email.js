@@ -1,7 +1,9 @@
+// טוען את פרטי הדוא"ל מקובץ הסביבה המקומי לפני הפעלת בדיקת השליחה.
 import './config/env.js';
 import { sendEmail } from './utils/mailer.js';
 
 
+// מציג מידע אבחוני בלבד, בלי לחשוף את סיסמת הדוא"ל ליומן.
 console.log('בודק משתני סביבה:');
 console.log('EMAIL_USER מוגדר?', Boolean(process.env.EMAIL_USER));
 console.log('EMAIL_PASS קיים?', Boolean(process.env.EMAIL_PASS));
@@ -12,6 +14,7 @@ console.log('EMAIL_PASS קיים?', Boolean(process.env.EMAIL_PASS));
  */
 async function sendTest() {
   try {
+    // שולח הודעת בדיקה אל אותה כתובת שהוגדרה כחשבון השליחה.
     console.log('\nמנסה לשלוח מייל בדיקה...');
     const info = await sendEmail({
       to: process.env.EMAIL_USER, // שולח מייל לעצמך לבדיקה
@@ -19,10 +22,13 @@ async function sendTest() {
       text: 'שלום! אם קיבלת מייל זה, מנגנון השליחה מחובר ועובד מצוין!',
       fromName: 'Botify Test'
     });
+    // מזהה ההודעה מאפשר לאתר את המשלוח אצל ספק הדוא"ל.
     console.log('✅ המייל נשלח בהצלחה! מזהה הודעה:', info.messageId);
   } catch (error) {
+    // מציג את פרטי הכשל כדי שאפשר יהיה לאבחן הגדרות או תקלה אצל הספק.
     console.error('❌ שגיאה בשליחת המייל:', error.message);
   }
 }
 
+// מפעיל את בדיקת השליחה מיד כשמריצים את קובץ העזר הזה.
 sendTest();

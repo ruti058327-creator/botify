@@ -1,3 +1,4 @@
+// מודל הפניות מאפשר לקרוא ולשמור הודעות לקוחות במסד הנתונים.
 import Contact from '../models/Contact.js';
 
 
@@ -8,6 +9,7 @@ import Contact from '../models/Contact.js';
  * @returns {Promise<import('express').Response>} JSON message list.
  */
 async function listAll(req, res) {
+  // מחזיר את כל ההודעות כשהחדשות ביותר מוצגות ראשונות למנהל.
   const messages = await Contact.find().sort({ createdAt: -1 });
   return res.json({ success: true, messages });
 }
@@ -19,6 +21,7 @@ async function listAll(req, res) {
  * @returns {Promise<import('express').Response>} JSON message list.
  */
 async function listMine(req, res) {
+  // מסנן לפי שם המשתמש שנקבע בבקשתו המאומתת, ולא לפי קלט חופשי מהלקוח.
   const messages = await Contact.find({ username: req.user.username }).sort({ createdAt: -1 });
   return res.json({ success: true, messages });
 }
@@ -30,7 +33,9 @@ async function listMine(req, res) {
  * @returns {Promise<import('express').Response>} Confirmation response.
  */
 async function create(req, res) {
+  // שולף מהקלט את שדות ההודעה שהסכמה כבר אימתה.
   const { subject, message, chatId } = req.body;
+  // יוצר הודעת לקוח ומשייך אותה לזהותו המאומתת ולשיחה שסופקה או לברירת מחדל.
   await new Contact({
     username: req.user.username,
     subject,
@@ -38,6 +43,7 @@ async function create(req, res) {
     chatId: chatId || 'chat_old_history',
     isAdmin: false
   }).save();
+  // מחזיר אישור פשוט לאחר שהשמירה במסד הושלמה.
   return res.json({ success: true, message: 'ההודעה נשלחה בהצלחה' });
 }
 
@@ -48,14 +54,18 @@ async function create(req, res) {
  * @returns {Promise<import('express').Response>} Confirmation response.
  */
 async function reply(req, res) {
+  // מפענח את יעד התגובה ואת הטקסט שהמנהל כתב.
   const { username, chatId, reply: replyText } = req.body;
+  // שומר תשובת מנהל כרשומת הודעה נפרדת באותו שרשור שיחה.
   await new Contact({
     username,
     chatId: chatId || 'chat_old_history',
     message: replyText,
     isAdmin: true
   }).save();
+  // מציין ללקוח שהתגובה נשמרה בהצלחה.
   return res.json({ success: true, message: 'התגובה נשמרה בהצלחה כהודעה חדשה בשיחה' });
 }
 
+// חושף לנתבים רק את פעולות הקריאה, היצירה והמענה של בקר הפניות.
 export default { listAll, listMine, create, reply };

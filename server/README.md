@@ -9,7 +9,7 @@ Botify is a Node.js and Express application for account management, website-scan
 3. Start the server with `npm start` from `server/`, or run `npm start` from the repository root.
 4. Open `http://localhost:3000`.
 
-The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, and `JWT_SECRET` from `server/.env`. `MONGO_URI` must point to the project's MongoDB Atlas database. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
+The server reads `MONGO_URI`, `PORT`, `EMAIL_USER`, `EMAIL_PASS`, `GEMINI_API_KEY`, `JWT_SECRET`, `ADMIN_USERNAMES`, and `ADMIN_PASSWORD` from `server/.env`. `MONGO_URI` must point to the project's MongoDB Atlas database. `JWT_SECRET` is required and must remain stable so existing tokens remain valid. Registration/login email verification needs the email settings. AI responses need `GEMINI_API_KEY`.
 
 ## Structure
 
@@ -33,4 +33,4 @@ See [docs/project-design.md](docs/project-design.md) for the screen-flow diagram
 
 The payment flow currently records a selected plan and safe card metadata in MongoDB. It does not connect to a payment processor and does not charge a card. The stored card data is limited to the cardholder name and last four digits; a full card number and CVV must not be stored by this application.
 
-To grant administrator access, promote a registered user's `role` field to `admin` in the Atlas `users` collection. Administrator login uses the same bcrypt password check and email verification flow as other accounts; do not add administrator credentials to source code.
+The server seeds the `administrators` MongoDB collection with the usernames in `ADMIN_USERNAMES` on startup (default: `NOA`, `RUTI`, `RUTY`, and `MIRYAM`). Add or remove usernames in that setting and restart the server to update the configured administrator accounts. All listed administrators sign in with the shared `ADMIN_PASSWORD`; set it in the server environment before starting the server. The server issues a signed administrator token only after checking this password; never put the shared password in source code or commit `.env`. Registered accounts can also be granted administrator access by promoting their `role` field to `admin` in the Atlas `users` collection; those accounts continue to use the normal password and email verification flow.
