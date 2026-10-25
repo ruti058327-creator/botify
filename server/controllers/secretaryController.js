@@ -7,6 +7,12 @@ import { sendEmail } from '../utils/mailer.js';
 import { secretarySchemas } from '../validation/schemas.js';
 const HEBREW_WEEKDAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
+function getBookingPageUrl(botUrlKey) {
+  const bookingUrl = new URL('/client-booking.html', process.env.APP_URL || 'http://localhost:3000');
+  bookingUrl.searchParams.set('bot', botUrlKey);
+  return bookingUrl.href;
+}
+
 async function getSecretaryBotQuota(userId) {
   const [botCount, completedPayment] = await Promise.all([
     SecretaryBot.countDocuments({ userId }),
@@ -62,7 +68,12 @@ async function setupSecretary(req, res) {
       },
       { new: true, upsert: true, runValidators: true }
     );
-    return res.json({ success: true, message: 'הגדרות בוט המזכירה נשמרו בהצלחה', bot });
+    return res.json({
+      success: true,
+      message: 'הגדרות בוט המזכירה נשמרו בהצלחה',
+      bot,
+      bookingUrl: getBookingPageUrl(bot.botUrlKey)
+    });
   } catch (error) {
     if (error.code === 11000) throw httpError(409, 'מזהה קישור זה כבר בשימוש');
     throw error;
