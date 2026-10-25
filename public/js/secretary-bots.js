@@ -68,12 +68,12 @@ function renderBotList(bots, quota = { canCreate: false, botCount: 0, botLimit: 
     const selectButton = document.createElement('button');
     selectButton.className = 'bot-select-button';
     selectButton.type = 'button';
-    selectButton.textContent = 'עריכה ויומן';
+    selectButton.textContent = 'עריכה';
     selectButton.addEventListener('click', () => selectBot(bot));
     const deleteButton = document.createElement('button');
-    deleteButton.className = 'secondary-button';
+    deleteButton.className = 'secondary-button bot-delete-button';
     deleteButton.type = 'button';
-    deleteButton.textContent = 'מחיקת בוט';
+    deleteButton.textContent = 'מחיקה';
     deleteButton.addEventListener('click', async () => {
       if (!window.confirm(`למחוק את בוט המזכירה "${bot.botUrlKey}" ואת יומן התורים שלו?`)) return;
       deleteButton.disabled = true;
@@ -104,6 +104,9 @@ async function loadBots() {
   try {
     const data = await requestJson('/api/secretary/mine');
     renderBotList(data.bots || [], data.quota);
+    const requestedBotUrlKey = new URLSearchParams(window.location.search).get('bot');
+    const requestedBot = data.bots?.find(bot => bot.botUrlKey === requestedBotUrlKey);
+    if (requestedBot) await selectBot(requestedBot);
   } catch (error) {
     setStatus(botsStatus, error.message || 'שגיאה בטעינת הבוטים.', 'error');
   }
@@ -123,7 +126,6 @@ async function selectBot(bot) {
   selectedBot = bot;
   managementPanel.hidden = false;
   document.getElementById('selectedBotTitle').textContent = `ניהול הבוט: ${bot.botUrlKey}`;
-  document.getElementById('bookingPageLink').href = `client-booking.html?bot=${encodeURIComponent(bot.botUrlKey)}`;
   populateSettings(bot);
   appointmentDetails.hidden = true;
   await loadAppointments();
@@ -252,7 +254,6 @@ settingsForm.addEventListener('submit', async event => {
     });
     selectedBot = data.bot;
     document.getElementById('selectedBotTitle').textContent = `ניהול הבוט: ${selectedBot.botUrlKey}`;
-    document.getElementById('bookingPageLink').href = `client-booking.html?bot=${encodeURIComponent(selectedBot.botUrlKey)}`;
     populateSettings(selectedBot);
     setStatus(settingsStatus, 'ההגדרות נשמרו בהצלחה.', 'success');
     const botsData = await requestJson('/api/secretary/mine');

@@ -206,15 +206,21 @@ async function loadOwnedBots() {
         // טוענים יחד את רשימת הבוטים ואת המכסה כדי להציג נתונים תואמים.
         const token = localStorage.getItem('token');
         const headers = { 'Authorization': `Bearer ${token || ''}` };
-        const [response, quotaResponse] = await Promise.all([
+        const [response, quotaResponse, secretaryResponse] = await Promise.all([
             ApiService.request('/api/bots', { headers }),
-            ApiService.request('/api/bots/quota', { headers })
+            ApiService.request('/api/bots/quota', { headers }),
+            ApiService.request('/api/secretary/mine', { headers })
         ]);
         // ממתינים לשתי התשובות ומפענחים את גופן כ-JSON.
-        const [data, quotaData] = await Promise.all([response.json(), quotaResponse.json()]);
+        const [data, quotaData, secretaryData] = await Promise.all([
+            response.json(),
+            quotaResponse.json(),
+            secretaryResponse.json()
+        ]);
         // הודעת שגיאה מכל אחד מהשירותים עוצרת הצגת מידע לא שלם.
         if (!response.ok) throw new Error(data.message || 'לא ניתן לטעון את הבוטים');
         if (!quotaResponse.ok) throw new Error(quotaData.message || 'לא ניתן לטעון את מכסת הבוטים');
+        if (!secretaryResponse.ok) throw new Error(secretaryData.message || 'לא ניתן לטעון את בוטי המזכירה');
 
         // מציגים מספר שימוש ומגבלה; ערך חסר או לא מספרי מוצג כ"ללא הגבלה".
         const quotaDisplay = document.getElementById('botQuotaDisplay');
@@ -226,7 +232,7 @@ async function loadOwnedBots() {
 
         // מנקים נתונים קודמים ומציגים הודעה כאשר למשתמש עדיין אין בוטים.
         container.replaceChildren();
-        if (!data.bots?.length) {
+        if (!data.bots?.length && !secretaryData.bots?.length) {
             container.textContent = 'עדיין לא יצרת בוט.';
             return;
         }
@@ -241,19 +247,15 @@ async function loadOwnedBots() {
             title.className = 'owned-bot-title';
             title.textContent = bot.websiteUrl;
 
-            // יוצרים אזור פעולות עבור פתיחת הצ'אט, עריכה ומחיקה.
+            // יוצרים אזור פעולות אחיד לעריכה ולמחיקה.
             const actions = document.createElement('div');
             actions.className = 'owned-bot-actions';
 
-            // קישור פתיחת הצ'אט כולל מזהה בוט מקודד כפרמטר URL.
-            const openLink = document.createElement('a');
-            openLink.href = `chat.html?botId=${encodeURIComponent(bot.id)}`;
-            openLink.textContent = 'פתיחת צ׳אט';
-
             // כפתור העריכה הראשון מנווט לטופס יצירה/עריכה עם מזהה הבוט.
             const editButton = document.createElement('button');
+            editButton.className = 'owned-bot-action';
             editButton.type = 'button';
-            editButton.textContent = 'עריכת בוט';
+            editButton.textContent = 'עריכה';
             editButton.addEventListener('click', event => {
                 // מונעים מאזיני לחיצה נוספים על אותה פעולה לפני הניווט לטופס העריכה.
                 event.stopImmediatePropagation();
@@ -288,6 +290,7 @@ async function loadOwnedBots() {
 
             // יוצרים כפתור מחיקה לבוט הנוכחי.
             const deleteButton = document.createElement('button');
+            deleteButton.className = 'owned-bot-action owned-bot-action-delete';
             deleteButton.type = 'button';
             deleteButton.textContent = 'מחיקה';
             /**
@@ -312,7 +315,52 @@ async function loadOwnedBots() {
             });
 
             // מחברים את הקישורים והכפתורים לשורת הבוט ומוסיפים אותה לרשימה.
-            actions.append(openLink, editButton, deleteButton);
+            actions.append(editButton, deleteButton);
+            row.append(title, actions);
+            container.appendChild(row);
+        }
+
+        // מציגים גם את בוטי המזכירה ברשימת הבוטים הפעילים באזור האישי.
+        for (const bot of secretaryData.bots || []) {
+            const row = document.createElement('div');
+            row.className = 'owned-bot-row';
+
+            const title = document.createElement('strong');
+            title.className = 'owned-bot-title';
+            title.textContent = `בוט מזכירה: ${bot.botUrlKey}`;
+
+            const actions = document.createElement('div');
+            actions.className = 'owned-bot-actions';
+
+            const editLink = document.createElement('a');
+            editLink.className = 'owned-bot-action';
+            editLink.href = `secretary-bots.html?bot=${encodeURIComponent(bot.botUrlKey)}`;
+            editLink.textContent = 'עריכה';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'owned-bot-action owned-bot-action-delete';
+            deleteButton.type = 'button';
+            deleteButton.textContent = 'מחיקה';
+            deleteButton.addEventListener('click', async () => {
+                if (!window.confirm(`למחוק את בוט המזכירה "${bot.botUrlKey}" ואת יומן התורים שלו?`)) return;
+                deleteButton.disabled = true;
+                try {
+                    const deleteResponse = await ApiService.request(
+                        `/api/secretary/${encodeURIComponent(bot.botUrlKey)}`,
+                        { method: 'DELETE', headers }
+                    );
+                    const deleteData = await deleteResponse.json();
+                    if (!deleteResponse.ok || !deleteData.success) {
+                        throw new Error(deleteData.message || 'לא ניתן למחוק את בוט המזכירה');
+                    }
+                    await loadOwnedBots();
+                } catch (error) {
+                    alert(error.message || 'שגיאה במחיקת בוט המזכירה');
+                    deleteButton.disabled = false;
+                }
+            });
+
+            actions.append(editLink, deleteButton);
             row.append(title, actions);
             container.appendChild(row);
         }
