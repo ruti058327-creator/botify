@@ -1,3 +1,5 @@
+import { ApiService } from '../services/api-service.js';
+
 // מתרגמים מזהי מסלולים לשמות ידידותיים לצורך הודעות האישור.
 const planNames = {
   starter: 'מסלול Starter בתשלום',
@@ -187,4 +189,3 @@ async function checkPlanChange(planId, price, planName, returnToCreate, currentP
 
 // חושפים פונקציה זו משום שכפתורי בחירת המסלול ב-HTML מפעילים אותה.
 window.choosePlan = choosePlan;
-import { ApiService } from '../services/api-service.js';
