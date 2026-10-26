@@ -11,6 +11,7 @@ import Contact from '../models/Contact.js';
 async function listAll(req, res) {
   // מחזיר את כל ההודעות כשהחדשות ביותר מוצגות ראשונות למנהל.
   const messages = await Contact.find().sort({ createdAt: -1 });
+  // עוטף את הרשימה במבנה התשובה האחיד של ה-API.
   return res.json({ success: true, messages });
 }
 
@@ -23,6 +24,7 @@ async function listAll(req, res) {
 async function listMine(req, res) {
   // מסנן לפי שם המשתמש שנקבע בבקשתו המאומתת, ולא לפי קלט חופשי מהלקוח.
   const messages = await Contact.find({ username: req.user.username }).sort({ createdAt: -1 });
+  // מחזיר למשתמש רק את השיחות ששויכו לזהותו.
   return res.json({ success: true, messages });
 }
 

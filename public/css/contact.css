@@ -1,153 +1,262 @@
-/* contact.css */
+
+/* מטרה: מעטפת מרכזית למיקום עמוד יצירת הקשר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .contact-wrapper {
+  /* min-height: מבטיח גובה מזערי של calc(100vh - 160px) גם כשהתוכן קצר. */
   min-height: calc(100vh - 160px);
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* padding: מוסיף ריווח פנימי 40px למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 40px 20px;
 }
 
+/* מטרה: כרטיס טופס יצירת הקשר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .contact-card {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* border-radius: מעגל את הפינות ברדיוס 24px. */
   border-radius: 24px;
+  /* box-shadow: מוסיף צל בערכים 0 12px 35px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.05);
+  /* padding: מוסיף ריווח פנימי 45px למעלה ולמטה ו-40px מימין ומשמאל. */
   padding: 45px 40px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* max-width: מגביל את הרוחב ל-600px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 600px;
+  /* text-align: מיישר טקסט לימין בתוך הרכיב. */
   text-align: right;
 }
 
+/* מטרה: כותרת עמוד יצירת הקשר. הסלקטור מזהה רכיב זה בממשק. */
 .contact-card h1 {
+  /* font-size: קובע גודל טקסט 2.2rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.2rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-#0f172a. */
   color: #0f172a;
+  /* margin-bottom: מוסיף שוליים של 8px מתחת לרכיב. */
   margin-bottom: 8px;
 }
 
+/* מטרה: הסבר קצר מתחת לכותרת עמוד יצירת הקשר. הסלקטור מזהה רכיב זה בממשק. */
 .contact-card .subtitle {
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b;
+  /* font-size: קובע גודל טקסט 1.05rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.05rem;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
 }
 
+/* מטרה: תגית המציגה את פרטי המשתמש המחובר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .user-info-badge {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* gap: קובע מרווח של 10px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 10px;
+  /* background: ממלא את הרקע ב-#eff6ff. */
   background: #eff6ff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #bfdbfe. */
   border: 1px solid #bfdbfe;
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 12px 16px;
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
+  /* color: צובע את הטקסט ב-#1e40af. */
   color: #1e40af;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
 }
 
+/* מטרה: שם או פרט משתמש בתוך תגית המשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .user-info-badge span {
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
 }
 
+/* מטרה: התראה למשתמש שאינו מחובר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .auth-alert {
+  /* background: ממלא את הרקע ב-#fff7ed. */
   background: #fff7ed;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #fed7aa. */
   border: 1px solid #fed7aa;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 25px. */
   padding: 25px;
+  /* border-radius: מעגל את הפינות ברדיוס 16px. */
   border-radius: 16px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* margin-bottom: מוסיף שוליים של 20px מתחת לרכיב. */
   margin-bottom: 20px;
 }
 
+/* מטרה: כותרת ההתראה למשתמש שאינו מחובר. הסלקטור מזהה רכיב זה בממשק. */
 .auth-alert h3 {
+  /* color: צובע את הטקסט ב-#c2410c. */
   color: #c2410c;
+  /* font-size: קובע גודל טקסט 1.25rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.25rem;
+  /* margin-bottom: מוסיף שוליים של 8px מתחת לרכיב. */
   margin-bottom: 8px;
 }
 
+/* מטרה: הסבר ההתראה למשתמש שאינו מחובר. הסלקטור מזהה רכיב זה בממשק. */
 .auth-alert p {
+  /* color: צובע את הטקסט ב-#9a3412. */
   color: #9a3412;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* margin-bottom: מוסיף שוליים של 20px מתחת לרכיב. */
   margin-bottom: 20px;
 }
 
+/* מטרה: טופס קבוצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .form-group {
+  /* margin-bottom: מוסיף שוליים של 20px מתחת לרכיב. */
   margin-bottom: 20px;
 }
 
+/* מטרה: תווית המסבירה את שדה הטופס. הסלקטור מזהה רכיב זה בממשק. */
 .form-group label {
+  /* display: מציג את הרכיב כבלוק נפרד שתופס שורה. */
   display: block;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* margin-bottom: מוסיף שוליים של 8px מתחת לרכיב. */
   margin-bottom: 8px;
 }
 
 .form-group select,
 .form-group input,
+/* מטרה: שדה להזנת הודעה או טקסט ארוך. הסלקטור מזהה רכיב זה בממשק. */
 .form-group textarea {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 12px 16px;
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
+  /* font-size: קובע גודל טקסט 1rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1rem;
+  /* font-family: בוחר בגופן inherit; הגופנים שאחריו משמשים חלופות אם הראשון אינו זמין. */
   font-family: inherit;
+  /* outline: מסיר את קו המתאר ברירת המחדל. */
   outline: none;
+  /* transition: מחליק שינוי במאפיינים all 0.2s ease במקום להציג קפיצה מיידית. */
   transition: all 0.2s ease;
+  /* background: ממלא את הרקע ב-#f8fafc. */
   background: #f8fafc;
 }
 
 .form-group select:focus,
 .form-group input:focus,
+/* מטרה: טופס קבוצה textarea:focus כאשר הרכיב במיקוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .form-group textarea:focus {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
+  /* box-shadow: מוסיף צל בערכים 0 0 0 3px rgba(37, 99, 235, 0.12); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
+/* מטרה: שדה להזנת הודעה או טקסט ארוך. הסלקטור מזהה רכיב זה בממשק. */
 .form-group textarea {
+  /* resize: מאפשר לשנות את גובה שדה הטקסט בלבד. */
   resize: vertical;
+  /* min-height: מבטיח גובה מזערי של 140px גם כשהתוכן קצר. */
   min-height: 140px;
+  /* line-height: קובע גובה שורה 1.5 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.5;
 }
 
+/* מטרה: אזור מונה המילים בטופס. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .word-counter-wrapper {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* margin-top: מוסיף שוליים של 6px מעל הרכיב. */
   margin-top: 6px;
+  /* font-size: קובע גודל טקסט 0.85rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.85rem;
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b;
 }
 
+/* מטרה: מונה מילים כשההודעה הגיעה למגבלה. הסלקטור מזהה רכיב זה בממשק. */
 .word-count.limit-reached {
+  /* color: צובע את הטקסט ב-#ef4444. */
   color: #ef4444;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
 }
 
+/* מטרה: כפתור שליחה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-send {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 14px. */
   padding: 14px;
+  /* font-size: קובע גודל טקסט 1.1rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.1rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* margin-top: מוסיף שוליים של 10px מעל הרכיב. */
   margin-top: 10px;
 }
 
+/* מטרה: אזור הודעת המשוב לאחר שליחת הטופס. הסלקטור מזהה רכיב זה בממשק. */
 .feedback-message {
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 14px. */
   padding: 14px;
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* margin-top: מוסיף שוליים של 20px מעל הרכיב. */
   margin-top: 20px;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* display: מסתיר את הרכיב ואינו משאיר לו מקום בפריסה. */
   display: none;
 }
 
+/* מטרה: הודעת הצלחה בטופס יצירת הקשר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .feedback-success {
+  /* background: ממלא את הרקע ב-#ecfdf5. */
   background: #ecfdf5;
+  /* color: צובע את הטקסט ב-#065f46. */
   color: #065f46;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #a7f3d0. */
   border: 1px solid #a7f3d0;
 }
 
+/* מטרה: הודעת שגיאה בטופס יצירת הקשר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .feedback-error {
+  /* background: ממלא את הרקע ב-#fef2f2. */
   background: #fef2f2;
+  /* color: צובע את הטקסט ב-#991b1b. */
   color: #991b1b;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #fecaca. */
   border: 1px solid #fecaca;
 }

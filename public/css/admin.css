@@ -1,457 +1,757 @@
-/* ==========================================
-   Admin Panel Styling
-   ========================================== */
 
+
+/* מטרה: כל רכיבי העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 * {
+  /* box-sizing: כולל ריווח ומסגרת בתוך הרוחב והגובה, כך שהמידות נשארות צפויות. */
   box-sizing: border-box;
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0. */
   padding: 0;
 }
 
+/* מטרה: גוף העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 body {
+  /* font-family: בוחר בגופן Arial, sans-serif; הגופנים שאחריו משמשים חלופות אם הראשון אינו זמין. */
   font-family: Arial, sans-serif;
+  /* background-color: צובע את הרקע ב-#f4f6f9. */
   background-color: #f4f6f9;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בשורה אופקית. */
   flex-direction: row;
+  /* height: קובע גובה של 100vh. */
   height: 100vh;
+  /* min-width: מונע הצטמצמות מתחת לרוחב 0. */
   min-width: 0;
 }
 
+/* מטרה: סרגל הצד של ממשק הניהול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .sidebar {
+  /* flex: קובע את גמישות הפריט לערך 0 0 240px. */
   flex: 0 0 240px;
+  /* background-color: צובע את הרקע ב-#2c3e50. */
   background-color: #2c3e50;
+  /* color: צובע את הטקסט ב-white. */
   color: white;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 20px. */
   padding: 20px;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
 }
 
+/* מטרה: תגית ההרשאה או התפקיד בסרגל הצד. הסלקטור מזהה רכיב זה בממשק. */
 .sidebar .badge {
+  /* background-color: צובע את הרקע ב-#e74c3c. */
   background-color: #e74c3c;
+  /* padding: מוסיף ריווח פנימי 5px למעלה ולמטה ו-10px מימין ומשמאל. */
   padding: 5px 10px;
+  /* border-radius: מעגל את הפינות ברדיוס 4px. */
   border-radius: 4px;
+  /* font-size: קובע גודל טקסט 12px. */
   font-size: 12px;
+  /* display: מציג את הרכיב בשורה תוך שמירה על אפשרות לקבוע את מידותיו. */
   display: inline-block;
+  /* margin-top: מוסיף שוליים של 5px מעל הרכיב. */
   margin-top: 5px;
 }
 
+/* מטרה: כותרת ממשק הניהול בסרגל הצד. הסלקטור מזהה רכיב זה בממשק. */
 .sidebar h2 {
+  /* font-size: קובע גודל טקסט 20px. */
   font-size: 20px;
+  /* margin-bottom: מוסיף שוליים של 10px מתחת לרכיב. */
   margin-bottom: 10px;
 }
 
+/* מטרה: פרטי החשבון של מנהל המערכת בסרגל הצד. הסלקטור מזהה רכיב זה בממשק. */
 .sidebar p.admin-info {
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* color: צובע את הטקסט ב-#bdc3c7. */
   color: #bdc3c7;
+  /* margin-top: מוסיף שוליים של 15px מעל הרכיב. */
   margin-top: 15px;
 }
 
+/* מטרה: קישור להתנתקות מחשבון הניהול. הסלקטור מזהה רכיב זה בממשק. */
 .logout-link {
+  /* color: צובע את הטקסט ב-#ecf0f1. */
   color: #ecf0f1;
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
 }
 
+/* מטרה: אזור התוכן הראשי בממשק הניהול. הסלקטור מזהה רכיב זה בממשק. */
 .main-content {
+  /* flex: מאפשר לפריט לגדול ולמלא את המקום הפנוי בפריסת Flex. */
   flex: 1;
+  /* min-width: מונע הצטמצמות מתחת לרוחב 0. */
   min-width: 0;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 30px. */
   padding: 30px;
+  /* overflow-y: מוסיף פס גלילה אנכי רק כשהתוכן חורג. */
   overflow-y: auto;
+  /* overflow-x: חותך ומסתיר תוכן שחורג מגבולות הרכיב. */
   overflow-x: hidden;
 }
 
+/* מטרה: כותרת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .header {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
 }
 
+/* מטרה: כרטיסי נתוני הניהול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .stats-cards {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* gap: קובע מרווח של 20px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 20px;
+  /* margin-bottom: מוסיף שוליים של 20px מתחת לרכיב. */
   margin-bottom: 20px;
 }
 
+/* מטרה: כרטיס יחיד המציג נתון סטטיסטי. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .stat-card {
+  /* background: ממלא את הרקע ב-white. */
   background: white;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 20px. */
   padding: 20px;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* box-shadow: מוסיף צל בערכים 0 4px 10px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  /* min-width: מונע הצטמצמות מתחת לרוחב 200px. */
   min-width: 200px;
+  /* border-right: מצייר מסגרת ימנית בערכים 5px solid #3498db. */
   border-right: 5px solid #3498db;
 }
 
+/* מטרה: תווית הנתון הסטטיסטי בכרטיס הניהול. הסלקטור מזהה רכיב זה בממשק. */
 .stat-card h3 {
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* color: צובע את הטקסט ב-#7f8c8d. */
   color: #7f8c8d;
+  /* margin-bottom: מוסיף שוליים של 10px מתחת לרכיב. */
   margin-bottom: 10px;
 }
 
+/* מטרה: הערך המספרי בכרטיס הנתון. הסלקטור מזהה רכיב זה בממשק. */
 .stat-card .number {
+  /* font-size: קובע גודל טקסט 28px. */
   font-size: 28px;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* color: צובע את הטקסט ב-#2c3e50. */
   color: #2c3e50;
 }
 
+/* מטרה: כותרת אזור תוכן בעמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .section-title {
+  /* margin: יוצר שוליים: 25px למעלה, 0 מימין, 15px למטה ו-0 משמאל. */
   margin: 25px 0 15px 0;
+  /* color: צובע את הטקסט ב-#2c3e50. */
   color: #2c3e50;
+  /* font-size: קובע גודל טקסט 18px. */
   font-size: 18px;
 }
 
+/* מטרה: אזור הודעות הלקוחות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .messages-container {
+  /* background: ממלא את הרקע ב-white. */
   background: white;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* box-shadow: מוסיף צל בערכים 0 4px 10px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 15px. */
   padding: 15px;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
+  /* max-height: מגביל את הגובה ל-400px, כדי שתוכן ארוך יגלול או ייחתך לפי overflow. */
   max-height: 400px;
+  /* overflow-y: מוסיף פס גלילה אנכי רק כשהתוכן חורג. */
   overflow-y: auto;
 }
 
+/* מטרה: כרטיס הודעת לקוח. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .message-card {
+  /* border-bottom: מצייר מסגרת תחתונה בערכים 1px solid #eee. */
   border-bottom: 1px solid #eee;
+  /* padding: מוסיף ריווח פנימי 15px למעלה ולמטה ו-5px מימין ומשמאל. */
   padding: 15px 5px;
+  /* margin-bottom: מוסיף שוליים של 10px מתחת לרכיב. */
   margin-bottom: 10px;
 }
 
+/* מטרה: הודעה כרטיס כאשר זהו הפריט האחרון. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .message-card:last-child {
+  /* border-bottom: מצייר מסגרת תחתונה בערכים none. */
   border-bottom: none;
 }
 
+/* מטרה: כותרת הודעת לקוח הכוללת את פרטי השולח. הסלקטור מזהה רכיב זה בממשק. */
 .message-header {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* margin-bottom: מוסיף שוליים של 5px מתחת לרכיב. */
   margin-bottom: 5px;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* color: צובע את הטקסט ב-#2c3e50. */
   color: #2c3e50;
 }
 
+/* מטרה: שם המשתמש ששלח את ההודעה. הסלקטור מזהה רכיב זה בממשק. */
 .message-username {
+  /* font-size: קובע גודל טקסט 13px. */
   font-size: 13px;
+  /* color: צובע את הטקסט ב-#2980b9. */
   color: #2980b9;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
 }
 
+/* מטרה: תוכן ההודעה שנשלחה בידי הלקוח. הסלקטור מזהה רכיב זה בממשק. */
 .message-text {
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* color: צובע את הטקסט ב-#34495e. */
   color: #34495e;
+  /* margin-top: מוסיף שוליים של 5px מעל הרכיב. */
   margin-top: 5px;
+  /* line-height: קובע גובה שורה 1.4 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.4;
 }
 
+/* מטרה: תאריך שליחת ההודעה. הסלקטור מזהה רכיב זה בממשק. */
 .message-date {
+  /* font-size: קובע גודל טקסט 11px. */
   font-size: 11px;
+  /* color: צובע את הטקסט ב-#95a5a6. */
   color: #95a5a6;
 }
 
+/* מטרה: אזור כתיבת מענה להודעה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .reply-section {
+  /* margin-top: מוסיף שוליים של 10px מעל הרכיב. */
   margin-top: 10px;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* gap: קובע מרווח של 8px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 8px;
 }
 
+/* מטרה: שדה כתיבת מענה להודעת לקוח. הסלקטור מזהה רכיב זה בממשק. */
 .reply-section input {
+  /* flex: מאפשר לפריט לגדול ולמלא את המקום הפנוי בפריסת Flex. */
   flex: 1;
+  /* padding: מוסיף ריווח פנימי 6px למעלה ולמטה ו-10px מימין ומשמאל. */
   padding: 6px 10px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #ccc. */
   border: 1px solid #ccc;
+  /* border-radius: מעגל את הפינות ברדיוס 4px. */
   border-radius: 4px;
+  /* font-size: קובע גודל טקסט 13px. */
   font-size: 13px;
 }
 
+/* מטרה: כפתור שליחת המענה ללקוח. הסלקטור מזהה רכיב זה בממשק. */
 .reply-section button {
+  /* background-color: צובע את הרקע ב-#3498db. */
   background-color: #3498db;
+  /* color: צובע את הטקסט ב-white. */
   color: white;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* padding: מוסיף ריווח פנימי 6px למעלה ולמטה ו-14px מימין ומשמאל. */
   padding: 6px 14px;
+  /* border-radius: מעגל את הפינות ברדיוס 4px. */
   border-radius: 4px;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* font-size: קובע גודל טקסט 13px. */
   font-size: 13px;
 }
 
+/* מטרה: מענה אזור button:hover בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .reply-section button:hover {
+  /* background-color: צובע את הרקע ב-#2980b9. */
   background-color: #2980b9;
 }
 
+/* מטרה: טבלה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 table {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* border-collapse: מאחד גבולות של תאי טבלה סמוכים לקו יחיד. */
   border-collapse: collapse;
+  /* background: ממלא את הרקע ב-white. */
   background: white;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* overflow: חותך ומסתיר תוכן שחורג מגבולות הרכיב. */
   overflow: hidden;
+  /* box-shadow: מוסיף צל בערכים 0 4px 10px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
+/* מטרה: מכל המאפשר גלילה אופקית של טבלת הניהול. הסלקטור מזהה רכיב זה בממשק. */
 .table-container {
+  /* max-width: מגביל את הרוחב ל-100% לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 100%;
+  /* overflow-x: מוסיף פס גלילה אופקי רק כשהתוכן חורג. */
   overflow-x: auto;
 }
 
+/* מטרה: תאי הכותרת והנתונים בטבלת הניהול. הסלקטור מזהה רכיב זה בממשק. */
 th, td {
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-15px מימין ומשמאל. */
   padding: 12px 15px;
+  /* text-align: מיישר טקסט לימין בתוך הרכיב. */
   text-align: right;
+  /* border-bottom: מצייר מסגרת תחתונה בערכים 1px solid #ddd. */
   border-bottom: 1px solid #ddd;
 }
 
+/* מטרה: תא כותרת עמודה בטבלת הניהול. הסלקטור מזהה רכיב זה בממשק. */
 th {
+  /* background-color: צובע את הרקע ב-#3498db. */
   background-color: #3498db;
+  /* color: צובע את הטקסט ב-white. */
   color: white;
 }
 
+/* מטרה: שורת טבלה בעת מעבר עכבר. הסלקטור מזהה רכיב זה בממשק. */
 tr:hover {
+  /* background-color: צובע את הרקע ב-#f1f1f1. */
   background-color: #f1f1f1;
 }
 
+/* מטרה: plan תגית. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .plan-tag {
+  /* padding: מוסיף ריווח פנימי 4px למעלה ולמטה ו-8px מימין ומשמאל. */
   padding: 4px 8px;
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* font-size: קובע גודל טקסט 12px. */
   font-size: 12px;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* background-color: צובע את הרקע ב-#e8f8f5. */
   background-color: #e8f8f5;
+  /* color: צובע את הטקסט ב-#27ae60. */
   color: #27ae60;
 }
 
+/* מטרה: סטטוס msg. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .status-msg {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* color: צובע את הטקסט ב-#7f8c8d. */
   color: #7f8c8d;
 }
 
+/* מטרה: הודעת שגיאה באזור הסטטוס. הסלקטור מזהה רכיב זה בממשק. */
 .status-msg.error {
+  /* color: צובע את הטקסט ב-#e74c3c. */
   color: #e74c3c;
 }
 
+/* מטרה: כרטיס שיחת תמיכה בממשק הניהול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-card {
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0. */
   padding: 0;
+  /* overflow: חותך ומסתיר תוכן שחורג מגבולות הרכיב. */
   overflow: hidden;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
 }
 
+/* מטרה: ניהול שיחה כרטיס. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-card.is-pending {
+  /* border-color: קובע את צבע המסגרת ל-#fca5a5. */
   border-color: #fca5a5;
 }
 
+/* מטרה: כותרת לחיצה לפתיחת שיחת התמיכה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-header {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* gap: קובע מרווח של 12px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 12px;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 15px. */
   padding: 15px;
+  /* border-bottom: מצייר מסגרת תחתונה בערכים 1px solid #e2e8f0. */
   border-bottom: 1px solid #e2e8f0;
+  /* background: ממלא את הרקע ב-#f8fafc. */
   background: #f8fafc;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
+/* מטרה: ניהול שיחה כותרת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-header.is-pending {
+  /* background: ממלא את הרקע ב-#fef2f2. */
   background: #fef2f2;
 }
 
+/* מטרה: אזור הכותרת הראשי של שיחת התמיכה. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-header-main {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* gap: קובע מרווח של 10px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 10px;
 }
 
+/* מטרה: שם או נושא שיחת התמיכה. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-title {
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* color: צובע את הטקסט ב-#1e293b. */
   color: #1e293b;
+  /* font-size: קובע גודל טקסט 16px. */
   font-size: 16px;
 }
 
+/* מטרה: תאריך שיחת התמיכה. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-date {
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b;
+  /* font-size: קובע גודל טקסט 12px. */
   font-size: 12px;
+  /* font-weight: קובע משקל גופן 400, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 400;
 }
 
+/* מטרה: תגית מצב הטיפול בשיחת התמיכה. הסלקטור מזהה רכיב זה בממשק. */
 .chat-status-badge {
+  /* padding: מוסיף ריווח פנימי 4px למעלה ולמטה ו-10px מימין ומשמאל. */
   padding: 4px 10px;
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* font-size: קובע גודל טקסט 12px. */
   font-size: 12px;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* white-space: מונע שבירת שורה ומשאיר את התוכן בשורה אחת. */
   white-space: nowrap;
 }
 
+/* מטרה: שיחה סטטוס תגית. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .chat-status-badge.is-pending {
+  /* background: ממלא את הרקע ב-#fee2e2. */
   background: #fee2e2;
+  /* color: צובע את הטקסט ב-#dc2626. */
   color: #dc2626;
 }
 
+/* מטרה: שיחה סטטוס תגית. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .chat-status-badge.is-resolved {
+  /* background: ממלא את הרקע ב-#dcfce7. */
   background: #dcfce7;
+  /* color: צובע את הטקסט ב-#16a34a. */
   color: #16a34a;
 }
 
+/* מטרה: כפתור פתיחה וסגירה של שיחת התמיכה. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-toggle {
+  /* padding: מוסיף ריווח פנימי 6px למעלה ולמטה ו-12px מימין ומשמאל. */
   padding: 6px 12px;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: 0;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* background: ממלא את הרקע ב-#e2e8f0. */
   background: #e2e8f0;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
+/* מטרה: תוכן שיחת התמיכה הפתוחה. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-body {
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 15px. */
   padding: 15px;
 }
 
+/* מטרה: רשימת ההודעות בשיחת התמיכה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-messages {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* max-height: מגביל את הגובה ל-350px, כדי שתוכן ארוך יגלול או ייחתך לפי overflow. */
   max-height: 350px;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* gap: קובע מרווח של 12px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 12px;
+  /* overflow-y: מוסיף פס גלילה אנכי רק כשהתוכן חורג. */
   overflow-y: auto;
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
+  /* padding-left: מרחיק את התוכן מהמסגרת השמאלית ב-5px. */
   padding-left: 5px;
 }
 
+/* מטרה: ניהול שיחה bubble. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-bubble {
+  /* max-width: מגביל את הרוחב ל-85% לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 85%;
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 12px 16px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
 }
 
+/* מטרה: בועת הודעה שנשלחה בידי הלקוח. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-bubble-client {
+  /* align-self: מיישר פריט זה בתחילת הציר הניצב, בלי לשנות פריטים אחרים. */
   align-self: flex-start;
+  /* border-radius: מעגל את הפינות ברדיוס 16px 16px 16px 0. */
   border-radius: 16px 16px 16px 0;
+  /* background: ממלא את הרקע ב-#f1f5f9. */
   background: #f1f5f9;
 }
 
+/* מטרה: בועת מענה שנשלחה בידי מנהל. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-bubble-admin {
+  /* align-self: מגדיר לפריט יישור עצמאי flex-end. */
   align-self: flex-end;
+  /* border-color: קובע את צבע המסגרת ל-#bfdbfe. */
   border-color: #bfdbfe;
+  /* border-radius: מעגל את הפינות ברדיוס 16px 16px 0 16px. */
   border-radius: 16px 16px 0 16px;
+  /* background: ממלא את הרקע ב-#eff6ff. */
   background: #eff6ff;
 }
 
+/* מטרה: פרטי שולח ותאריך מעל הודעת צ׳אט. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-meta {
+  /* margin-bottom: מוסיף שוליים של 4px מתחת לרכיב. */
   margin-bottom: 4px;
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b;
+  /* font-size: קובע גודל טקסט 11px. */
   font-size: 11px;
 }
 
+/* מטרה: ניהול שיחה bubble ניהול ניהול שיחה פרטים. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-bubble-admin .admin-chat-meta {
+  /* color: צובע את הטקסט ב-#3b82f6. */
   color: #3b82f6;
 }
 
+/* מטרה: תוכן הודעת הצ׳אט. הסלקטור מזהה רכיב זה בממשק. */
 .admin-chat-text {
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* overflow-wrap: מאפשר לשבור מילים ארוכות גם ללא רווחים, כדי למנוע גלישה. */
   overflow-wrap: anywhere;
 }
 
+/* מטרה: ניהול שיחה bubble ניהול ניהול שיחה טקסט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-chat-bubble-admin .admin-chat-text {
+  /* color: צובע את הטקסט ב-#1e40af. */
   color: #1e40af;
 }
 
+/* מטרה: אזור כתיבת מענה של מנהל. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .admin-reply-section {
+  /* gap: קובע מרווח של 10px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 10px;
+  /* border-top: מצייר מסגרת עליונה בערכים 1px solid #e2e8f0. */
   border-top: 1px solid #e2e8f0;
+  /* padding-top: מרחיק את התוכן מהמסגרת העליונה ב-15px. */
   padding-top: 15px;
 }
 
+/* מטרה: שדה כתיבת תשובת מנהל ללקוח. הסלקטור מזהה רכיב זה בממשק. */
 .admin-reply-input {
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 12px. */
   padding: 12px !important;
+  /* border-color: קובע את צבע המסגרת ל-#cbd5e1. */
   border-color: #cbd5e1 !important;
+  /* border-radius: מעגל את הפינות ברדיוס 8px !important. */
   border-radius: 8px !important;
+  /* outline: מסיר את קו המתאר ברירת המחדל. */
   outline: none;
 }
 
 .admin-reply-button,
+/* מטרה: כפתור הצגת היסטוריית הלקוח. הסלקטור מזהה רכיב זה בממשק. */
 .client-history-btn {
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: 0;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* background: ממלא את הרקע ב-#2563eb. */
   background: #2563eb;
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
+/* מטרה: כפתור שליחת תשובת מנהל. הסלקטור מזהה רכיב זה בממשק. */
 .admin-reply-button {
+  /* padding: מוסיף ריווח פנימי 10px למעלה ולמטה ו-24px מימין ומשמאל. */
   padding: 10px 24px;
 }
 
+/* מטרה: כפתור הצגת היסטוריית הלקוח. הסלקטור מזהה רכיב זה בממשק. */
 .client-history-btn {
+  /* padding: מוסיף ריווח פנימי 6px למעלה ולמטה ו-10px מימין ומשמאל. */
   padding: 6px 10px;
 }
 
 .admin-chat-toggle:focus-visible,
 .admin-reply-button:focus-visible,
+/* מטרה: לקוח היסטוריה כפתור בעת ניווט מקלדת למוקד נגיש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .client-history-btn:focus-visible {
+  /* outline: מצייר קו מתאר לפי 3px solid #f59e0b. */
   outline: 3px solid #f59e0b;
+  /* outline-offset: מרחיק את קו המתאר מהמסגרת ב-2px. */
   outline-offset: 2px;
 }
 
+/* כללים רספונסיביים: כאשר רוחב המסך הוא 700px ומטה, הפריסה והמידות הבאות מותאמות למסך קטן. */
 @media (max-width: 700px) {
+  /* מטרה: גוף העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   body {
+    /* height: מחשב את הגובה לפי התוכן ושומר על יחס הממדים הטבעי. */
     height: auto;
+    /* min-height: מבטיח גובה מזערי של 100vh גם כשהתוכן קצר. */
     min-height: 100vh;
+    /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
     flex-direction: column;
   }
 
+  /* מטרה: סרגל הצד של ממשק הניהול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .sidebar {
+    /* flex: קובע את גמישות הפריט לערך 0 0 auto. */
     flex: 0 0 auto;
+    /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
     width: 100%;
+    /* gap: קובע מרווח של 16px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
     gap: 16px;
+    /* padding: מוסיף ריווח פנימי 14px למעלה ולמטה ו-16px מימין ומשמאל. */
     padding: 14px 16px;
   }
 
+  /* מטרה: סרגל צד > div:first-child כאשר זהו הפריט הראשון. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .sidebar > div:first-child {
+    /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
     display: flex;
+    /* flex-wrap: מעביר פריטים לשורה נוספת כשאין די מקום בשורה. */
     flex-wrap: wrap;
+    /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
     align-items: center;
+    /* gap: קובע מרווח של 8px 12px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
     gap: 8px 12px;
   }
 
   .sidebar h2,
   .sidebar p.admin-info,
+  /* מטרה: תגית ההרשאה או התפקיד בסרגל הצד. הסלקטור מזהה רכיב זה בממשק. */
   .sidebar .badge {
+    /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
     margin: 0;
   }
 
+  /* מטרה: כותרת ממשק הניהול בסרגל הצד. הסלקטור מזהה רכיב זה בממשק. */
   .sidebar h2 {
+    /* font-size: קובע גודל טקסט 18px. */
     font-size: 18px;
   }
 
+  /* מטרה: אזור התוכן הראשי בממשק הניהול. הסלקטור מזהה רכיב זה בממשק. */
   .main-content {
+    /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
     width: 100%;
+    /* padding: מוסיף ריווח פנימי 20px למעלה ולמטה ו-16px מימין ומשמאל. */
     padding: 20px 16px;
   }
 
+  /* מטרה: כותרת העמוד באזור התוכן. הסלקטור מזהה רכיב זה בממשק. */
   .header h1 {
+    /* font-size: קובע גודל טקסט 22px. */
     font-size: 22px;
   }
 
+  /* מטרה: כרטיסי נתוני הניהול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .stats-cards {
+    /* flex-wrap: מעביר פריטים לשורה נוספת כשאין די מקום בשורה. */
     flex-wrap: wrap;
   }
 
+  /* מטרה: כרטיס יחיד המציג נתון סטטיסטי. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .stat-card {
+    /* min-width: מונע הצטמצמות מתחת לרוחב 0. */
     min-width: 0;
+    /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
     width: 100%;
   }
 
+  /* מטרה: ראשי תוכן שדה קלט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .main-content input {
+    /* max-width: מגביל את הרוחב ל-100% לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
     max-width: 100%;
   }
 
   th,
+  /* מטרה: תא בטבלה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   td {
+    /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 10px. */
     padding: 10px;
+    /* white-space: מונע שבירת שורה ומשאיר את התוכן בשורה אחת. */
     white-space: nowrap;
   }
 
   .admin-chat-header,
+  /* מטרה: אזור הכותרת הראשי של שיחת התמיכה. הסלקטור מזהה רכיב זה בממשק. */
   .admin-chat-header-main {
+    /* align-items: מיישר פריטים לתחילת הציר הניצב. */
     align-items: flex-start;
+    /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
     flex-direction: column;
   }
 
+  /* מטרה: ניהול שיחה bubble. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .admin-chat-bubble {
+    /* max-width: מגביל את הרוחב ל-100% לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
     max-width: 100%;
   }
 }

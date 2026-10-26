@@ -1,78 +1,78 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botify - פאנל ניהול</title>
-    <link rel="icon" type="image/png" href="../images/pic.png">
-    <link rel="stylesheet" href="../css/global.css">
-    <link rel="stylesheet" href="../css/admin.css">
-    <script src="../js/session-manager.js"></script>
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- ממשק הניהול מרכז פעולות ניהוליות ורכיבים אינטראקטיביים שמופעלים על ידי הסקריפטים. -->
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>Botify - פאנל ניהול</title>
+    <!-- הקישור למשאב ../images/pic.png מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. הסוג הוא image/png; כתובת היעד הוא ../images/pic.png. --><link rel="icon" type="image/png" href="../images/pic.png">
+    <!-- הקישור למשאב ../css/global.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/global.css. --><link rel="stylesheet" href="../css/global.css">
+    <!-- הקישור למשאב ../css/admin.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/admin.css. --><link rel="stylesheet" href="../css/admin.css">
+    <!-- הקובץ ../js/session-manager.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. מקור הקובץ הוא ../js/session-manager.js. --><script src="../js/session-manager.js"></script>
 </head>
-<body>
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. --><body>
 
-    <div class="sidebar">
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא sidebar. --><div class="sidebar">
         <div>
-            <h2>Botify Admin</h2>
+            <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>Botify Admin</h2>
             <span class="badge">פרופיל ניהול פעיל</span>
-            <p class="admin-info">מנהל מחובר: <strong id="adminNameDisplay">טוען...</strong></p>
+            <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא admin-info. --><p class="admin-info">מנהל מחובר: <strong id="adminNameDisplay">טוען...</strong></p>
         </div>
         <div>
-            <a href="login.html" class="logout-link">התנתקות</a>
+            <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא logout-link; כתובת היעד הוא login.html. --><a href="login.html" class="logout-link">התנתקות</a>
         </div>
     </div>
 
-    <div class="main-content">
-        <div class="header">
-            <h1>לוח בקרה וניהול מערכת</h1>
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא main-content. --><div class="main-content">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא header. --><div class="header">
+            <!-- כותרת h1 מציינת את הנושא הראשי של הדף; משתמשים בדרך כלל בכותרת ראשית אחת. --><h1>לוח בקרה וניהול מערכת</h1>
         </div>
 
         <!-- כרטיסיית ספירת מנויים -->
-        <div class="stats-cards">
-            <div class="stat-card">
-                <h3>סה"כ מנויים רשומים</h3>
-                <div class="number" id="subscriberCount">0</div>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא stats-cards. --><div class="stats-cards">
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא stat-card. --><div class="stat-card">
+                <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>סה"כ מנויים רשומים</h3>
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא subscriberCount; מחלקות העיצוב הוא number. --><div class="number" id="subscriberCount">0</div>
             </div>
         </div>
 
         <!-- תיבת הודעות נכנסות (צור קשר) עם שורת חיפוש -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-            <h2 id="messagesSectionTitle" class="section-title" style="margin: 0;">הודעות נכנסות (ממתינות לטיפול)</h2>
+            <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. המזהה הוא messagesSectionTitle; מחלקות העיצוב הוא section-title. --><h2 id="messagesSectionTitle" class="section-title" style="margin: 0;">הודעות נכנסות (ממתינות לטיפול)</h2>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="adminSearchClient" placeholder="🔍 חפש שם לקוח..." oninput="filterAdminChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 250px; font-size: 14px;">
-                <button onclick="showAllClientChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #334155; cursor: pointer;">הצג ממתינות</button>
-                <button onclick="showConversationHistory()" style="padding: 8px 12px; border: 1px solid #2563eb; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer;">היסטוריית שיחות</button>
+                <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא adminSearchClient; הסוג הוא text. --><input type="text" id="adminSearchClient" placeholder="🔍 חפש שם לקוח..." oninput="filterAdminChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 250px; font-size: 14px;">
+                <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. --><button onclick="showAllClientChats()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #334155; cursor: pointer;">הצג ממתינות</button>
+                <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. --><button onclick="showConversationHistory()" style="padding: 8px 12px; border: 1px solid #2563eb; border-radius: 6px; background: #2563eb; color: #fff; cursor: pointer;">היסטוריית שיחות</button>
             </div>
         </div>
 
-        <div class="messages-container" id="messagesList">
-            <p class="status-msg">טוען הודעות...</p>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא messagesList; מחלקות העיצוב הוא messages-container. --><div class="messages-container" id="messagesList">
+            <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא status-msg. --><p class="status-msg">טוען הודעות...</p>
         </div>
 
         <!-- טבלת לקוחות -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin: 30px 0 15px; flex-wrap: wrap; gap: 10px;">
-            <h2 class="section-title" style="margin: 0;">רשימת לקוחות</h2>
-            <input type="text" id="adminSearchUsers" placeholder="🔍 חפש לקוח לפי שם או אימייל..." oninput="filterAdminUsers()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 280px; font-size: 14px;">
+            <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. מחלקות העיצוב הוא section-title. --><h2 class="section-title" style="margin: 0;">רשימת לקוחות</h2>
+            <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא adminSearchUsers; הסוג הוא text. --><input type="text" id="adminSearchUsers" placeholder="🔍 חפש לקוח לפי שם או אימייל..." oninput="filterAdminUsers()" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; width: 280px; font-size: 14px;">
         </div>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>שם משתמש</th>
-                        <th>אימייל</th>
-                        <th>סוג מנוי</th>
-                        <th>תאריך הרשמה</th>
-                        <th>היסטוריית שיחות</th>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא table-container. --><div class="table-container">
+            <!-- הטבלה table מארגנת מידע בשורות ובעמודות; כותרות התאים מסבירות את משמעות הנתונים. --><table>
+                <!-- החלק thead מקבץ את שורות הכותרת של הטבלה. --><thead>
+                    <!-- האלמנט tr מייצג שורה בטבלה. --><tr>
+                        <!-- התא th הוא כותרת לשורה או לעמודה בטבלה. --><th>#</th>
+                        <!-- התא th הוא כותרת לשורה או לעמודה בטבלה. --><th>שם משתמש</th>
+                        <!-- התא th הוא כותרת לשורה או לעמודה בטבלה. --><th>אימייל</th>
+                        <!-- התא th הוא כותרת לשורה או לעמודה בטבלה. --><th>סוג מנוי</th>
+                        <!-- התא th הוא כותרת לשורה או לעמודה בטבלה. --><th>תאריך הרשמה</th>
+                        <!-- התא th הוא כותרת לשורה או לעמודה בטבלה. --><th>היסטוריית שיחות</th>
                     </tr>
                 </thead>
-                <tbody id="usersTableBody">
-                    <tr><td colspan="6" class="status-msg">טוען נתונים...</td></tr>
+                <!-- החלק tbody מקבץ את שורות הנתונים של הטבלה. המזהה הוא usersTableBody. --><tbody id="usersTableBody">
+                    <!-- האלמנט tr מייצג שורה בטבלה. --><tr><!-- התא td מכיל ערך או תוכן בשורה בטבלה. מחלקות העיצוב הוא status-msg. --><td colspan="6" class="status-msg">טוען נתונים...</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <script type="module" src="../js/admin.js"></script>
+    <!-- הקובץ ../js/admin.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ../js/admin.js. --><script type="module" src="../js/admin.js"></script>
 </body>
 </html>

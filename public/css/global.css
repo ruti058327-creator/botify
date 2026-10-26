@@ -1,409 +1,678 @@
-/* ==========================================
-   1. משתנים ואיפוס (Variables & Reset)
-   ========================================== */
+
+/* מטרה: הגדרות העיצוב הגלובליות של האתר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 :root {
+  /* --primary-color: הצבע הראשי של הממשק המשמש לכפתורים, קישורים והדגשות. */
   --primary-color: #2563eb;
+  /* --primary-hover: צבע כהה יותר לכפתור הראשי בעת מעבר עכבר. */
   --primary-hover: #1d4ed8;
+  /* --secondary-color: צבע הרקע המשני המשמש לכפתורים ואזורים משניים. */
   --secondary-color: #f1f5f9;
+  /* --secondary-hover: צבע הרקע של רכיב משני בעת מעבר עכבר. */
   --secondary-hover: #e2e8f0;
+  /* --text-dark: צבע הטקסט הראשי והכהה בכותרות ובתוכן. */
   --text-dark: #0f172a;
+  /* --text-muted: צבע טקסט משני להערות ולפרטים פחות בולטים. */
   --text-muted: #64748b;
+  /* --bg-light: צבע רקע בהיר למשטחים וכרטיסים. */
   --bg-light: #ffffff;
+  /* --bg-subtle: צבע הרקע העדין של העמוד. */
   --bg-subtle: #f8fafc;
+  /* --border-color: צבע גבול אחיד לשדות ולכרטיסים. */
   --border-color: #e2e8f0;
+  /* --font-family: שרשרת גופנים ראשית עם חלופות למערכות הפעלה שונות. */
   --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* --radius: רדיוס פינות רגיל לרכיבי ממשק. */
   --radius: 10px;
+  /* --radius-card: רדיוס פינות גדול לכרטיסים ומכלים. */
   --radius-card: 20px;
+  /* --transition: משך וסגנון המעבר החלק לאפקטים בממשק. */
   --transition: all 0.25s ease-in-out;
+  /* --shadow-sm: צל קטן לכפתורים ופריטים מודגשים. */
   --shadow-sm: 0 4px 12px rgba(37, 99, 235, 0.12);
+  /* --shadow-card: צל עדין לכרטיסים, המפריד אותם מהרקע. */
   --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.05);
+  /* --shadow-hover: צל מודגש שמופיע בריחוף מעל כרטיס. */
   --shadow-hover: 0 15px 35px rgba(37, 99, 235, 0.15);
 }
 
+/* מטרה: כל רכיבי העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 * {
+  /* box-sizing: כולל ריווח ומסגרת בתוך הרוחב והגובה, כך שהמידות נשארות צפויות. */
   box-sizing: border-box;
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0. */
   padding: 0;
 }
 
+/* מטרה: גוף העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 body {
+  /* font-family: בוחר בגופן var(--font-family); הגופנים שאחריו משמשים חלופות אם הראשון אינו זמין. */
   font-family: var(--font-family);
+  /* background-color: צובע את הרקע ב-משתנה הצבע --bg-subtle. */
   background-color: var(--bg-subtle);
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* direction: מגדיר ערך rtl, אשר קובע כיצד הרכיב מעוצב. */
   direction: rtl;
+  /* line-height: קובע גובה שורה 1.6 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.6;
+  /* min-height: מבטיח גובה מזערי של 100vh גם כשהתוכן קצר. */
   min-height: 100vh;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
 }
 
-/* ==========================================
-   2. סרגל ניווט עליון (Header & Navbar)
-   ========================================== */
+/* מטרה: כותרת האתר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 header {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --bg-light. */
   background-color: var(--bg-light);
+  /* border-bottom: מצייר מסגרת תחתונה בערכים 1px solid var(--border-color). */
   border-bottom: 1px solid var(--border-color);
+  /* position: משאיר את הרכיב צמוד למסך באזור הגלילה שנקבע. */
   position: sticky;
+  /* top: ממקם את הרכיב במרחק 0 מהקצה העליון של נקודת הייחוס. */
   top: 0;
+  /* z-index: מציב את הרכיב בשכבה 100; מספר גבוה יותר מוצג מעל שכבה נמוכה יותר. */
   z-index: 100;
+  /* box-shadow: מוסיף צל בערכים 0 2px 8px rgba(0, 0, 0, 0.02); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
+/* מטרה: סרגל ניווט האתר. הסלקטור מזהה רכיב זה בממשק. */
 .navbar {
+  /* max-width: מגביל את הרוחב ל-1200px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1200px;
+  /* margin: יוצר מרווח אנכי 0 וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 0 auto;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* padding: מוסיף ריווח פנימי 0.6rem למעלה ולמטה ו-2rem מימין ומשמאל. */
   padding: 0.6rem 2rem;
 }
 
+/* מטרה: לוגו. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .logo {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
 }
 
+/* מטרה: תמונת הלוגו של האתר. הסלקטור מזהה רכיב זה בממשק. */
 .logo-img {
+  /* height: קובע גובה של 60px. */
   height: 60px;
+  /* width: קובע רוחב של auto. */
   width: auto;
+  /* object-fit: מתאים תמונה כך שתוצג בשלמותה בתוך המסגרת, ללא חיתוך. */
   object-fit: contain;
+  /* transition: מחליק שינוי במאפיינים var(--transition) במקום להציג קפיצה מיידית. */
   transition: var(--transition);
 }
 
+/* מטרה: לוגו תמונה בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .logo-img:hover {
+  /* transform: משנה את גודל הרכיב לפי scale(1.05). */
   transform: scale(1.05);
 }
 
+/* מטרה: רשימת קישורי הניווט הראשיים. הסלקטור מזהה רכיב זה בממשק. */
 .nav-links {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* list-style: מסיר את תבליטי ברירת המחדל של הרשימה. */
   list-style: none;
+  /* gap: קובע מרווח של 1.5rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 1.5rem;
 }
 
+/* מטרה: קישור בודד בסרגל הניווט. הסלקטור מזהה רכיב זה בממשק. */
 .nav-links a {
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* font-weight: קובע משקל גופן 500, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 500;
+  /* transition: מחליק שינוי במאפיינים var(--transition) במקום להציג קפיצה מיידית. */
   transition: var(--transition);
 }
 
 .nav-links a:hover,
+/* מטרה: ניווט links a.active. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .nav-links a.active {
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color);
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
 }
 
-/* ==========================================
-   3. כפתורים כלליים (Buttons)
-   ========================================== */
 .auth-buttons,
+/* מטרה: קריאה לפעולה קבוצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .cta-group {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* gap: קובע מרווח של 0.75rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 0.75rem;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
 }
 
 .btn-primary,
+/* מטרה: כפתור משני. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-secondary {
+  /* padding: מוסיף ריווח פנימי 0.65rem למעלה ולמטה ו-1.3rem מימין ומשמאל. */
   padding: 0.65rem 1.3rem;
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius). */
   border-radius: var(--radius);
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* transition: מחליק שינוי במאפיינים var(--transition) במקום להציג קפיצה מיידית. */
   transition: var(--transition);
+  /* display: מציג את הרכיב בשורה תוך שמירה על אפשרות לקבוע את מידותיו. */
   display: inline-block;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
 }
 
+/* מטרה: כפתור ראשי. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-primary {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --primary-color. */
   background-color: var(--primary-color);
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff !important;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-sm); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-sm);
 }
 
+/* מטרה: כפתור ראשי בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-primary:hover {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --primary-hover. */
   background-color: var(--primary-hover);
+  /* transform: מזיז את הרכיב אנכית לפי translateY(-2px); ערך שלילי מעלה אותו. */
   transform: translateY(-2px);
+  /* box-shadow: מוסיף צל בערכים 0 6px 16px rgba(37, 99, 235, 0.25); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
+/* מטרה: כפתור משני. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-secondary {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --secondary-color. */
   background-color: var(--secondary-color);
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark) !important;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
 }
 
+/* מטרה: כפתור משני בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-secondary:hover {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --secondary-hover. */
   background-color: var(--secondary-hover);
+  /* transform: מזיז את הרכיב אנכית לפי translateY(-2px); ערך שלילי מעלה אותו. */
   transform: translateY(-2px);
 }
 
-/* ==========================================
-   4. דף הבית (Hero Section)
-   ========================================== */
+/* מטרה: אזור פתיחה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .hero {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* padding: מוסיף ריווח פנימי 50px למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 50px 20px;
 }
 
+/* מטרה: מכל אזור הפתיחה הכולל טקסט ותמונה. הסלקטור מזהה רכיב זה בממשק. */
 .hero-container {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* gap: קובע מרווח של 40px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 40px;
+  /* max-width: מגביל את הרוחב ל-1050px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1050px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-light. */
   background: var(--bg-light);
+  /* padding: מוסיף ריווח פנימי 50px למעלה ולמטה ו-45px מימין ומשמאל. */
   padding: 50px 45px;
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius-card). */
   border-radius: var(--radius-card);
+  /* box-shadow: מוסיף צל בערכים var(--shadow-card); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-card);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
 }
 
+/* מטרה: אזור הטקסט והקריאה לפעולה בפתיחת העמוד. הסלקטור מזהה רכיב זה בממשק. */
 .hero-text {
+  /* flex: קובע את גמישות הפריט לערך 1.2. */
   flex: 1.2;
+  /* text-align: מיישר טקסט לימין בתוך הרכיב. */
   text-align: right;
 }
 
+/* מטרה: אזור פתיחה טקסט כותרת ראשית. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .hero-text h1 {
+  /* font-size: קובע גודל טקסט 2.6rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.6rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* margin-bottom: מוסיף שוליים של 16px מתחת לרכיב. */
   margin-bottom: 16px;
+  /* line-height: קובע גובה שורה 1.2 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.2;
 }
 
+/* מטרה: אזור פתיחה טקסט פסקה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .hero-text p {
+  /* font-size: קובע גודל טקסט 1.25rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.25rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* margin-bottom: מוסיף שוליים של 30px מתחת לרכיב. */
   margin-bottom: 30px;
+  /* line-height: קובע גובה שורה 1.5 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.5;
 }
 
+/* מטרה: אזור תמונת הפתיחה. הסלקטור מזהה רכיב זה בממשק. */
 .hero-image {
+  /* flex: קובע את גמישות הפריט לערך 0.8. */
   flex: 0.8;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
 }
 
+/* מטרה: אזור פתיחה תמונה תמונה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .hero-image img {
+  /* max-width: מגביל את הרוחב ל-270px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 270px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* height: מחשב את הגובה לפי התוכן ושומר על יחס הממדים הטבעי. */
   height: auto;
+  /* object-fit: מתאים תמונה כך שתוצג בשלמותה בתוך המסגרת, ללא חיתוך. */
   object-fit: contain;
-  animation: floatRobot 1.8s ease-in-out infinite; /* עודכן ל-1.8 שניות */
+  /* animation: מפעיל את האנימציה floatRobot במשכי הזמן ובקצב 1.8s ease-in-out infinite שצוינו. */
+  animation: floatRobot 1.8s ease-in-out infinite;
+  /* filter: מחיל על התמונה אפקט חזותי drop-shadow(0 15px 20px rgba(37, 99, 235, 0.1)). */
   filter: drop-shadow(0 15px 20px rgba(37, 99, 235, 0.1));
 }
 
+/* מגדיר את שלבי האנימציה floatRobot, המתוארים באמצעות נקודות העצירה שמתחת. */
 @keyframes floatRobot {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-18px); } /* עודכן לטווח תנועה של 18px */
+  /* בנקודת ההתחלה והסיום של האנימציה הרובוט חוזר למיקום האנכי המקורי שלו. */
+  0%, 100% {
+    /* transform: משאיר את תמונת הרובוט ללא היסט אנכי בתחילת האנימציה ובסיומה. */
+    transform: translateY(0);
+  }
+  /* באמצע האנימציה תמונת הרובוט עולה 18px, לפני שהיא חוזרת למיקומה המקורי בסיום. */
+  50% {
+    /* transform: מזיז את הרכיב אנכית לפי translateY(-18px); ערך שלילי מעלה אותו. */
+    transform: translateY(-18px);
+  }
 }
 
-/* ==========================================
-   5. דף מחירון (Pricing Page Layout)
-   ========================================== */
+/* מטרה: מכל עמוד המחירון המגביל וממרכז את התוכן. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-container {
+  /* max-width: מגביל את הרוחב ל-1250px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1250px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* margin: יוצר מרווח אנכי 40px וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 40px auto;
+  /* padding: מוסיף ריווח פנימי 0 למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 0 20px;
+  /* flex: מאפשר לפריט לגדול ולמלא את המקום הפנוי בפריסת Flex. */
   flex: 1;
 }
 
+/* מטרה: אזור הכותרת של עמוד המחירון. הסלקטור מזהה רכיב זה בממשק. */
 .pricing-header {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* margin-bottom: מוסיף שוליים של 40px מתחת לרכיב. */
   margin-bottom: 40px;
 }
 
+/* מטרה: כותרת עמוד המחירון. הסלקטור מזהה רכיב זה בממשק. */
 .pricing-header h1 {
+  /* font-size: קובע גודל טקסט 2.4rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.4rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* margin-bottom: מוסיף שוליים של 12px מתחת לרכיב. */
   margin-bottom: 12px;
 }
 
+/* מטרה: הסבר קצר מתחת לכותרת המחירון. הסלקטור מזהה רכיב זה בממשק. */
 .pricing-header p {
+  /* font-size: קובע גודל טקסט 1.15rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.15rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
 }
 
+/* מטרה: רשת כרטיסי מסלולי השירות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מתאים אוטומטית את מספר העמודות לרוחב הזמין; כל עמודה תהיה ברוחב מזערי 260px. */
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  /* gap: קובע מרווח של 25px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 25px;
+  /* align-items: מותח פריטים למלא את המסילה בציר הניצב. */
   align-items: stretch;
 }
 
+/* מטרה: כרטיס המציג מסלול מחיר יחיד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card {
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-light. */
   background: var(--bg-light);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius-card). */
   border-radius: var(--radius-card);
+  /* padding: מוסיף ריווח פנימי 30px למעלה ולמטה ו-24px מימין ומשמאל. */
   padding: 30px 24px;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-card); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-card);
+  /* transition: מחליק שינוי במאפיינים var(--transition) במקום להציג קפיצה מיידית. */
   transition: var(--transition);
+  /* position: יוצר נקודת ייחוס לילדים ממוקמים, בלי להוציא את הרכיב מזרימת הפריסה. */
   position: relative;
+  /* text-align: מיישר טקסט לימין בתוך הרכיב. */
   text-align: right;
 }
 
+/* מטרה: מחירון כרטיס בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card:hover {
+  /* transform: מזיז את הרכיב אנכית לפי translateY(-8px); ערך שלילי מעלה אותו. */
   transform: translateY(-8px);
+  /* box-shadow: מוסיף צל בערכים var(--shadow-hover); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-hover);
+  /* border-color: קובע את צבע המסגרת ל-var(--primary-color). */
   border-color: var(--primary-color);
 }
 
+/* מטרה: כרטיס המסלול המומלץ במחירון. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card.popular {
+  /* border: מצייר מסגרת בעובי 2px, בסגנון solid ובצבע var(--primary-color). */
   border: 2px solid var(--primary-color);
+  /* box-shadow: מוסיף צל בערכים 0 15px 35px rgba(37, 99, 235, 0.12); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 15px 35px rgba(37, 99, 235, 0.12);
 }
 
+/* מטרה: תגית המסמנת את המסלול המומלץ. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .badge-popular {
+  /* position: ממקם את הרכיב ביחס לאב הממוקם הקרוב ביותר ומוציאו מזרימת הפריסה. */
   position: absolute;
+  /* top: ממקם את הרכיב במרחק -14px מהקצה העליון של נקודת הייחוס. */
   top: -14px;
+  /* left: ממקם את הרכיב במרחק 50% מהקצה השמאלי של נקודת הייחוס. */
   left: 50%;
+  /* transform: מזיז את הרכיב אופקית לפי translateX(-50%), למשל לצורך מרכוז. */
   transform: translateX(-50%);
+  /* background: ממלא את הרקע ב-משתנה הצבע --primary-color. */
   background: var(--primary-color);
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
+  /* padding: מוסיף ריווח פנימי 4px למעלה ולמטה ו-14px מימין ומשמאל. */
   padding: 4px 14px;
+  /* border-radius: מעגל את הפינות ברדיוס 20px. */
   border-radius: 20px;
+  /* font-size: קובע גודל טקסט 0.85rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.85rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
 }
 
+/* מטרה: שם מסלול השירות בכרטיס המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .card-header h3 {
+  /* font-size: קובע גודל טקסט 1.35rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.35rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* margin-bottom: מוסיף שוליים של 6px מתחת לרכיב. */
   margin-bottom: 6px;
 }
 
+/* מטרה: תיאור מסלול השירות בכרטיס המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .card-header .desc {
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* min-height: מבטיח גובה מזערי של 40px גם כשהתוכן קצר. */
   min-height: 40px;
 }
 
+/* מטרה: כרטיס כותרת מחיר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .card-header .price {
+  /* margin: יוצר שוליים: 18px למעלה, 0 מימין, 20px למטה ו-0 משמאל. */
   margin: 18px 0 20px 0;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: מיישר פריטים בציר הניצב לפי baseline. */
   align-items: baseline;
+  /* gap: קובע מרווח של 4px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 4px;
 }
 
+/* מטרה: סמל המטבע לצד המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .price .currency {
+  /* font-size: קובע גודל טקסט 1.4rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.4rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color);
 }
 
+/* מטרה: הסכום המספרי של המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .price .amount {
+  /* font-size: קובע גודל טקסט 2.5rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.5rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
 }
 
+/* מטרה: תקופת החיוב של המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .price .period {
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
 }
 
+/* מטרה: רשימת התכונות הכלולות במסלול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .features-list {
+  /* list-style: מסיר את תבליטי ברירת המחדל של הרשימה. */
   list-style: none;
+  /* margin: יוצר שוליים: 0 למעלה, 0 מימין, 25px למטה ו-0 משמאל. */
   margin: 0 0 25px 0;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0. */
   padding: 0;
+  /* flex-grow: מאפשר לפריט לגדול במקדם 1 כדי למלא מקום פנוי. */
   flex-grow: 1;
 }
 
+/* מטרה: פריט ברשימת תכונות המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .features-list li {
+  /* padding: מוסיף ריווח פנימי 8px למעלה ולמטה ו-0 מימין ומשמאל. */
   padding: 8px 0;
+  /* font-size: קובע גודל טקסט 0.92rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.92rem;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* border-bottom: מצייר מסגרת תחתונה בערכים 1px dashed #f1f5f9. */
   border-bottom: 1px dashed #f1f5f9;
 }
 
+/* מטרה: כפתור בחירת מסלול השירות. הסלקטור מזהה רכיב זה בממשק. */
 .btn-select-plan {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 12px. */
   padding: 12px;
+  /* font-size: קובע גודל טקסט 1rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1rem;
 }
 
-/* ==========================================
-   6. פוטר (Footer)
-   ========================================== */
+/* מטרה: אזור תחתית האתר. הסלקטור מזהה רכיב זה בממשק. */
 .site-footer {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --bg-light. */
   background-color: var(--bg-light);
+  /* border-top: מצייר מסגרת עליונה בערכים 1px solid var(--border-color). */
   border-top: 1px solid var(--border-color);
+  /* padding: מוסיף ריווח פנימי 25px למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 25px 20px;
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* direction: מגדיר ערך rtl, אשר קובע כיצד הרכיב מעוצב. */
   direction: rtl;
 }
 
+/* מטרה: מכל הקישורים באזור תחתית האתר. הסלקטור מזהה רכיב זה בממשק. */
 .footer-container {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* max-width: מגביל את הרוחב ל-1100px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1100px;
+  /* margin: יוצר שוליים חיצוניים של 0 auto 15px מכל הצדדים. */
   margin: 0 auto 15px;
 }
 
+/* מטרה: רשימת קישורים בתחתית האתר. הסלקטור מזהה רכיב זה בממשק. */
 .footer-links {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* list-style: מסיר את תבליטי ברירת המחדל של הרשימה. */
   list-style: none;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0. */
   padding: 0;
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* gap: קובע מרווח של 2rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 2rem;
 }
 
+/* מטרה: תחתית העמוד links קישור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .footer-links a {
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
+  /* font-weight: קובע משקל גופן 500, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 500;
+  /* transition: מחליק שינוי במאפיינים var(--transition) במקום להציג קפיצה מיידית. */
   transition: var(--transition);
 }
 
+/* מטרה: תחתית העמוד links a:hover בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .footer-links a:hover {
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color);
+  /* text-decoration: מוסיף עיטור טקסט underline. */
   text-decoration: underline;
 }
 
+/* מטרה: שורת המידע האחרונה בתחתית האתר. הסלקטור מזהה רכיב זה בממשק. */
 .footer-bottom {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* font-size: קובע גודל טקסט 0.85rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.85rem;
 }
 
-/* ==========================================
-   7. רספונסיביות (Mobile)
-   ========================================== */
+/* כללים למסכים צרים: כאשר רוחב המסך עד 820px, הפריסה הבאה מותאמת למסך קטן. */
 @media (max-width: 820px) {
+  /* מטרה: סרגל ניווט האתר. הסלקטור מזהה רכיב זה בממשק. */
   .navbar {
+    /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
     flex-direction: column;
+    /* gap: קובע מרווח של 1rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
     gap: 1rem;
+    /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 1rem. */
     padding: 1rem;
   }
+  /* מטרה: רשימת קישורי הניווט הראשיים. הסלקטור מזהה רכיב זה בממשק. */
   .nav-links {
+    /* flex-wrap: מעביר פריטים לשורה נוספת כשאין די מקום בשורה. */
     flex-wrap: wrap;
+    /* justify-content: ממרכז את הפריטים בציר הראשי. */
     justify-content: center;
+    /* gap: קובע מרווח של 1rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
     gap: 1rem;
   }
+  /* מטרה: מכל אזור הפתיחה הכולל טקסט ותמונה. הסלקטור מזהה רכיב זה בממשק. */
   .hero-container {
+    /* flex-direction: מסדר את הפריטים בטור בסדר הפוך. */
     flex-direction: column-reverse;
+    /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
     text-align: center;
+    /* padding: מוסיף ריווח פנימי 35px למעלה ולמטה ו-20px מימין ומשמאל. */
     padding: 35px 20px;
+    /* gap: קובע מרווח של 25px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
     gap: 25px;
   }
+  /* מטרה: אזור הפתיחה טקסט. הסלקטור בוחר רכיב זה בעמוד ומחיל עליו את העיצוב שבהמשך. */
   .hero-text { text-align: center; }
+  /* מטרה: אזור הפתיחה טקסט כותרת ראשית. הסלקטור בוחר רכיב זה בעמוד ומחיל עליו את העיצוב שבהמשך. */
   .hero-text h1 { font-size: 2rem; }
+  /* מטרה: קריאה לפעולה group. הסלקטור בוחר רכיב זה בעמוד ומחיל עליו את העיצוב שבהמשך. */
   .cta-group { justify-content: center; }
+  /* מטרה: אזור הפתיחה תמונה תמונה. הסלקטור בוחר רכיב זה בעמוד ומחיל עליו את העיצוב שבהמשך. */
   .hero-image img { max-width: 200px; }
 }

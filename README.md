@@ -1,23 +1,76 @@
 # Botify
 
-Botify is a Hebrew, right-to-left website for creating website-aware customer-service bots. The application includes regular-user and administrator views, OTP account flows, bot management, customer support conversations, profile-image upload, and plan records.
+Botify היא מערכת בעברית ובכיווניות מימין לשמאל לניהול בוטים לשירות לקוחות, שיחות ותורים. הפרויקט כולל ממשק משתמש וממשק מנהל, הרשמה ואימות בדוא"ל, ניהול בוטים, חיבור למסד נתונים ורישום מסלולי מנוי.
 
-## Run locally
+## דרישות מקדימות
 
-1. Install server dependencies: `cd server` and run `npm install`.
-2. Configure `server/.env` using the variable names in `server/.env.example`. Set `MONGO_URI` to the connection string for your MongoDB Atlas cluster.
-3. From the repository root, run `npm start`.
-4. Open `http://localhost:3000`.
+- Node.js בגרסה 20 ומעלה.
+- npm.
+- מסד נתונים MongoDB זמין. אפשר להשתמש ב־MongoDB Atlas או בהתקנה מקומית.
 
-The server validates `MONGO_URI`, `JWT_SECRET`, `PORT`, `APP_URL`, `EMAIL_USER`, `EMAIL_PASS`, and `GEMINI_API_KEY` from `server/.env` at startup. Set `APP_URL` to the public application URL. Do not commit `.env` or share its values.
+## התקנה והרצה
 
-## Project layout
+1. מתקינים את כל התלויות מתיקיית הפרויקט הראשית:
 
-- `public/` contains the client pages, styles, shared scripts, and browser API service.
-- `server/` contains the Express API, Mongoose models, middleware, and controllers.
-- `server/docs/project-design.md` contains the screen-flow diagram, active API table, and database relationship diagram.
-- `server/README.md` contains server-specific setup and implementation notes.
+   ```bash
+   npm install
+   ```
 
-The payment page currently records plan and limited card metadata in MongoDB. It is not connected to a payment processor and does not charge cards; full card numbers and CVVs are not stored.
+2. מעתיקים את `server/.env.example` לקובץ `server/.env` ומעדכנים בו את הערכים הנדרשים. בפרט, יש להגדיר `MONGO_URI` לחיבור למסד הנתונים ו־`JWT_SECRET` כמפתח אקראי יציב באורך של 32 תווים לפחות.
+3. מפעילים את השרת מתיקיית הפרויקט הראשית:
 
-Deployment to Render, GitHub Pages, and MongoDB Atlas must be configured and verified in the corresponding provider dashboards. The local repository alone cannot confirm that production services are deployed.
+   ```bash
+   npm start
+   ```
+
+   לפיתוח עם הפעלה מחדש אוטומטית לאחר שינוי בקובץ:
+
+   ```bash
+   npm run dev
+   ```
+
+4. פותחים בדפדפן את `http://localhost:3000`.
+
+## הגדרות סביבה
+
+השרת טוען ומאמת את הגדרות הסביבה בזמן ההפעלה:
+
+| משתנה | תפקיד |
+| --- | --- |
+| `MONGO_URI` | כתובת החיבור למסד הנתונים של MongoDB. |
+| `PORT` | הפורט שבו השרת מאזין; ברירת המחדל היא `3000`. |
+| `APP_URL` | כתובת האתר, המשמשת בין היתר ליצירת קישורים בדוא"ל. |
+| `JWT_SECRET` | מפתח סודי ויציב לחתימת אסימוני התחברות; נדרשים לפחות 32 תווים. |
+| `EMAIL_USER`, `EMAIL_PASS` | פרטי חשבון הדוא"ל למשלוח קודי אימות והודעות. |
+| `GEMINI_API_KEY` | מפתח API הנדרש לתכונות המבוססות על Gemini. |
+| `ADMIN_USERNAMES` | שמות המשתמשים שייווצרו כמנהלים בעת הפעלת השרת. |
+| `ADMIN_PASSWORD` | הסיסמה המשותפת לכניסה של מנהלים שנוצרו דרך `ADMIN_USERNAMES`. |
+
+אפשר ליצור מפתח `JWT_SECRET` אקראי באמצעות הפקודה:
+
+```bash
+node --input-type=module -e "import { randomBytes } from 'node:crypto'; console.log(randomBytes(64).toString('hex'))"
+```
+
+אין לשמור סודות בקוד או להעלות את `server/.env` למאגר. יש להשתמש ב־`.env.example` כתבנית בלבד ולהגדיר ערכים אמיתיים בסביבה המקומית או במערכת הפריסה.
+
+## מבנה הפרויקט
+
+- `public/` — דפי האתר, קובצי העיצוב, סקריפטים לדפדפן, תמונות ושירות הבקשות ל־API.
+- `server/` — יישום Express, הגדרות, נתיבים, בקרים, middleware, מודלים, ולידציה וכלי עזר.
+- `server/docs/project-design.md` — תרשימי זרימה, פירוט נתיבי ה־API וקשרי הנתונים.
+- `package.json` ו־`package-lock.json` בתיקיית השורש — קובצי התלויות והפקודות של הפרויקט כולו; מתקינים ומריצים מהם גם את השרת.
+
+השרת משתמש ב־ES Modules וב־Mongoose מול MongoDB. בקשות הממשק עוברות דרך `public/services/api-service.js`, וההרשאות נאכפות בצד השרת ולא רק באמצעות הסתרת קישורים בממשק.
+
+## חשבונות מנהלים
+
+בעת הפעלת השרת, שמות המשתמשים שמוגדרים ב־`ADMIN_USERNAMES` מתווספים לאוסף המנהלים במסד הנתונים. ברירת המחדל שמופיעה בתבנית היא `NOA,RUTI,RUTY,MIRYAM`. יש להגדיר את `ADMIN_PASSWORD` בסביבה לפני ההפעלה; אין לשמור אותה בקוד או ב־Git.
+
+אפשר גם להעניק הרשאת מנהל לחשבון רשום על ידי שינוי שדה `role` שלו ל־`admin` באוסף `users`. חשבונות כאלה ממשיכים להשתמש בתהליך ההתחברות ואימות הדוא"ל הרגיל.
+
+## מגבלות חשובות
+
+תהליך התשלום שומר במסד הנתונים את המסלול שנבחר ומידע מצומצם על הכרטיס, אך אינו מחובר לספק תשלומים ואינו מחייב כרטיס. אין לשמור במערכת מספר כרטיס מלא או CVV.
+
+פריסה ל־Render, ל־GitHub Pages או ל־MongoDB Atlas דורשת הגדרה ואימות נפרדים בלוחות הבקרה של השירותים. קיום הקוד במאגר אינו מעיד שהשירותים כבר נפרסו או הוגדרו.

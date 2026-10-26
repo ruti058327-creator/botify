@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminInfoEl.textContent = username;
     }
 
+    // מחברים התנתקות לקישור אם קיים, כדי לנקות את מצב המשתמש לפני היציאה ממסך הניהול.
     document.querySelector('.logout-link')?.addEventListener('click', event => {
         // מונעים ניווט בקישור ומוחקים פרטי התחברות ושיחה לפני חזרה לדף הראשי.
         event.preventDefault();
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * @returns {Promise<void>} מעדכן את מונה המנויים אם הבקשה הצליחה.
  */
 async function loadSubscriberCount() {
+    // אם בקשת המונה נכשלת, משאירים את הערך הקיים ולא חוסמים את טעינת שאר מסך הניהול.
     try {
         // מבקשים את מספר המשתמשים עם אסימון המנהל בכותרת האימות.
         const response = await ApiService.request('/api/users/count', {
@@ -91,6 +93,7 @@ async function loadMessages() {
 
         // ברירת המחדל מאפשרת להציג שגיאה גם אם גוף התשובה אינו JSON תקין.
         let data = {};
+        // אם הגוף אינו JSON, משאירים את האובייקט הריק כדי להשתמש בהודעת שגיאה חלופית.
         try {
             data = await response.json();
         } catch (_) {}
@@ -186,8 +189,10 @@ function renderAdminChats(messages, pendingOnly = false) {
     let boxCounter = 1;
     let renderedChatCount = 0;
 
+    // עוברים על כל לקוח ועל אוסף השיחות שקובץ עבורו.
     for (const [user, userChats] of Object.entries(groupedByUserAndChat)) {
         // מציגים כל שיחה של אותו משתמש בנפרד.
+        // מעבדים כל שיחה של הלקוח בנפרד כדי לחשב את מצבה ולבנות עבורה כרטיס.
         for (const [chatId, chatMessages] of Object.entries(userChats)) {
             // מסדרים הודעות לפי זמן כדי לקבוע את תחילת השיחה ואת מצבה הנוכחי.
             chatMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -233,6 +238,7 @@ function renderAdminChats(messages, pendingOnly = false) {
                                 m => {
                                 // מתחילים כל פריט הודעה ללא תוכן, ומציגים נושא רק להודעת לקוח.
                                 let html = '';
+                                // מקודדים תווים מיוחדים בנושא כדי למנוע פירושם כסימוני HTML.
                                 const subject = !m.isAdmin && m.subject
                                     ? `<div class="admin-chat-meta">נושא הפנייה: ${String(m.subject).replace(/[&<>"']/g, character => ({
                                         '&': '&amp;',
@@ -371,6 +377,7 @@ async function loadUsers() {
         if (!response.ok) return;
         // מקבלים גם תשובת מערך ישירה וגם תשובה שעוטפת את המשתמשים במאפיין users.
         const data = await response.json();
+        // תומכים בתשובה כמערך ישיר וגם במעטפת אובייקט המכילה את המערך.
         allUsersCache = Array.isArray(data) ? data : (data.users || []);
         renderUsers(allUsersCache);
     } catch (err) {

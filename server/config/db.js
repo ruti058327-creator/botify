@@ -1,5 +1,6 @@
 // מבטיח שמשתני הסביבה נטענים גם כאשר הקובץ מיובא באופן עצמאי.
 import './env.js';
+// Mongoose הוא שכבת הגישה למסד הנתונים MongoDB.
 import mongoose from 'mongoose';
 
 
@@ -10,6 +11,7 @@ import mongoose from 'mongoose';
 export default async function connectDB() {
   // כתובת החיבור אינה מוטמעת בקוד ונקראת מהתצורה הסודית של הסביבה.
   const dbURI = process.env.MONGO_URI;
+  // ממתינים לבחירת שרת MongoDB ולחיבור מוצלח, עם זמן קצוב לניסיון.
   await mongoose.connect(dbURI, {
     serverSelectionTimeoutMS: 15000,
     retryWrites: true

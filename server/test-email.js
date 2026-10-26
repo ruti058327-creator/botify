@@ -5,7 +5,9 @@ import { sendEmail } from './utils/mailer.js';
 
 // מציג מידע אבחוני בלבד, בלי לחשוף את סיסמת הדוא"ל ליומן.
 console.log('בודק משתני סביבה:');
+// מדפיס רק אם הוגדר שם משתמש, בלי לרשום את הערך עצמו.
 console.log('EMAIL_USER מוגדר?', Boolean(process.env.EMAIL_USER));
+// מציג מצב נוכחות סיסמה בלבד כדי להימנע מחשיפתה ביומן.
 console.log('EMAIL_PASS קיים?', Boolean(process.env.EMAIL_PASS));
 
 /**
@@ -18,8 +20,11 @@ async function sendTest() {
     console.log('\nמנסה לשלוח מייל בדיקה...');
     const info = await sendEmail({
       to: process.env.EMAIL_USER, // שולח מייל לעצמך לבדיקה
+      // הנושא מאפשר לזהות במהירות שמדובר בהודעת אבחון.
       subject: 'בדיקת שליחת מייל מ-Botify',
+      // שולח גוף טקסט פשוט כדי לבדוק את מסלול השליחה הבסיסי.
       text: 'שלום! אם קיבלת מייל זה, מנגנון השליחה מחובר ועובד מצוין!',
+      // מציג שם שולח ברור בהודעה שתתקבל.
       fromName: 'Botify Test'
     });
     // מזהה ההודעה מאפשר לאתר את המשלוח אצל ספק הדוא"ל.

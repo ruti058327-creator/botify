@@ -1,3 +1,4 @@
+// מייבאים שירות משותף לשליחת פרטי תשלום ולשמירת המסלול באמצעות השרת.
 import { ApiService } from '../services/api-service.js';
 
 /**

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botify - יצירת בוט חדש</title>
-    <link rel="icon" type="image/png" href="../images/pic.png">
-    <link rel="stylesheet" href="../css/global.css">
-    <script src="../js/session-manager.js"></script>
-    <style>
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- טופס יצירת הבוט אוסף את פרטי העסק והגדרות הבוט לצורך יצירתו. -->
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>Botify - יצירת בוט חדש</title>
+    <!-- הקישור למשאב ../images/pic.png מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. הסוג הוא image/png; כתובת היעד הוא ../images/pic.png. --><link rel="icon" type="image/png" href="../images/pic.png">
+    <!-- הקישור למשאב ../css/global.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/global.css. --><link rel="stylesheet" href="../css/global.css">
+    <!-- הקובץ ../js/session-manager.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. מקור הקובץ הוא ../js/session-manager.js. --><script src="../js/session-manager.js"></script>
+    <!-- תג style מכיל כללי CSS לעיצוב הדף; הוא נפרד מתוכן ה־HTML ואין להוסיף בו הערות HTML. --><style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f7f6;
@@ -94,58 +94,58 @@
         }
     </style>
 </head>
-<body class="quota-checking">
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. מחלקות העיצוב הוא quota-checking. --><body class="quota-checking">
 
-    <header>
-        <nav class="navbar">
-            <a href="../index.html" class="logo" title="Botify - חזרה לדף הבית">
-                <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+    <!-- אזור header מציג תוכן פתיחה או כותרת של הדף/החלק. --><header>
+        <!-- אזור nav מרכז קישורי ניווט בין דפים או אזורים באתר. מחלקות העיצוב הוא navbar. --><nav class="navbar">
+            <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא logo; כתובת היעד הוא ../index.html. --><a href="../index.html" class="logo" title="Botify - חזרה לדף הבית">
+                <!-- התמונה img מציגה קובץ שמוגדר ב־src; alt מספק תיאור חלופי לקוראי מסך או כשהתמונה אינה נטענת. מחלקות העיצוב הוא logo-img; מקור הקובץ הוא ../images/pic2.png. --><img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
             </a>
-            <ul class="nav-links">
-                <li><a href="../index.html">בית</a></li>
-                <li><a href="about.html">אודות</a></li>
-                <li><a href="pricing.html">מחירון</a></li>
-                <li><a href="contact.html">צור קשר</a></li>
+            <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא nav-links. --><ul class="nav-links">
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא ../index.html. --><a href="../index.html">בית</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא about.html. --><a href="about.html">אודות</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא pricing.html. --><a href="pricing.html">מחירון</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא contact.html. --><a href="contact.html">צור קשר</a></li>
             </ul>
-            <div class="auth-buttons" id="nav-auth-container"></div>
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא nav-auth-container; מחלקות העיצוב הוא auth-buttons. --><div class="auth-buttons" id="nav-auth-container"></div>
         </nav>
     </header>
 
-    <main class="create-bot-main">
-    <div class="container">
-        <h2 id="form-title">מחולל הבוטים של Botify</h2>
-        <a class="dashboard-link" href="dashboard.html">חזרה לאזור האישי</a>
-        <form id="createBotForm">
-            <div class="form-group">
-                <label for="websiteUrl">כתובת האתר שלך (URL):</label>
-                <input type="text" id="websiteUrl" name="websiteUrl" placeholder="example.com או https://example.com" inputmode="url" required>
+    <!-- אזור main מכיל את התוכן המרכזי והייחודי של הדף. מחלקות העיצוב הוא create-bot-main. --><main class="create-bot-main">
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא container. --><div class="container">
+        <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. המזהה הוא form-title. --><h2 id="form-title">מחולל הבוטים של Botify</h2>
+        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא dashboard-link; כתובת היעד הוא dashboard.html. --><a class="dashboard-link" href="dashboard.html">חזרה לאזור האישי</a>
+        <!-- הטופס form מאגד שדות ופקדי שליחה. action ו־method, אם קיימים, מגדירים יעד ואופן שליחה; לעיתים JavaScript מטפל בשליחה. המזהה הוא createBotForm. --><form id="createBotForm">
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+                <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. הקישור לשדה הוא websiteUrl. --><label for="websiteUrl">כתובת האתר שלך (URL):</label>
+                <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא websiteUrl; שם השדה הוא websiteUrl; הסוג הוא text. --><input type="text" id="websiteUrl" name="websiteUrl" placeholder="example.com או https://example.com" inputmode="url" required>
             </div>
             
-            <div class="form-group">
-                <label for="instructions">הנחיות לבוט (מה תרצה שהבוט יעשה?):</label>
-                <textarea id="instructions" name="instructions" placeholder="לדוגמה: ענה על שאלות לקוחות מתוך אתר החברה בלבד..."></textarea>
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+                <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. הקישור לשדה הוא instructions. --><label for="instructions">הנחיות לבוט (מה תרצה שהבוט יעשה?):</label>
+                <!-- השדה textarea מאפשר להזין טקסט רב־שורות; name/id מזהים אותו ו־placeholder עשוי להציג רמז. המזהה הוא instructions; שם השדה הוא instructions. --><textarea id="instructions" name="instructions" placeholder="לדוגמה: ענה על שאלות לקוחות מתוך אתר החברה בלבד..."></textarea>
             </div>
 
-            <button type="submit" id="submit-bot-btn">צור בוט אישי</button>
+            <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא submit-bot-btn; הסוג הוא submit. --><button type="submit" id="submit-bot-btn">צור בוט אישי</button>
         </form>
-        <div id="result"></div>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא result. --><div id="result"></div>
     </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <ul class="footer-links">
-                <li><a href="terms.html">תנאי שימוש</a></li>
-                <li><a href="privacy.html">מדיניות פרטיות</a></li>
-                <li><a href="accessibility.html">הצהרת נגישות</a></li>
+    <!-- אזור footer מציג מידע מסכם, קישורים או פרטי זכויות יוצרים בתחתית הדף/החלק. מחלקות העיצוב הוא site-footer. --><footer class="site-footer">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא footer-container. --><div class="footer-container">
+            <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא footer-links. --><ul class="footer-links">
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא terms.html. --><a href="terms.html">תנאי שימוש</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא privacy.html. --><a href="privacy.html">מדיניות פרטיות</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא accessibility.html. --><a href="accessibility.html">הצהרת נגישות</a></li>
             </ul>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא footer-bottom. --><div class="footer-bottom">
+            <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
         </div>
     </footer>
 
-    <script type="module">
+    <!-- תג script מחבר או מכיל JavaScript שמוסיף התנהגות לדף; src מצביע על קובץ, ו־defer/async משפיעים על מועד הטעינה. הסוג הוא module. --><script type="module">
         import { ApiService } from '../services/api-service.js';
 
         const createBotForm = document.getElementById('createBotForm');
@@ -314,6 +314,6 @@
             }
         });
     </script>
-    <script type="module" src="../js/navbar-auth.js"></script>
+    <!-- הקובץ ../js/navbar-auth.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ../js/navbar-auth.js. --><script type="module" src="../js/navbar-auth.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+// מייבאים עטיפה אחידה לבקשות השרת עבור אימות קוד ההרשמה ושליחתו מחדש.
 import { ApiService } from '../services/api-service.js';
 
 /**

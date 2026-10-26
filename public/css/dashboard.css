@@ -1,219 +1,379 @@
+/* מטרה: אזור פתיחה וברכה בלוח הבקרה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-hero {
+  /* padding: מוסיף ריווח פנימי 60px למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 60px 20px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* background: יוצר רקע מדורג לפי linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%), כולל הזווית והצבעים שנקבעו. */
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  /* min-height: מבטיח גובה מזערי של calc(100vh - 160px) גם כשהתוכן קצר. */
   min-height: calc(100vh - 160px);
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
 }
 
+/* מטרה: כותרת הברכה הראשית בלוח הבקרה. הסלקטור מזהה רכיב זה בממשק. */
 .dashboard-hero h1 {
+  /* font-size: קובע גודל טקסט 2.5rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.5rem;
+  /* color: צובע את הטקסט ב-#0f172a. */
   color: #0f172a;
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
 }
 
+/* מטרה: טקסט ההסבר באזור הפתיחה של לוח הבקרה. הסלקטור מזהה רכיב זה בממשק. */
 .dashboard-hero p {
+  /* font-size: קובע גודל טקסט 1.1rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.1rem;
+  /* color: צובע את הטקסט ב-#475569. */
   color: #475569;
+  /* max-width: מגביל את הרוחב ל-600px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 600px;
+  /* margin-bottom: מוסיף שוליים של 30px מתחת לרכיב. */
   margin-bottom: 30px;
 }
 
+/* מטרה: כרטיס ברכת המשתמש בלוח הבקרה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .welcome-card {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
+  /* border-radius: מעגל את הפינות ברדיוס 16px. */
   border-radius: 16px;
+  /* padding: מוסיף ריווח פנימי 30px למעלה ולמטה ו-40px מימין ומשמאל. */
   padding: 30px 40px;
+  /* box-shadow: מוסיף צל בערכים 0 10px 25px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  /* max-width: מגביל את הרוחב ל-500px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 500px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
 }
 
+/* מטרה: הודעת הצלחה לאחר תשלום. הסלקטור מזהה רכיב זה בממשק. */
 .payment-success-notice {
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 12px 16px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #86efac. */
   border: 1px solid #86efac;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* background: ממלא את הרקע ב-#f0fdf4. */
   background: #f0fdf4;
+  /* color: צובע את הטקסט ב-#166534. */
   color: #166534 !important;
+  /* font-size: קובע גודל טקסט 0.95rem !important. */
   font-size: 0.95rem !important;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
 }
 
+/* מטרה: תגית ברכה עם פרטי המשתמש המחובר. הסלקטור מזהה רכיב זה בממשק. */
 .user-greeting {
+  /* display: מציג את הרכיב בתצוגת inline-flex. */
   display: inline-flex;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* gap: קובע מרווח של 8px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 8px;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* color: צובע את הטקסט ב-#1e293b. */
   color: #1e293b;
+  /* background: ממלא את הרקע ב-#f1f5f9. */
   background: #f1f5f9;
+  /* padding: מוסיף ריווח פנימי 8px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 8px 16px;
+  /* border-radius: מעגל את הפינות ברדיוס 50px. */
   border-radius: 50px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
 }
 
+/* מטרה: כפתור או קישור להתנתקות המשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .btn-logout {
+  /* background-color: צובע את הרקע ב-#ef4444. */
   background-color: #ef4444 !important;
+  /* color: צובע את הטקסט ב-white. */
   color: white !important;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* padding: מוסיף ריווח פנימי 8px למעלה ולמטה ו-18px מימין ומשמאל. */
   padding: 8px 18px;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* transition: מחליק שינוי במאפיינים background-color 0.2s ease במקום להציג קפיצה מיידית. */
   transition: background-color 0.2s ease;
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
 }
 
+/* מטרה: כפתור התנתקות בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-logout:hover {
+  /* background-color: צובע את הרקע ב-#dc2626. */
   background-color: #dc2626 !important;
 }
 
+/* מטרה: הודעת שגיאה בלוח הבקרה. הסלקטור מזהה רכיב זה בממשק. */
 .dashboard-status-error {
+  /* color: צובע את הטקסט ב-#dc2626. */
   color: #dc2626;
 }
 
+/* מטרה: שורה המציגה בוט השייך למשתמש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .owned-bot-row {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-wrap: מעביר פריטים לשורה נוספת כשאין די מקום בשורה. */
   flex-wrap: wrap;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* gap: קובע מרווח של 12px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 12px;
+  /* min-width: מונע הצטמצמות מתחת לרוחב 0. */
   min-width: 0;
+  /* margin-bottom: מוסיף שוליים של 8px מתחת לרכיב. */
   margin-bottom: 8px;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 12px. */
   padding: 12px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
 }
 
+/* מטרה: שם הבוט השייך למשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .owned-bot-title {
+  /* flex: קובע את גמישות הפריט לערך 1 1 220px. */
   flex: 1 1 220px;
+  /* min-width: מונע הצטמצמות מתחת לרוחב 0. */
   min-width: 0;
+  /* overflow-wrap: מאפשר לשבור מילים ארוכות גם ללא רווחים, כדי למנוע גלישה. */
   overflow-wrap: anywhere;
+  /* word-break: קובע היכן ניתן לשבור מילים לפי break-word. */
   word-break: break-word;
 }
 
+/* מטרה: קבוצת הפעולות הזמינות לבוט של המשתמש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .owned-bot-actions {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-wrap: מעביר פריטים לשורה נוספת כשאין די מקום בשורה. */
   flex-wrap: wrap;
+  /* min-width: מונע הצטמצמות מתחת לרוחב 0. */
   min-width: 0;
+  /* gap: קובע מרווח של 8px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 8px;
 }
 
+/* מטרה: פעולה זמינה עבור בוט המשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .owned-bot-action {
+  /* display: מציג את הרכיב בשורה תוך שמירה על אפשרות לקבוע את מידותיו. */
   display: inline-block;
+  /* padding: מוסיף ריווח פנימי 6px למעלה ולמטה ו-12px מימין ומשמאל. */
   padding: 6px 12px;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: 0;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* background: ממלא את הרקע ב-#0056b3. */
   background: #0056b3;
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
+  /* font-size: קובע גודל טקסט 13px. */
   font-size: 13px;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* font-family: בוחר בגופן inherit; הגופנים שאחריו משמשים חלופות אם הראשון אינו זמין. */
   font-family: inherit;
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
+/* מטרה: פעולת מחיקת בוט המשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .owned-bot-action-delete {
+  /* background: ממלא את הרקע ב-#e2e8f0. */
   background: #e2e8f0;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
 }
 
+/* מטרה: כותרת רשימת הבוטים של המשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .bot-list-heading {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-wrap: מעביר פריטים לשורה נוספת כשאין די מקום בשורה. */
   flex-wrap: wrap;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* gap: קובע מרווח של 10px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 10px;
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
 }
 
+/* מטרה: בוט רשימה כותרת כותרת משנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .bot-list-heading h2 {
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* color: צובע את הטקסט ב-#333. */
   color: #333;
+  /* font-size: קובע גודל טקסט 18px. */
   font-size: 18px;
 }
 
+/* מטרה: תצוגת מכסת הבוטים שנותרה למשתמש. הסלקטור מזהה רכיב זה בממשק. */
 .bot-quota-display {
+  /* color: צובע את הטקסט ב-#475569. */
   color: #475569;
+  /* font-size: קובע גודל טקסט 13px. */
   font-size: 13px;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
 }
 
+/* מטרה: כפתור הוספת בוט חדש. הסלקטור מזהה רכיב זה בממשק. */
 .add-bot-button {
+  /* padding: מוסיף ריווח פנימי 6px למעלה ולמטה ו-12px מימין ומשמאל. */
   padding: 6px 12px;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: 0;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* background: ממלא את הרקע ב-#0056b3. */
   background: #0056b3;
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
+  /* font-size: קובע גודל טקסט 13px. */
   font-size: 13px;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
 .dashboard-chat-empty,
+/* מטרה: לוח בקרה שיחה חדש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-new {
+  /* margin-top: מוסיף שוליים של 20px מעל הרכיב. */
   margin-top: 20px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
 }
 
+/* מטרה: לוח בקרה שיחה חדש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-new {
+  /* color: צובע את הטקסט ב-#2563eb. */
   color: #2563eb;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
 }
 
+/* מטרה: שורת הודעה בשיחת התמיכה בלוח הבקרה. הסלקטור מזהה רכיב זה בממשק. */
 .dashboard-chat-row {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* margin-bottom: מוסיף שוליים של 12px מתחת לרכיב. */
   margin-bottom: 12px;
 }
 
+/* מטרה: לוח בקרה שיחה bubble. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-bubble {
+  /* max-width: מגביל את הרוחב ל-85% לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 85%;
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 12px 16px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* border-radius: מעגל את הפינות ברדיוס 16px. */
   border-radius: 16px;
+  /* box-shadow: מוסיף צל בערכים 0 1px 2px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  /* overflow-wrap: מאפשר לשבור מילים ארוכות גם ללא רווחים, כדי למנוע גלישה. */
   overflow-wrap: anywhere;
 }
 
+/* מטרה: בועת הודעה שנשלחה בידי המשתמש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-bubble-user {
+  /* align-self: מיישר פריט זה בתחילת הציר הניצב, בלי לשנות פריטים אחרים. */
   align-self: flex-start;
+  /* border-radius: מעגל את הפינות ברדיוס 16px 16px 16px 0. */
   border-radius: 16px 16px 16px 0;
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
 }
 
+/* מטרה: בועת מענה שנשלחה בידי מנהל. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-bubble-admin {
+  /* align-self: מגדיר לפריט יישור עצמאי flex-end. */
   align-self: flex-end;
+  /* border-color: קובע את צבע המסגרת ל-#bfdbfe. */
   border-color: #bfdbfe;
+  /* border-radius: מעגל את הפינות ברדיוס 16px 16px 0 16px. */
   border-radius: 16px 16px 0 16px;
+  /* background: ממלא את הרקע ב-#eff6ff. */
   background: #eff6ff;
 }
 
+/* מטרה: פרטי שולח ותאריך בהודעת שיחה. הסלקטור מזהה רכיב זה בממשק. */
 .dashboard-chat-meta {
+  /* margin-bottom: מוסיף שוליים של 4px מתחת לרכיב. */
   margin-bottom: 4px;
+  /* color: צובע את הטקסט ב-#94a3b8. */
   color: #94a3b8;
+  /* font-size: קובע גודל טקסט 11px. */
   font-size: 11px;
 }
 
+/* מטרה: לוח בקרה שיחה bubble ניהול לוח בקרה שיחה פרטים. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-bubble-admin .dashboard-chat-meta {
+  /* color: צובע את הטקסט ב-#3b82f6. */
   color: #3b82f6;
 }
 
+/* מטרה: תוכן הודעת שיחה בלוח הבקרה. הסלקטור מזהה רכיב זה בממשק. */
 .dashboard-chat-text {
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* font-size: קובע גודל טקסט 15px. */
   font-size: 15px;
 }
 
+/* מטרה: לוח בקרה שיחה bubble ניהול לוח בקרה שיחה טקסט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .dashboard-chat-bubble-admin .dashboard-chat-text {
+  /* color: צובע את הטקסט ב-#1e40af. */
   color: #1e40af;
 }
 
+/* כללים רספונסיביים: כאשר רוחב המסך הוא 600px ומטה, הפריסה והמידות הבאות מותאמות למסך קטן. */
 @media (max-width: 600px) {
+  /* מטרה: לוח בקרה שיחה bubble. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .dashboard-chat-bubble {
+    /* max-width: מגביל את הרוחב ל-100% לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
     max-width: 100%;
   }
 }

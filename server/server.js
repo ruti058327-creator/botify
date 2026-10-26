@@ -7,6 +7,7 @@ import connectDB from './config/db.js';
 // מודל המנהלים משמש לסנכרון רשימת המנהלים בכל אתחול.
 import Administrator from './models/Administrator.js';
 
+// ממירים פורט ממחרוזת הסביבה למספר שהשרת יקבל.
 const PORT = Number(process.env.PORT);
 
 try {
@@ -35,6 +36,7 @@ try {
   await Administrator.deleteMany({ username: { $nin: administratorUsernames } });
   // מתחילים להאזין רק לאחר שהאתחול ומסד הנתונים הושלמו.
   app.listen(PORT, () => {
+    // מציגים את כתובת ההאזנה כדי שמפעיל השרת ידע היכן השירות זמין.
     console.log(`🚀 Server is running on http://localhost:${PORT}`);
   });
 } catch (error) {

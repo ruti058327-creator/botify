@@ -1,239 +1,387 @@
-/* ==========================================
-   Pricing Page Styling (Fixed RTL & Badge)
-   ========================================== */
 
+
+/* מטרה: מכל עמוד המחירון המגביל וממרכז את התוכן. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-container {
+  /* max-width: מגביל את הרוחב ל-1250px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1250px;
+  /* margin: יוצר מרווח אנכי 3rem וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 3rem auto;
+  /* padding: מוסיף ריווח פנימי 0 למעלה ולמטה ו-1.5rem מימין ומשמאל. */
   padding: 0 1.5rem;
 }
 
+/* מטרה: אזור הכותרת של עמוד המחירון. הסלקטור מזהה רכיב זה בממשק. */
 .pricing-header {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* margin-bottom: מוסיף שוליים של 3.5rem מתחת לרכיב. */
   margin-bottom: 3.5rem;
 }
 
+/* מטרה: כותרת עמוד המחירון. הסלקטור מזהה רכיב זה בממשק. */
 .pricing-header h1 {
+  /* font-size: קובע גודל טקסט 2.3rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.3rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #1f2937);
+  /* margin-bottom: מוסיף שוליים של 0.8rem מתחת לרכיב. */
   margin-bottom: 0.8rem;
 }
 
+/* מטרה: הסבר קצר מתחת לכותרת המחירון. הסלקטור מזהה רכיב זה בממשק. */
 .pricing-header p {
+  /* font-size: קובע גודל טקסט 1.15rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.15rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted, #4b5563);
 }
 
-/* Grid layout for cards */
+/* מטרה: רשת כרטיסי מסלולי השירות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מתאים אוטומטית את מספר העמודות לרוחב הזמין; כל עמודה תהיה ברוחב מזערי 260px. */
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  /* gap: קובע מרווח של 1.8rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 1.8rem;
+  /* align-items: מותח פריטים למלא את המסילה בציר הניצב. */
   align-items: stretch;
 }
 
-/* Individual Card */
+/* מטרה: כרטיס המציג מסלול מחיר יחיד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color, #e2e8f0). */
   border: 1px solid var(--border-color, #e2e8f0);
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
-  padding: 2.8rem 1.6rem 2.2rem 1.6rem; /* הגדלת המרווח העליון למניעת חפיפה */
+  /* padding: מוסיף ריווח פנימי: 2.8rem למעלה, 1.6rem מימין, 2.2rem למטה ו-1.6rem משמאל. */
+  padding: 2.8rem 1.6rem 2.2rem 1.6rem;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* position: יוצר נקודת ייחוס לילדים ממוקמים, בלי להוציא את הרכיב מזרימת הפריסה. */
   position: relative;
+  /* box-shadow: מוסיף צל בערכים 0 4px 6px -1px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  /* transition: מחליק שינוי במאפיינים transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease במקום להציג קפיצה מיידית. */
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
+/* מטרה: מחירון כרטיס בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card:hover {
+  /* transform: מזיז את הרכיב אנכית לפי translateY(-6px); ערך שלילי מעלה אותו. */
   transform: translateY(-6px);
+  /* box-shadow: מוסיף צל בערכים 0 12px 20px -3px rgba(0, 0, 0, 0.1); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.1);
+  /* border-color: קובע את צבע המסגרת ל-#cbd5e1. */
   border-color: #cbd5e1;
 }
 
-/* Highlighted Popular Plan */
+/* מטרה: כרטיס המסלול המומלץ במחירון. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card.popular {
+  /* border: מצייר מסגרת בעובי 2px, בסגנון solid ובצבע var(--primary-color, #2563eb). */
   border: 2px solid var(--primary-color, #2563eb);
+  /* box-shadow: מוסיף צל בערכים 0 10px 25px -4px rgba(37, 99, 235, 0.15); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 10px 25px -4px rgba(37, 99, 235, 0.15);
+  /* transform: משנה את גודל הרכיב לפי scale(1.02). */
   transform: scale(1.02);
 }
 
+/* מטרה: מחירון כרטיס בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .pricing-card.popular:hover {
+  /* transform: משנה את גודל הרכיב לפי scale(1.02) translateY(-6px). */
   transform: scale(1.02) translateY(-6px);
 }
 
-/* תיקון תווית "הכי פופולרי" עבור RTL */
+/* מטרה: תגית המסמנת את המסלול המומלץ. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .badge-popular {
+  /* position: ממקם את הרכיב ביחס לאב הממוקם הקרוב ביותר ומוציאו מזרימת הפריסה. */
   position: absolute;
+  /* top: ממקם את הרכיב במרחק -14px מהקצה העליון של נקודת הייחוס. */
   top: -14px;
-  left: 50%; /* מרכוז תקני באמצעות left בשילוב transform -50% */
+  /* left: ממקם את הרכיב במרחק 50% מהקצה השמאלי של נקודת הייחוס. */
+  left: 50%;
+  /* transform: מזיז את הרכיב אופקית לפי translateX(-50%), למשל לצורך מרכוז. */
   transform: translateX(-50%);
+  /* background-color: צובע את הרקע ב-משתנה הצבע --primary-color. */
   background-color: var(--primary-color, #2563eb);
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
+  /* padding: מוסיף ריווח פנימי 4px למעלה ולמטה ו-14px מימין ומשמאל. */
   padding: 4px 14px;
+  /* border-radius: מעגל את הפינות ברדיוס 20px. */
   border-radius: 20px;
+  /* font-size: קובע גודל טקסט 0.85rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.85rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* letter-spacing: מוסיף מרווח 0.5px בין תווי הטקסט. */
   letter-spacing: 0.5px;
-  white-space: nowrap; /* מונע שבירת שורה בתווית */
+  /* white-space: מונע שבירת שורה ומשאיר את התוכן בשורה אחת. */
+  white-space: nowrap;
+  /* z-index: מציב את הרכיב בשכבה 10; מספר גבוה יותר מוצג מעל שכבה נמוכה יותר. */
   z-index: 10;
 }
 
-/* Header inside card */
+/* מטרה: כותרת כרטיס המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .card-header {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
 }
 
+/* מטרה: שם מסלול השירות בכרטיס המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .card-header h3 {
+  /* font-size: קובע גודל טקסט 1.35rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.35rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #1f2937);
+  /* margin-bottom: מוסיף שוליים של 0.4rem מתחת לרכיב. */
   margin-bottom: 0.4rem;
 }
 
+/* מטרה: תיאור מסלול השירות בכרטיס המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .card-header .desc {
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted, #64748b);
+  /* min-height: מבטיח גובה מזערי של 40px גם כשהתוכן קצר. */
   min-height: 40px;
 }
 
+/* מטרה: אזור הצגת מחיר המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .price {
+  /* margin: יוצר שוליים 1.5rem למעלה ולמטה ו-0 מימין ומשמאל. */
   margin: 1.5rem 0;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* align-items: מיישר פריטים בציר הניצב לפי baseline. */
   align-items: baseline;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* gap: קובע מרווח של 4px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 4px;
 }
 
+/* מטרה: סמל המטבע לצד המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .price .currency {
+  /* font-size: קובע גודל טקסט 1.4rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.4rem;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #0f172a);
 }
 
+/* מטרה: הסכום המספרי של המחיר. הסלקטור מזהה רכיב זה בממשק. */
 .price .amount {
+  /* font-size: קובע גודל טקסט 2.8rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.8rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #0f172a);
 }
 
+/* מטרה: תקופת החיוב של המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .price .period {
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted, #64748b);
 }
 
-/* Features List */
+/* מטרה: רשימת התכונות הכלולות במסלול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .features-list {
+  /* list-style: מסיר את תבליטי ברירת המחדל של הרשימה. */
   list-style: none;
+  /* margin: יוצר שוליים: 1.5rem למעלה, 0 מימין, 2rem למטה ו-0 משמאל. */
   margin: 1.5rem 0 2rem 0;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0. */
   padding: 0;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* gap: קובע מרווח של 0.85rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 0.85rem;
+  /* text-align: מיישר טקסט לימין בתוך הרכיב. */
   text-align: right;
+  /* border-top: מצייר מסגרת עליונה בערכים 1px solid #f1f5f9. */
   border-top: 1px solid #f1f5f9;
+  /* padding-top: מרחיק את התוכן מהמסגרת העליונה ב-1.5rem. */
   padding-top: 1.5rem;
+  /* flex-grow: מאפשר לפריט לגדול במקדם 1 כדי למלא מקום פנוי. */
   flex-grow: 1;
 }
 
+/* מטרה: פריט ברשימת תכונות המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .features-list li {
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
 }
 
-/* Action button inside card */
+/* מטרה: כפתור בחירת מסלול השירות. הסלקטור מזהה רכיב זה בממשק. */
 .btn-select-plan {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0.85rem. */
   padding: 0.85rem;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* transition: מחליק שינוי במאפיינים all 0.2s ease במקום להציג קפיצה מיידית. */
   transition: all 0.2s ease;
 }
 
+/* מטרה: כפתור בחירה plan. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-select-plan.btn-secondary {
+  /* background-color: צובע את הרקע ב-#f1f5f9. */
   background-color: #f1f5f9;
+  /* color: צובע את הטקסט ב-#1e293b. */
   color: #1e293b;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
 }
 
+/* מטרה: כפתור בחירה plan בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-select-plan.btn-secondary:hover {
+  /* background-color: צובע את הרקע ב-#e2e8f0. */
   background-color: #e2e8f0;
 }
 
+/* מטרה: כפתור בחירה plan. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-select-plan.btn-primary {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --primary-color. */
   background-color: var(--primary-color, #2563eb);
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
 }
 
+/* מטרה: כפתור בחירה plan בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-select-plan.btn-primary:hover {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --primary-hover. */
   background-color: var(--primary-hover, #1d4ed8);
 }
 
+/* מטרה: חלונית אישור שינוי מסלול. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .plan-change-dialog {
+  /* width: קובע רוחב של min(440px, calc(100vw - 32px)). */
   width: min(440px, calc(100vw - 32px));
+  /* margin: יוצר שוליים חיצוניים של auto מכל הצדדים. */
   margin: auto;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 24px. */
   padding: 24px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* color: צובע את הטקסט ב-#1f2937. */
   color: #1f2937;
+  /* box-shadow: מוסיף צל בערכים 0 20px 50px rgba(15, 23, 42, 0.25); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
 }
 
+/* מטרה: שכבת הרקע שמאחורי חלונית שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-change-dialog::backdrop {
+  /* background: ממלא את הרקע ב-rgba(15, 23, 42, 0.55). */
   background: rgba(15, 23, 42, 0.55);
 }
 
+/* מטרה: כותרת חלונית שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-change-dialog h2 {
+  /* margin: יוצר שוליים חיצוניים של 0 0 12px מכל הצדדים. */
   margin: 0 0 12px;
+  /* font-size: קובע גודל טקסט 1.25rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.25rem;
 }
 
+/* מטרה: הסבר בחלונית שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-change-dialog p {
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* color: צובע את הטקסט ב-#475569. */
   color: #475569;
+  /* line-height: קובע גובה שורה 1.6 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.6;
 }
 
+/* מטרה: כפתורי הפעולה בחלונית שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-dialog-actions {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* gap: קובע מרווח של 12px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 12px;
+  /* margin-top: מוסיף שוליים של 24px מעל הרכיב. */
   margin-top: 24px;
 }
 
+/* מטרה: כפתור בחלונית שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-dialog-actions button {
+  /* flex: מאפשר לפריט לגדול ולמלא את המקום הפנוי בפריסת Flex. */
   flex: 1;
+  /* min-height: מבטיח גובה מזערי של 44px גם כשהתוכן קצר. */
   min-height: 44px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע transparent. */
   border: 1px solid transparent;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* font: מחיל את הגדרות הגופן המקוצרות inherit. */
   font: inherit;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
+/* מטרה: כפתור ביטול שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-dialog-cancel {
+  /* background: ממלא את הרקע ב-#f1f5f9. */
   background: #f1f5f9;
+  /* border-color: קובע את צבע המסגרת ל-#cbd5e1. */
   border-color: #cbd5e1 !important;
+  /* color: צובע את הטקסט ב-#1e293b. */
   color: #1e293b;
 }
 
+/* מטרה: כפתור אישור שינוי המסלול. הסלקטור מזהה רכיב זה בממשק. */
 .plan-dialog-confirm {
+  /* background: ממלא את הרקע ב-#2563eb. */
   background: #2563eb;
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
 }
 
+/* מטרה: plan חלונית פעולות button:focus-visible בעת ניווט מקלדת למוקד נגיש. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .plan-dialog-actions button:focus-visible {
+  /* outline: מצייר קו מתאר לפי 3px solid #f59e0b. */
   outline: 3px solid #f59e0b;
+  /* outline-offset: מרחיק את קו המתאר מהמסגרת ב-2px. */
   outline-offset: 2px;
 }
 
-/* Responsive */
+/* כללים רספונסיביים: כאשר רוחב המסך הוא 900px ומטה, הפריסה והמידות הבאות מותאמות למסך קטן. */
 @media (max-width: 900px) {
+  /* מטרה: כרטיס המסלול המומלץ במחירון. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .pricing-card.popular {
+    /* transform: מבצע שינוי צורה none. */
     transform: none;
   }
+  /* מטרה: מחירון כרטיס בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .pricing-card.popular:hover {
+    /* transform: מזיז את הרכיב אנכית לפי translateY(-6px); ערך שלילי מעלה אותו. */
     transform: translateY(-6px);
   }
 }

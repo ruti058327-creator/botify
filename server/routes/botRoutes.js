@@ -5,6 +5,7 @@ import __cjsImport0 from '../middlewares/authMiddleware.js';
 import validateRequest from '../middlewares/validateRequest.js';
 import { botSchemas } from '../validation/schemas.js';
 
+// משתמש בכלי אימות האסימון המשותף לכל פעולות הבוטים המוגנות.
 const { authenticateToken } = __cjsImport0;
 
 // כל נתיבי הניהול דורשים התחברות; נתיב השיחה עצמו נשאר ציבורי.

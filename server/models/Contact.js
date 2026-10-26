@@ -10,6 +10,7 @@ const contactSchema = new mongoose.Schema({
     subject: { type: String, default: '' },
     // תוכן ההודעה כפי שנשלח על ידי הלקוח או מנהל.
     message: { type: String },
+    // שדה תאימות ישן לתשובה; תגובות חדשות נשמרות כרשומות הודעה נפרדות.
     reply: { type: String, default: '' }, 
     // מזהה השיחה מקבץ הודעות קשורות; ברירת המחדל תומכת בהיסטוריה ישנה.
     chatId: { type: String, default: 'chat_default' }, // <--- הוספת chatId כדי שהמידע יישמר

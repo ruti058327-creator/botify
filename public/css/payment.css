@@ -1,226 +1,374 @@
-/* ==========================================
-   Checkout & Payment Page Styling
-   ========================================== */
 
+
+/* מטרה: המכל המרכזי של עמוד התשלום. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .checkout-container {
+  /* max-width: מגביל את הרוחב ל-1050px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1050px;
+  /* margin: יוצר מרווח אנכי 3rem וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 3rem auto;
+  /* padding: מוסיף ריווח פנימי 0 למעלה ולמטה ו-1.5rem מימין ומשמאל. */
   padding: 0 1.5rem;
 }
 
+/* מטרה: פריסת טופס התשלום לצד סיכום ההזמנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .checkout-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מגדיר את עמודות הרשת לפי 1.4fr 1fr. */
   grid-template-columns: 1.4fr 1fr;
+  /* gap: קובע מרווח של 2.5rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 2.5rem;
+  /* align-items: מיישר פריטים בציר הניצב לפי start. */
   align-items: start;
 }
 
-/* Payment Form Section */
+/* מטרה: טופס הזנת פרטי התשלום. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .payment-form-section {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color, #e2e8f0). */
   border: 1px solid var(--border-color, #e2e8f0);
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 2.2rem. */
   padding: 2.2rem;
+  /* box-shadow: מוסיף צל בערכים 0 4px 6px -1px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
+/* מטרה: כותרת טופס התשלום. הסלקטור מזהה רכיב זה בממשק. */
 .payment-form-section h2 {
+  /* font-size: קובע גודל טקסט 1.6rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.6rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #1f2937);
+  /* margin-bottom: מוסיף שוליים של 0.3rem מתחת לרכיב. */
   margin-bottom: 0.3rem;
 }
 
+/* מטרה: הסבר קצר בטופס התשלום. הסלקטור מזהה רכיב זה בממשק. */
 .payment-form-section .subtitle {
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted, #64748b);
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* margin-bottom: מוסיף שוליים של 1.8rem מתחת לרכיב. */
   margin-bottom: 1.8rem;
 }
 
+/* מטרה: הערת מידע חשובה לפני הזנת התשלום. הסלקטור מזהה רכיב זה בממשק. */
 .payment-note {
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 1rem. */
   padding: 1rem;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #facc15. */
   border: 1px solid #facc15;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* background: ממלא את הרקע ב-#fefce8. */
   background: #fefce8;
+  /* color: צובע את הטקסט ב-#713f12. */
   color: #713f12;
+  /* line-height: קובע גובה שורה 1.6 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.6;
 }
 
+/* מטרה: טופס קבוצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .form-group {
+  /* margin-bottom: מוסיף שוליים של 1.25rem מתחת לרכיב. */
   margin-bottom: 1.25rem;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
 }
 
+/* מטרה: שורת שדות תשלום המוצגים זה לצד זה. הסלקטור מזהה רכיב זה בממשק. */
 .form-row {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מחלק את האזור לשתי עמודות שוות. */
   grid-template-columns: 1fr 1fr;
+  /* gap: קובע מרווח של 1rem בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 1rem;
 }
 
+/* מטרה: תווית שדה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 label {
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* margin-bottom: מוסיף שוליים של 0.4rem מתחת לרכיב. */
   margin-bottom: 0.4rem;
 }
 
+/* מטרה: שדה קלט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 input {
+  /* padding: מוסיף ריווח פנימי 0.75rem למעלה ולמטה ו-1rem מימין ומשמאל. */
   padding: 0.75rem 1rem;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color, #cbd5e1). */
   border: 1px solid var(--border-color, #cbd5e1);
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* font-size: קובע גודל טקסט 1rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1rem;
+  /* transition: מחליק שינוי במאפיינים border-color 0.2s במקום להציג קפיצה מיידית. */
   transition: border-color 0.2s;
+  /* outline: מסיר את קו המתאר ברירת המחדל. */
   outline: none;
 }
 
+/* מטרה: input:focus כאשר הרכיב במיקוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 input:focus {
+  /* border-color: קובע את צבע המסגרת ל-var(--primary-color, #2563eb). */
   border-color: var(--primary-color, #2563eb);
+  /* box-shadow: מוסיף צל בערכים 0 0 0 3px rgba(37, 99, 235, 0.15); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+/* מטרה: כפתור תשלום נוכחי. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-pay-now {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0.95rem. */
   padding: 0.95rem;
+  /* background-color: צובע את הרקע ב-#16a34a. */
   background-color: #16a34a;
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
+  /* font-size: קובע גודל טקסט 1.05rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.05rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* margin-top: מוסיף שוליים של 1rem מעל הרכיב. */
   margin-top: 1rem;
+  /* transition: מחליק שינוי במאפיינים background-color 0.2s ease במקום להציג קפיצה מיידית. */
   transition: background-color 0.2s ease;
 }
 
+/* מטרה: כפתור תשלום נוכחי בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-pay-now:hover {
+  /* background-color: צובע את הרקע ב-#15803d. */
   background-color: #15803d;
 }
 
-/* Order Summary */
+/* מטרה: כותרת אזור סיכום ההזמנה. הסלקטור מזהה רכיב זה בממשק. */
 .order-summary-section h3 {
+  /* font-size: קובע גודל טקסט 1.35rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.35rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #1f2937);
+  /* margin-bottom: מוסיף שוליים של 1rem מתחת לרכיב. */
   margin-bottom: 1rem;
 }
 
+/* מטרה: כרטיס סיכום פרטי ההזמנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .summary-card {
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-subtle. */
   background: var(--bg-subtle, #f8fafc);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color, #e2e8f0). */
   border: 1px solid var(--border-color, #e2e8f0);
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 1.8rem. */
   padding: 1.8rem;
 }
 
+/* מטרה: שורה של פריט או סכום בסיכום ההזמנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .summary-row {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* margin-bottom: מוסיף שוליים של 0.85rem מתחת לרכיב. */
   margin-bottom: 0.85rem;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* color: צובע את הטקסט ב-#475569. */
   color: #475569;
 }
 
+/* מטרה: שם המסלול הנבחר בסיכום ההזמנה. הסלקטור מזהה רכיב זה בממשק. */
 .summary-row.plan-name-row strong {
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color, #2563eb);
+  /* font-size: קובע גודל טקסט 1.05rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.05rem;
 }
 
+/* מטרה: קו הפרדה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .divider {
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: 0;
+  /* border-top: מצייר מסגרת עליונה בערכים 1px solid #e2e8f0. */
   border-top: 1px solid #e2e8f0;
+  /* margin: יוצר שוליים 1.2rem למעלה ולמטה ו-0 מימין ומשמאל. */
   margin: 1.2rem 0;
 }
 
+/* מטרה: שורת הסכום הכולל לתשלום. הסלקטור מזהה רכיב זה בממשק. */
 .summary-row.total-row {
+  /* font-size: קובע גודל טקסט 1.2rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.2rem;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark, #0f172a);
 }
 
+/* מטרה: סכום התשלום הכולל. הסלקטור מזהה רכיב זה בממשק. */
 .total-amount {
+  /* color: צובע את הטקסט ב-#16a34a. */
   color: #16a34a;
 }
 
+/* מטרה: תיבת מידע על ערבות או התחייבות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .guarantee-box {
+  /* margin-top: מוסיף שוליים של 1.5rem מעל הרכיב. */
   margin-top: 1.5rem;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 1rem. */
   padding: 1rem;
+  /* background: ממלא את הרקע ב-#f0fdf4. */
   background: #f0fdf4;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #bbf7d0. */
   border: 1px solid #bbf7d0;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* font-size: קובע גודל טקסט 0.88rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.88rem;
+  /* color: צובע את הטקסט ב-#166534. */
   color: #166534;
+  /* line-height: קובע גובה שורה 1.6 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.6;
 }
 
-/* Status Message */
+/* מטרה: אזור להצגת מצב פעולה או הודעת מערכת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .status-message {
+  /* margin-top: מוסיף שוליים של 1rem מעל הרכיב. */
   margin-top: 1rem;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 0.85rem. */
   padding: 0.85rem;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* display: מסתיר את הרכיב ואינו משאיר לו מקום בפריסה. */
   display: none;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
 }
 
+/* מטרה: הודעה המוצגת לאחר הצלחת הפעולה. הסלקטור מזהה רכיב זה בממשק. */
 .status-message.success {
+  /* background: ממלא את הרקע ב-#dcfce7. */
   background: #dcfce7;
+  /* color: צובע את הטקסט ב-#15803d. */
   color: #15803d;
+  /* display: מציג את הרכיב כבלוק נפרד שתופס שורה. */
   display: block;
 }
 
+/* מטרה: חלונית אישור מחיקת בוט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .bot-deletion-dialog {
+  /* width: קובע רוחב של min(440px, calc(100vw - 32px)). */
   width: min(440px, calc(100vw - 32px));
+  /* margin: יוצר שוליים חיצוניים של auto מכל הצדדים. */
   margin: auto;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 24px. */
   padding: 24px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #fca5a5. */
   border: 1px solid #fca5a5;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* color: צובע את הטקסט ב-#1f2937. */
   color: #1f2937;
+  /* box-shadow: מוסיף צל בערכים 0 20px 50px rgba(15, 23, 42, 0.25); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
 }
 
+/* מטרה: שכבת הרקע שמאחורי חלונית אישור מחיקת בוט. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-dialog::backdrop {
+  /* background: ממלא את הרקע ב-rgba(15, 23, 42, 0.55). */
   background: rgba(15, 23, 42, 0.55);
 }
 
+/* מטרה: כותרת חלונית אישור מחיקת הבוט. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-dialog h2 {
+  /* margin: יוצר שוליים חיצוניים של 0 0 12px מכל הצדדים. */
   margin: 0 0 12px;
+  /* font-size: קובע גודל טקסט 1.25rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.25rem;
 }
 
+/* מטרה: הסבר בחלונית אישור מחיקת הבוט. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-dialog p {
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* color: צובע את הטקסט ב-#475569. */
   color: #475569;
+  /* line-height: קובע גובה שורה 1.6 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.6;
 }
 
+/* מטרה: כפתורי ביטול ואישור מחיקת הבוט. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-actions {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* gap: קובע מרווח של 12px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 12px;
+  /* margin-top: מוסיף שוליים של 24px מעל הרכיב. */
   margin-top: 24px;
 }
 
+/* מטרה: כפתור פעולה בחלונית המחיקה. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-actions button {
+  /* flex: מאפשר לפריט לגדול ולמלא את המקום הפנוי בפריסת Flex. */
   flex: 1;
+  /* min-height: מבטיח גובה מזערי של 44px גם כשהתוכן קצר. */
   min-height: 44px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע transparent. */
   border: 1px solid transparent;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* font: מחיל את הגדרות הגופן המקוצרות inherit. */
   font: inherit;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
 }
 
+/* מטרה: כפתור ביטול מחיקת הבוט. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-cancel {
+  /* border-color: קובע את צבע המסגרת ל-#cbd5e1. */
   border-color: #cbd5e1 !important;
+  /* background: ממלא את הרקע ב-#f1f5f9. */
   background: #f1f5f9;
+  /* color: צובע את הטקסט ב-#1e293b. */
   color: #1e293b;
 }
 
+/* מטרה: כפתור אישור מחיקת הבוט. הסלקטור מזהה רכיב זה בממשק. */
 .bot-deletion-confirm {
+  /* background: ממלא את הרקע ב-#b91c1c. */
   background: #b91c1c;
+  /* color: צובע את הטקסט ב-#ffffff. */
   color: #ffffff;
 }
 
-/* Responsive */
+/* כללים רספונסיביים: כאשר רוחב המסך הוא 800px ומטה, הפריסה והמידות הבאות מותאמות למסך קטן. */
 @media (max-width: 800px) {
+  /* מטרה: פריסת טופס התשלום לצד סיכום ההזמנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
   .checkout-grid {
+    /* grid-template-columns: מגדיר את עמודות הרשת לפי 1fr. */
     grid-template-columns: 1fr;
   }
 }

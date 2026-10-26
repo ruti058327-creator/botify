@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- דף הבית מציג את השירות, נקודות הכניסה המרכזיות והקישורים לשאר חלקי Botify. -->
     <!-- כותרת הלשונית עם הסלוגן המלא -->
-    <title>Botify - בינה שמבינה</title>
+    <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>Botify - בינה שמבינה</title>
 
     <!-- אייקון הלשונית (Favicon) -->
-    <link rel="icon" type="image/png" href="/images/pic.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- הקישור למשאב /images/pic.png מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. הסוג הוא image/png; כתובת היעד הוא /images/pic.png. --><link rel="icon" type="image/png" href="/images/pic.png">
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- קישור לעיצוב הראשי של האתר -->
-    <link rel="stylesheet" href="/css/global.css">
-    <style>
+    <!-- הקישור למשאב /css/global.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא /css/global.css. --><link rel="stylesheet" href="/css/global.css">
+    <!-- תג style מכיל כללי CSS לעיצוב הדף; הוא נפרד מתוכן ה־HTML ואין להוסיף בו הערות HTML. --><style>
         /* תוספות עיצוב מותאמות לעמוד הבית */
         .home-sections {
             max-width: 1050px;
@@ -93,112 +93,112 @@
         }
     </style>
 </head>
-<body>
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. --><body>
 
-    <header>
-        <nav class="navbar">
-            <a href="index.html" class="logo" title="Botify - חזרה לדף הבית">
-                <img src="/images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+    <!-- אזור header מציג תוכן פתיחה או כותרת של הדף/החלק. --><header>
+        <!-- אזור nav מרכז קישורי ניווט בין דפים או אזורים באתר. מחלקות העיצוב הוא navbar. --><nav class="navbar">
+            <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא logo; כתובת היעד הוא index.html. --><a href="index.html" class="logo" title="Botify - חזרה לדף הבית">
+                <!-- התמונה img מציגה קובץ שמוגדר ב־src; alt מספק תיאור חלופי לקוראי מסך או כשהתמונה אינה נטענת. מחלקות העיצוב הוא logo-img; מקור הקובץ הוא /images/pic2.png. --><img src="/images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
             </a>
 
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">בית</a></li>
-                <li><a href="./pages/about.html">אודות</a></li>
-                <li><a href="./pages/pricing.html">מחירון</a></li>
-                <li><a href="./pages/contact.html">צור קשר</a></li>
+            <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא nav-links. --><ul class="nav-links">
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא active; כתובת היעד הוא index.html. --><a href="index.html" class="active">בית</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא ./pages/about.html. --><a href="./pages/about.html">אודות</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא ./pages/pricing.html. --><a href="./pages/pricing.html">מחירון</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא ./pages/contact.html. --><a href="./pages/contact.html">צור קשר</a></li>
             </ul>
 
-            <div class="auth-buttons" id="nav-auth-container">
-                <a href="./pages/login.html" class="btn-secondary">התחברות</a>
-                <a href="./pages/register.html" class="btn-primary">הרשמה</a>
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא nav-auth-container; מחלקות העיצוב הוא auth-buttons. --><div class="auth-buttons" id="nav-auth-container">
+                <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-secondary; כתובת היעד הוא ./pages/login.html. --><a href="./pages/login.html" class="btn-secondary">התחברות</a>
+                <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-primary; כתובת היעד הוא ./pages/register.html. --><a href="./pages/register.html" class="btn-primary">הרשמה</a>
             </div>
         </nav>
     </header>
 
-    <main>
+    <!-- אזור main מכיל את התוכן המרכזי והייחודי של הדף. --><main>
         <!-- אזור פתיח מרכזי -->
-        <section class="hero">
-            <div class="hero-container">
-                <div class="hero-text">
-                    <h1>ברוכים הבאים ל-Botify</h1>
-                    <p>הפלטפורמה ליצירה וניהול בוטים חכמים לעסק</p>
-                    <div class="cta-group">
-                        <a href="./pages/register.html" class="btn-primary">הרשמה מהירה</a>
-                        <a href="./pages/pricing.html" class="btn-secondary">לצפייה במסלולים</a>
+        <!-- אזור section מאגד תוכן בנושא אחד; הכותרת וה־id/class עוזרים להבין אותו ולקשר אליו עיצוב או קוד. מחלקות העיצוב הוא hero. --><section class="hero">
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא hero-container. --><div class="hero-container">
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא hero-text. --><div class="hero-text">
+                    <!-- כותרת h1 מציינת את הנושא הראשי של הדף; משתמשים בדרך כלל בכותרת ראשית אחת. --><h1>ברוכים הבאים ל-Botify</h1>
+                    <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>הפלטפורמה ליצירה וניהול בוטים חכמים לעסק</p>
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא cta-group. --><div class="cta-group">
+                        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-primary; כתובת היעד הוא ./pages/register.html. --><a href="./pages/register.html" class="btn-primary">הרשמה מהירה</a>
+                        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-secondary; כתובת היעד הוא ./pages/pricing.html. --><a href="./pages/pricing.html" class="btn-secondary">לצפייה במסלולים</a>
                     </div>
                 </div>
 
-                <div class="hero-image">
-                    <img src="/images/pic3.png" alt="בוט של Botify">
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא hero-image. --><div class="hero-image">
+                    <!-- התמונה img מציגה קובץ שמוגדר ב־src; alt מספק תיאור חלופי לקוראי מסך או כשהתמונה אינה נטענת. מקור הקובץ הוא /images/pic3.png. --><img src="/images/pic3.png" alt="בוט של Botify">
                 </div>
             </div>
         </section>
 
         <!-- אזורי תוכן מורחבים -->
-        <div class="home-sections">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא home-sections. --><div class="home-sections">
 
             <!-- יתרונות המערכת -->
-            <section>
-                <div class="section-header">
-                    <h2>למה העסק שלך חייב בוט חכם?</h2>
-                    <p>הכלים שיעזרו לך לחסוך זמן ולהגדיל את אחוז ההמשרות</p>
+            <!-- אזור section מאגד תוכן בנושא אחד; הכותרת וה־id/class עוזרים להבין אותו ולקשר אליו עיצוב או קוד. --><section>
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא section-header. --><div class="section-header">
+                    <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>למה העסק שלך חייב בוט חכם?</h2>
+                    <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>הכלים שיעזרו לך לחסוך זמן ולהגדיל את אחוז ההמשרות</p>
                 </div>
 
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <h3>⚡ מענה מיידי 24/7</h3>
-                        <p class="desc">הלקוחות שלך לא מחכים. הבוט מספק תשובות מדויקות גם מחוץ לשעות הפעילות.</p>
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-grid. --><div class="pricing-grid">
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card. --><div class="pricing-card">
+                        <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>⚡ מענה מיידי 24/7</h3>
+                        <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">הלקוחות שלך לא מחכים. הבוט מספק תשובות מדויקות גם מחוץ לשעות הפעילות.</p>
                     </div>
-                    <div class="pricing-card">
-                        <h3>🎯 איסוף לידים חכם</h3>
-                        <p class="desc">סינון פניות, איסוף פרטי התקשרות והעברה ישירה למערכת ה-CRM שלך.</p>
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card. --><div class="pricing-card">
+                        <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>🎯 איסוף לידים חכם</h3>
+                        <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">סינון פניות, איסוף פרטי התקשרות והעברה ישירה למערכת ה-CRM שלך.</p>
                     </div>
-                    <div class="pricing-card">
-                        <h3>📚 למידה מקבצים</h3>
-                        <p class="desc">מעלים קובצי PDF או מחירונים, והבוט לומד להשיב על בסיס התוכן העסקי שלך.</p>
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card. --><div class="pricing-card">
+                        <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>📚 למידה מקבצים</h3>
+                        <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">מעלים קובצי PDF או מחירונים, והבוט לומד להשיב על בסיס התוכן העסקי שלך.</p>
                     </div>
                 </div>
             </section>
 
             <!-- איך זה עובד -->
-            <section style="margin-top: 60px;">
-                <div class="section-header">
-                    <h2>איך זה עובד?</h2>
-                    <p>שלושה צעדים פשוטים עד שהבוט שלך באוויר</p>
+            <!-- אזור section מאגד תוכן בנושא אחד; הכותרת וה־id/class עוזרים להבין אותו ולקשר אליו עיצוב או קוד. --><section style="margin-top: 60px;">
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא section-header. --><div class="section-header">
+                    <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>איך זה עובד?</h2>
+                    <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>שלושה צעדים פשוטים עד שהבוט שלך באוויר</p>
                 </div>
 
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <h4>נרשמים למערכת</h4>
-                        <p>יוצרים חשבון בחינם תוך פחות מדקה.</p>
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא steps-grid. --><div class="steps-grid">
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step-card. --><div class="step-card">
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step-number. --><div class="step-number">1</div>
+                        <!-- כותרת h4 מציגה רמת משנה נוספת בהיררכיית הכותרות. --><h4>נרשמים למערכת</h4>
+                        <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>יוצרים חשבון בחינם תוך פחות מדקה.</p>
                     </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <h4>מעלים תוכן</h4>
-                        <p>מזינים את השאלות והתשובות או מעלים קובץ מידע.</p>
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step-card. --><div class="step-card">
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step-number. --><div class="step-number">2</div>
+                        <!-- כותרת h4 מציגה רמת משנה נוספת בהיררכיית הכותרות. --><h4>מעלים תוכן</h4>
+                        <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>מזינים את השאלות והתשובות או מעלים קובץ מידע.</p>
                     </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <h4>מטמיעים באתר</h4>
-                        <p>מעתיקים שורת קוד אחת והבוט מוכן לעבודה.</p>
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step-card. --><div class="step-card">
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step-number. --><div class="step-number">3</div>
+                        <!-- כותרת h4 מציגה רמת משנה נוספת בהיררכיית הכותרות. --><h4>מטמיעים באתר</h4>
+                        <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>מעתיקים שורת קוד אחת והבוט מוכן לעבודה.</p>
                     </div>
                 </div>
             </section>
 
             <!-- שאלות נפוצות -->
-            <section>
-                <div class="section-header">
-                    <h2>שאלות נפוצות</h2>
+            <!-- אזור section מאגד תוכן בנושא אחד; הכותרת וה־id/class עוזרים להבין אותו ולקשר אליו עיצוב או קוד. --><section>
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא section-header. --><div class="section-header">
+                    <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>שאלות נפוצות</h2>
                 </div>
-                <div class="faq-container">
-                    <div class="faq-item">
-                        <div class="faq-question">❓ האם נדרש ידע בקוד כדי לתפעל את המערכת?</div>
-                        <div class="faq-answer">לא. המערכת נבנתה במיוחד עבור בעלי עסקים ללא רקע טכני.</div>
+                <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-container. --><div class="faq-container">
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-item. --><div class="faq-item">
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-question. --><div class="faq-question">❓ האם נדרש ידע בקוד כדי לתפעל את המערכת?</div>
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-answer. --><div class="faq-answer">לא. המערכת נבנתה במיוחד עבור בעלי עסקים ללא רקע טכני.</div>
                     </div>
-                    <div class="faq-item">
-                        <div class="faq-question">❓ האם אפשר לנסות את המערכת בחינם?</div>
-                        <div class="faq-answer">אפשר להתחיל בהרשמה ולבחור את המסלול המתאים לעסק.</div>
+                    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-item. --><div class="faq-item">
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-question. --><div class="faq-question">❓ האם אפשר לנסות את המערכת בחינם?</div>
+                        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא faq-answer. --><div class="faq-answer">אפשר להתחיל בהרשמה ולבחור את המסלול המתאים לעסק.</div>
                     </div>
                 </div>
             </section>
@@ -206,20 +206,20 @@
         </div>
     </main>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <ul class="footer-links">
-                <li><a href="/terms.html">תנאי שימוש</a></li>
-                <li><a href="/privacy.html">מדיניות פרטיות</a></li>
-                <li><a href="/accessibility.html">הצהרת נגישות</a></li>
+    <!-- אזור footer מציג מידע מסכם, קישורים או פרטי זכויות יוצרים בתחתית הדף/החלק. מחלקות העיצוב הוא site-footer. --><footer class="site-footer">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא footer-container. --><div class="footer-container">
+            <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא footer-links. --><ul class="footer-links">
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא /terms.html. --><a href="/terms.html">תנאי שימוש</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא /privacy.html. --><a href="/privacy.html">מדיניות פרטיות</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא /accessibility.html. --><a href="/accessibility.html">הצהרת נגישות</a></li>
             </ul>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא footer-bottom. --><div class="footer-bottom">
+            <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
         </div>
     </footer>
 
-    <script type="module" src="./js/config.js"></script>
-    <script type="module" src="./js/navbar-auth.js"></script>
+    <!-- הקובץ ./js/config.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ./js/config.js. --><script type="module" src="./js/config.js"></script>
+    <!-- הקובץ ./js/navbar-auth.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ./js/navbar-auth.js. --><script type="module" src="./js/navbar-auth.js"></script>
 </body>
 </html>

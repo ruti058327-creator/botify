@@ -1,3 +1,4 @@
+// מייבאים שירות משותף כדי לשלוח לשרת בקשות התחברות ואיפוס סיסמה באותה דרך.
 import { ApiService } from '../services/api-service.js';
 
     /**
