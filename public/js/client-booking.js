@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
 
       if (data.success) {
-        messageDiv.textContent = `התור נקבע בהצלחה ל-${selectedDate} בשעה ${selectedTime}! אישור נשלח למייל.`;
+        messageDiv.textContent = `התור נקבע בהצלחה ל-${selectedDate} בשעה ${selectedTime}! `;
         messageDiv.className = 'success';
         step2.style.display = 'none';
       } else {

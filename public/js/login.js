@@ -1,3 +1,5 @@
+import { ApiService } from '../services/api-service.js';
+
     /**
      * מאתחל התחברות, שחזור סיסמה והפניה אופציונלית לאחר הכניסה.
      * @returns {void} מחבר טפסים ומעדכן את קישור ההרשמה.
@@ -322,4 +324,3 @@
         }
       });
     });
-import { ApiService } from '../services/api-service.js';

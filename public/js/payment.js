@@ -1,3 +1,5 @@
+import { ApiService } from '../services/api-service.js';
+
 /**
  * מאתחל סיכום תשלום, בודק התחברות ומחבר את פעולות האישור.
  * @returns {void} מציג את המסלול ומתקין טיפול בטופס התשלום.
@@ -152,4 +154,3 @@ document.addEventListener('DOMContentLoaded', () => {
     submitPayment(confirmedBotCount);
   });
 });
-import { ApiService } from '../services/api-service.js';

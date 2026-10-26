@@ -103,6 +103,25 @@
   gap: 8px;
 }
 
+.owned-bot-action {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: #0056b3;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.owned-bot-action-delete {
+  background: #e2e8f0;
+  color: #334155;
+}
+
 .bot-list-heading {
   display: flex;
   flex-wrap: wrap;

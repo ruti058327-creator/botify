@@ -32,11 +32,38 @@ const payload = {
 
     const data = await response.json();
     if (data.success) {
+      const bookingUrl = data.bookingUrl || new URL(
+        `/client-booking.html?bot=${encodeURIComponent(data.bot.botUrlKey)}`,
+        window.location.origin
+      ).href;
+      const successMessage = document.createElement('p');
+      successMessage.textContent = 'הבוט נוצר בהצלחה, העתק את הקישור המופיע למטה לאתר שלך כדי להפוך אותו זמין ללקוחות';
+      const bookingLink = document.createElement('a');
+      bookingLink.href = bookingUrl;
+      bookingLink.target = '_blank';
+      bookingLink.rel = 'noopener noreferrer';
+      bookingLink.textContent = bookingUrl;
+      const copyButton = document.createElement('button');
+      copyButton.type = 'button';
+      copyButton.textContent = 'העתקת הקישור';
+      const copyStatus = document.createElement('span');
+      copyStatus.setAttribute('role', 'status');
+      copyStatus.setAttribute('aria-live', 'polite');
+      copyButton.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(bookingUrl);
+          copyButton.textContent = 'הקישור הועתק';
+          copyStatus.textContent = '';
+        } catch {
+          copyStatus.textContent = 'לא ניתן להעתיק אוטומטית. אפשר לסמן ולהעתיק את הקישור שמופיע למעלה.';
+          copyStatus.style.color = '#dc2626';
+        }
+      });
+      const botsLink = document.createElement('a');
+      botsLink.href = 'secretary-bots.html';
+      botsLink.textContent = 'לרשימת הבוטים הפעילים';
+      messageDiv.replaceChildren(successMessage, bookingLink, copyButton, copyStatus, botsLink);
       messageDiv.style.color = '#16a34a';
-      messageDiv.textContent = 'ההגדרות נשמרו בהצלחה! מעביר לרשימת הבוטים...';
-      window.setTimeout(() => {
-        window.location.href = 'secretary-bots.html';
-      }, 700);
     } else if (data.code === 'SECRETARY_BOT_LIMIT_REACHED') {
       window.location.href = data.pricingUrl || '/pages/pricing.html?required=secretary-bot';
     } else {

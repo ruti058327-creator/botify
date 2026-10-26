@@ -1,3 +1,5 @@
+import { ApiService } from '../services/api-service.js';
+
 /**
  * מאתחל אימות הרשמה תלוי-שלבים ומוודא שקיימים פרטי הרשמה ממתינים.
  * @returns {void} מציג את הדוא״ל, מפעיל טיימר ומחבר את פעולות האימות.
@@ -223,4 +225,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-import { ApiService } from '../services/api-service.js';
