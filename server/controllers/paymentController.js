@@ -8,6 +8,7 @@ import httpError from '../utils/httpError.js';
 export async function createPayment(req, res) {
   // קלט התשלום כבר עבר אימות בסכמת הנתיב; מחיר המסלול נלקח מהגדרות השרת.
   const { planId, cardholderName, cardLast4, confirmedBotCount } = req.body;
+  // פרטי המחיר והמכסה נלקחים ממיפוי התוכניות המקומי, לא מהמחיר שסיפק הלקוח.
   const selectedPlan = PLANS[planId];
   // מאתרים את המשתמש לפי המזהה שנלקח מאסימון ההתחברות המאומת.
   const user = await User.findById(req.user.id);

@@ -1,88 +1,88 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>קביעת תור - בוט מזכירה</title>
-  <link rel="stylesheet" href="../css/client-booking.css">
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- דף הזמנת התורים מאפשר ללקוח לבחור מועד ולשלוח בקשת פגישה מול עסק. -->
+  <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+  <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>קביעת תור - בוט מזכירה</title>
+  <!-- הקישור למשאב ../css/client-booking.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/client-booking.css. --><link rel="stylesheet" href="../css/client-booking.css">
 </head>
-<body>
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. --><body>
 
-  <div class="booking-container">
-    <div class="header">
-      <h1 id="businessTitle">קביעת תור</h1>
-      <p id="businessSubtitle">ניהול זימון פגישות מתקדם</p>
+  <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא booking-container. --><div class="booking-container">
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא header. --><div class="header">
+      <!-- כותרת h1 מציינת את הנושא הראשי של הדף; משתמשים בדרך כלל בכותרת ראשית אחת. המזהה הוא businessTitle. --><h1 id="businessTitle">קביעת תור</h1>
+      <!-- האלמנט p מציג פסקה של טקסט רגיל. המזהה הוא businessSubtitle. --><p id="businessSubtitle">ניהול זימון פגישות מתקדם</p>
     </div>
 
     <!-- ================= שלב 1: מילוי פרטי הלקוח ================= -->
-    <div id="step1" class="booking-step">
-      <h2>שלב 1: פרטים אישיים</h2>
-      <form id="clientDetailsForm">
-        <div class="form-group">
-          <label for="clientIdNumber">מספר תעודת זהות:</label>
-          <input type="text" id="clientIdNumber" placeholder="הכנס 9 ספרות" pattern="[0-9]{9}" required>
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא step1; מחלקות העיצוב הוא booking-step. --><div id="step1" class="booking-step">
+      <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>שלב 1: פרטים אישיים</h2>
+      <!-- הטופס form מאגד שדות ופקדי שליחה. action ו־method, אם קיימים, מגדירים יעד ואופן שליחה; לעיתים JavaScript מטפל בשליחה. המזהה הוא clientDetailsForm. --><form id="clientDetailsForm">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+          <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. הקישור לשדה הוא clientIdNumber. --><label for="clientIdNumber">מספר תעודת זהות:</label>
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא clientIdNumber; הסוג הוא text. --><input type="text" id="clientIdNumber" placeholder="הכנס 9 ספרות" pattern="[0-9]{9}" required>
         </div>
 
-        <div class="form-group">
-          <label for="clientName">שם מלא:</label>
-          <input type="text" id="clientName" placeholder="הכנס שם מלא" required>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+          <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. הקישור לשדה הוא clientName. --><label for="clientName">שם מלא:</label>
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא clientName; הסוג הוא text. --><input type="text" id="clientName" placeholder="הכנס שם מלא" required>
         </div>
 
-        <div class="form-group">
-          <label for="clientPhone">מספר טלפון:</label>
-          <input type="tel" id="clientPhone" placeholder="050-0000000" required>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+          <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. הקישור לשדה הוא clientPhone. --><label for="clientPhone">מספר טלפון:</label>
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא clientPhone; הסוג הוא tel. --><input type="tel" id="clientPhone" placeholder="050-0000000" required>
         </div>
 
-        <div class="form-group">
-          <label for="clientEmail">כתובת אימייל:</label>
-          <input type="email" id="clientEmail" placeholder="your@email.com" required>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+          <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. הקישור לשדה הוא clientEmail. --><label for="clientEmail">כתובת אימייל:</label>
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא clientEmail; הסוג הוא email. --><input type="email" id="clientEmail" placeholder="your@email.com" required>
         </div>
 
-        <button type="submit" class="primary-btn">המשך לבחירת תאריך ושעה</button>
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. מחלקות העיצוב הוא primary-btn; הסוג הוא submit. --><button type="submit" class="primary-btn">המשך לבחירת תאריך ושעה</button>
       </form>
     </div>
 
     <!-- ================= שלב 2: בחירת תאריך ושעה ================= -->
-    <div id="step2" class="booking-step" style="display: none;">
-      <div class="step2-header">
-        <button type="button" id="backToStep1" class="back-link">⟵ חזרה לפרטים אישיים</button>
-        <h2>למתי תרצה לקבוע תור?</h2>
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא step2; מחלקות העיצוב הוא booking-step. --><div id="step2" class="booking-step" style="display: none;">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא step2-header. --><div class="step2-header">
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא backToStep1; מחלקות העיצוב הוא back-link; הסוג הוא button. --><button type="button" id="backToStep1" class="back-link">⟵ חזרה לפרטים אישיים</button>
+        <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>למתי תרצה לקבוע תור?</h2>
       </div>
 
-      <div class="calendar-booking-grid">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא calendar-booking-grid. --><div class="calendar-booking-grid">
         <!-- צד ימין: לוח שנה חודשי ויזואלי -->
-        <div class="calendar-section">
-          <div class="calendar-nav">
-            <button type="button" id="prevMonth">❮</button>
-            <h3 id="calendarMonthTitle"></h3>
-            <button type="button" id="nextMonth">❯</button>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא calendar-section. --><div class="calendar-section">
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא calendar-nav. --><div class="calendar-nav">
+            <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא prevMonth; הסוג הוא button. --><button type="button" id="prevMonth">❮</button>
+            <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. המזהה הוא calendarMonthTitle. --><h3 id="calendarMonthTitle"></h3>
+            <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא nextMonth; הסוג הוא button. --><button type="button" id="nextMonth">❯</button>
           </div>
           
-          <div class="calendar-grid" id="calendarGrid"></div>
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא calendarGrid; מחלקות העיצוב הוא calendar-grid. --><div class="calendar-grid" id="calendarGrid"></div>
         </div>
 
         <!-- צד שמאל: בחירת שעה מתוך כפתורים -->
-        <div class="slots-section">
-          <label>שעות פנויות ביום הנבחר:</label>
-          <div id="slotsContainer" class="slots-container">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא slots-section. --><div class="slots-section">
+          <!-- האלמנט label נותן שם ברור לשדה; התאמה באמצעות for ל־id של השדה משפרת שימושיות ונגישות. --><label>שעות פנויות ביום הנבחר:</label>
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא slotsContainer; מחלקות העיצוב הוא slots-container. --><div id="slotsContainer" class="slots-container">
             <span class="placeholder-text">בחר תאריך מלוח השנה מימין...</span>
           </div>
         </div>
       </div>
 
       <!-- סיכום מחיר ואישור סופי -->
-      <div class="final-approval-box">
-        <div class="price-summary">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא final-approval-box. --><div class="final-approval-box">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא price-summary. --><div class="price-summary">
           <span>מחיר השירות:</span>
           <strong id="displayPrice">-- ₪</strong>
         </div>
-        <button type="button" id="confirmBookingBtn" class="primary-btn" disabled>אשר וקבע תור סופית</button>
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא confirmBookingBtn; מחלקות העיצוב הוא primary-btn; הסוג הוא button. --><button type="button" id="confirmBookingBtn" class="primary-btn" disabled>אשר וקבע תור סופית</button>
       </div>
     </div>
 
-    <div id="bookingMessage"></div>
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא bookingMessage. --><div id="bookingMessage"></div>
   </div>
 
-  <script src="../js/client-booking.js"></script>
+  <!-- הקובץ ../js/client-booking.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. מקור הקובץ הוא ../js/client-booking.js. --><script src="../js/client-booking.js"></script>
 </body>
 </html>

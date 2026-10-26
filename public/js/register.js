@@ -114,17 +114,20 @@ async function handleSendOtp() {
     clearStatus();
 
     // קוראים את הערכים מכל שדות ההרשמה; טקסט נחתך ואילו סיסמה נשמרת בדיוק.
+    // אוספים את פרטי הזהות והחשבון; שדות טקסט עוברים trim להסרת רווחי קצה.
     const fullName = document.getElementById('fullName').value.trim();
     const idNumber = document.getElementById('idNumber').value.trim();
     const email = document.getElementById('email').value.trim();
     const phone = document.getElementById('phone').value.trim();
     const businessName = document.getElementById('businessName').value.trim();
     const username = document.getElementById('username').value.trim();
+    // משאירים את הסיסמה ללא trim כדי לא לשנות תווים שהמשתמש בחר במכוון.
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
     const terms = document.getElementById('terms').checked;
 
     // מאמתים את שדות החובה לפי הסדר ומפסיקים ברגע שמתגלה נתון חסר או שגוי.
+    // כל בדיקה עוצרת מיד עם הודעה ממוקדת, כדי שלא תישלח בקשת OTP עם נתונים חלקיים.
     if (!fullName) return showStatus('נא להזין שם מלא');
     if (!idNumber) return showStatus('נא להזין מספר תעודת זהות');
     if (!email || !email.includes('@')) return showStatus('נא להזין כתובת אימייל תקינה');
@@ -184,6 +187,7 @@ async function handleSendOtp() {
 async function handleVerifyAndRegister() {
     // מנקים תוצאה קודמת וקוראים את קוד האימות שהמשתמש הזין.
     clearStatus();
+    // קוראים את הקוד ומסירים רווחים שנוספו בטעות לפני או אחרי הספרות.
     const otpCode = document.getElementById('otpCode').value.trim();
 
     // הקוד חייב להכיל בדיוק שישה תווים לפני שליחתו לשרת.
@@ -239,6 +243,7 @@ async function handleVerifyAndRegister() {
 async function handleResendCode() {
     // מנקים הודעה ישנה וקובעים הפניה לכפתור כדי להציג מצב שליחה.
     clearStatus();
+    // מאתרים ומשביתים את כפתור השליחה החוזרת כדי למנוע בקשות מקבילות.
     const resendBtn = document.getElementById('resendBtn');
     resendBtn.disabled = true;
     resendBtn.textContent = 'שולח קוד חדש...';

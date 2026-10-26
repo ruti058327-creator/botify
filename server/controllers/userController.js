@@ -18,6 +18,7 @@ const uploadDirectory = fileURLToPath(new URL('../../public/uploads/profile-imag
 async function countUsers(req, res) {
   // סופר מסמכים במקום לטעון את כל המשתמשים לזיכרון.
   const count = await User.countDocuments();
+  // מוסר למנהל את מספר החשבונות הכולל כערך מספרי.
   return res.json({ success: true, count });
 }
 
@@ -30,6 +31,7 @@ async function countUsers(req, res) {
 async function listUsers(req, res) {
   // מחזיר רשימת משתמשים ללא שדה הסיסמה, וממיין מהחדש לישן.
   const users = await User.find({}, '-password').sort({ createdAt: -1 });
+  // מחזיר את הרשימה לאחר שהשאילתה החריגה את סיסמאות המשתמשים.
   return res.json({ success: true, users });
 }
 

@@ -10,7 +10,9 @@ import createRequestLogger from './middlewares/requestLogger.js';
 import errorHandler from './middlewares/errorHandler.js';
 // כל קובץ נתיבים מרכז נקודת כניסה אחת או יותר בתחום אחר של המערכת.
 import authRoutes from './routes/authRoutes.js';
+// נתיבי הבוטים כוללים יצירה, ניהול ושיחה עם בוטים.
 import botRoutes from './routes/botRoutes.js';
+// נתיב התשלומים רושם רכישות ומפעיל מסלולים למשתמשים.
 import paymentRoutes from './routes/paymentRoutes.js';
 // יוצר שגיאת HTTP אחידה עבור בקשות לכתובות שאינן קיימות.
 import secretaryRoutes from './routes/secretaryRoutes.js';
@@ -29,8 +31,11 @@ app.use(express.static(fileURLToPath(new URL('../public', import.meta.url))));
 app.use(express.static(fileURLToPath(new URL('../public/pages', import.meta.url))));
 // מחבר את נקודות הקצה של חשבונות, בוטים ותשלומים תחת תחילית API.
 app.use('/api', authRoutes);
+// מחבר פעולות בוטים תחת /api/bots.
 app.use('/api/bots', botRoutes);
+// מחבר רישום תשלומים תחת /api/payments.
 app.use('/api/payments', paymentRoutes);
+// מחבר את פעולות המזכירות תחת /api/secretary.
 app.use('/api/secretary', secretaryRoutes);
 
 // אם אף נתיב לא התאים, מעבירים שגיאת 404 לטיפול המרכזי.

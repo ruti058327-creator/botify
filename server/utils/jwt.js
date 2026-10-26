@@ -3,6 +3,7 @@ import '../config/env.js';
 import jwt from 'jsonwebtoken';
 
 
+// קוראים פעם אחת את סוד החתימה מתוך הסביבה לאחר שטעינתה ואימותה הושלמו.
 const jwtSecret = process.env.JWT_SECRET;
 
 /**
@@ -20,6 +21,7 @@ function signAuthToken(user) {
 }
 
 export default {
+  // חושף את פונקציית יצירת האסימון לשימוש בבקרי ההתחברות.
   signAuthToken,
   /**
    * מאמת אסימון JWT ומפענח את המטען החתום.

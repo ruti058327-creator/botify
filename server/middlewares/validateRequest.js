@@ -6,6 +6,7 @@
  * @returns {import('express').RequestHandler} Express validation middleware.
  */
 export default function validateRequest(schema, property = 'body') {
+  // כל בקשה עוברת בדיקה לפני הנתיב, כדי שהבקר יקבל ערכים מנורמלים בלבד.
   return (req, res, next) => {
     // Joi בודק את החלק שנבחר בבקשה, ממיר טיפוסים ומסיר שדות שאינם בסכמה.
     const { error, value } = schema.validate(req[property], {

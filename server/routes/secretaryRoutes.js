@@ -1,18 +1,24 @@
+// Express מספק נתב נפרד לנקודות הקצה של בוט המזכירה.
 import express from 'express';
+// הבקר מממש פעולות של הגדרות עסק, תורים, חופשות ולוח שנה.
 import secretaryController from '../controllers/secretaryController.js';
+// מסלולי ניהול מוגנים בזיהוי משתמש מתוך אסימון ההתחברות.
 import { authenticateToken } from '../middlewares/authMiddleware.js';
+// middleware זה מאמת ומנרמל נתונים לפני שהבקר משתמש בהם.
 import validateRequest from '../middlewares/validateRequest.js';
+// הסכמות מתארות את המבנה התקין לכל סוג נתיב של המזכירה.
 import { secretarySchemas } from '../validation/schemas.js';
 
+// יוצרים אוסף נתיבים שניתן לחבר לאפליקציה תחת תחילית API.
 const router = express.Router();
 
-// הגדרה או עדכון ראשוני של בוט המזכירה (דורש אימות של בעל העסק)
+// הגדרה או עדכון ראשוני דורשים משתמש מחובר ונתוני הגדרה תקינים.
 router.post('/setup', authenticateToken, validateRequest(secretarySchemas.setup), secretaryController.setupSecretary);
 
-// בוטי המזכירה השייכים לבעל העסק
+// רשימת הבוטים מוצגת רק למשתמש המזוהה שבבעלותו הם רשומים.
 router.get('/mine', authenticateToken, secretaryController.getOwnedSecretaryBots);
 
-// מחיקת בוט מזכירה על ידי בעל העסק
+// אימות הבעלות נעשה בבקר לאחר אימות המבנה של המזהה שבנתיב.
 router.delete(
   '/:botUrlKey',
   authenticateToken,
@@ -20,7 +26,7 @@ router.delete(
   secretaryController.deleteSecretaryBot
 );
 
-// נתיב לשליפת לוח שנה חודשי של הבוט (פתוח לציבור דרך הקישור הייחודי של הבוט)
+// לוח השנה ציבורי, אך גם מפתח הבוט וגם השנה והחודש נבדקים לפני החיפוש.
 router.get(
   '/:botUrlKey/calendar-month',
   validateRequest(secretarySchemas.botParams, 'params'),
@@ -28,7 +34,7 @@ router.get(
   secretaryController.getMonthCalendar
 );
 
-// נתיב לבדיקה אם תאריך מסוים הוא חופשה או שבת (פתוח לציבור דרך הקישור הייחודי של הבוט)
+// בדיקת תאריך ציבורית מקבלת מפתח בוט ותאריך בתבנית תקינה.
 router.get(
   '/:botUrlKey/is-holiday-or-shabbat',
   validateRequest(secretarySchemas.botParams, 'params'),
@@ -36,7 +42,7 @@ router.get(
   secretaryController.isHolidayOrShabbat
 );
 
-// נתיב להמרת זמן למספר דקות (פתוח לציבור דרך הקישור הייחודי של הבוט)
+// ממיר זמן שסופק בשאילתה לדקות; הסכמה מוודאת תבנית HH:MM.
 router.get(
   '/:botUrlKey/time-to-minutes',
   validateRequest(secretarySchemas.botParams, 'params'),
@@ -44,7 +50,7 @@ router.get(
   secretaryController.timeToMinutes
 );
 
-// נתיב להמרת מספר דקות לזמן (פתוח לציבור דרך הקישור הייחודי של הבוט)
+// ממיר דקות לתצוגת שעה, לאחר בדיקת הערך המספרי.
 router.get(
   '/:botUrlKey/minutes-to-time',
   validateRequest(secretarySchemas.botParams, 'params'),
@@ -52,7 +58,7 @@ router.get(
   secretaryController.minutesToTime
 );
 
-// קביעת תור חדש על ידי לקוח (פתוח לציבור דרך הקישור הייחודי של הבוט)
+// לקוח יכול לקבוע תור ציבורי; פרטי הלקוח, התאריך והשעה נבדקים מראש.
 router.post(
   '/:botUrlKey/book',
   validateRequest(secretarySchemas.botParams, 'params'),
@@ -60,7 +66,7 @@ router.post(
   secretaryController.bookAppointment
 );
 
-// נתיב לשליפת שעות פנויות ללקוח לפי תאריך
+// השעות הפנויות מוחזרות עבור תאריך תקין ומפתח של בוט קיים.
 router.get(
   '/:botUrlKey/slots',
   validateRequest(secretarySchemas.botParams, 'params'),
@@ -68,7 +74,7 @@ router.get(
   secretaryController.getAvailableSlots
 );
 
-// צפייה בתורים המאושרים של העסק (דורש אימות של בעל העסק)
+// צפייה בתורים דורשת התחברות, מזהה בוט ופרמטרים תקינים לסינון.
 router.get(
   '/:botUrlKey/appointments',
   authenticateToken,
@@ -77,7 +83,7 @@ router.get(
   secretaryController.getBusinessAppointments
 );
 
-// עדכון הגדרות הבוט על ידי בעל העסק (דורש אימות)
+// שינוי הגדרות נעשה רק לאחר אימות משתמש ונתוני ההגדרה החדשים.
 router.patch(
   '/:botUrlKey/settings',
   authenticateToken,
@@ -86,14 +92,14 @@ router.patch(
   secretaryController.updateBotSettings
 );
 
-// נתיב לאישור קריאה של הלקוח על ידי לחיצה על הקישור במייל (פתוח לציבור)
+// קישור האישור נגיש לנמען ללא התחברות, אך אסימון הנתיב נבדק תחילה.
 router.get(
   '/confirm-read/:token',
   validateRequest(secretarySchemas.tokenParams, 'params'),
   secretaryController.confirmReadMessage
 );
 
-// בקשת חופשה פתאומית ושליחת הודעה ללקוחות של הבוט
+// בקשת חופשה דורשת בעלים מחובר ותאריך והודעה שעומדים בכללי הסכמה.
 router.post(
   '/:botUrlKey/emergency-vacation',
   authenticateToken,
@@ -102,4 +108,5 @@ router.post(
   secretaryController.requestEmergencyVacation
 );
 
+// מייצא את הנתב כדי שהאפליקציה תוכל לרשום את כל נקודות הקצה יחד.
 export default router;

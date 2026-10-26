@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>צ'אט עם הבוט - Botify</title>
-    <style>
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- מסך הצ׳אט מציג את השיחה, אזור כתיבת ההודעות ורכיבים הנדרשים לשליחת הודעה ולקבלת תשובה. -->
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+    <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>צ'אט עם הבוט - Botify</title>
+    <!-- תג style מכיל כללי CSS לעיצוב הדף; הוא נפרד מתוכן ה־HTML ואין להוסיף בו הערות HTML. --><style>
         :root {
             --primary-color: #0284c7;
             --primary-hover: #0369a1;
@@ -166,20 +166,20 @@
         }
     </style>
 </head>
-<body>
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. --><body>
 
-    <div class="chat-container">
-        <div class="chat-header" id="botTitle">טוען את הבוט שלך...</div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">שלום! אני הבוט שנסרק מהאתר. שאל אותי כל דבר ואענה מתוך תוכן האתר עם חיוך! 😊</div>
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא chat-container. --><div class="chat-container">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא botTitle; מחלקות העיצוב הוא chat-header. --><div class="chat-header" id="botTitle">טוען את הבוט שלך...</div>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא chatMessages; מחלקות העיצוב הוא chat-messages. --><div class="chat-messages" id="chatMessages">
+            <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא message bot-message. --><div class="message bot-message">שלום! אני הבוט שנסרק מהאתר. שאל אותי כל דבר ואענה מתוך תוכן האתר עם חיוך! 😊</div>
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="הקלדי הודעה כאן...">
-            <button onclick="sendMessage()">שלח</button>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא chat-input-area. --><div class="chat-input-area">
+            <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא userInput; הסוג הוא text. --><input type="text" id="userInput" placeholder="הקלדי הודעה כאן...">
+            <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. --><button onclick="sendMessage()">שלח</button>
         </div>
     </div>
 
-    <script type="module">
+    <!-- תג script מחבר או מכיל JavaScript שמוסיף התנהגות לדף; src מצביע על קובץ, ו־defer/async משפיעים על מועד הטעינה. הסוג הוא module. --><script type="module">
         import { ApiService } from '../services/api-service.js';
 
         const urlParams = new URLSearchParams(window.location.search);

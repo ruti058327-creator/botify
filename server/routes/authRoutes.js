@@ -8,6 +8,7 @@ import profileImageUpload from '../middlewares/profileImageUpload.js';
 import validateRequest from '../middlewares/validateRequest.js';
 import { authSchemas, contactSchemas } from '../validation/schemas.js';
 
+// מפיק את בדיקות האימות וההרשאה מה-middleware המשותף.
 const { authenticateToken, requireAdmin } = __cjsImport0;
 
 // יוצרים נתב ייעודי לחשבונות, פרופיל ופניות תמיכה.

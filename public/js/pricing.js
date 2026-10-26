@@ -1,3 +1,4 @@
+// מייבאים שירות בקשות כדי לבדוק מול השרת מכסה ומעבר בין מסלולים.
 import { ApiService } from '../services/api-service.js';
 
 // מתרגמים מזהי מסלולים לשמות ידידותיים לצורך הודעות האישור.
@@ -39,8 +40,11 @@ function continueToPlan(planId, price, planName, returnToCreate, confirmedBotCou
   // בודקים אם המשתמש מחובר כדי לבחור בין תשלום מיידי להרשמה.
   const token = localStorage.getItem('token');
   if (token) {
+    // פרמטר required קובע לאיזה מסך חוזרים לאחר שדרוג שהתחיל בעקבות מכסה.
     const required = new URLSearchParams(window.location.search).get('required');
+    // יוצרים יעד חזרה ליצירת בוט או לניהול בוטי המזכירה, אם זה מקור המעבר.
     const returnTarget = returnToCreate ? 'create-bot' : required === 'secretary-bot' ? 'secretary-bots' : '';
+    // מוסיפים פרמטרים לכתובת התשלום רק כאשר יש יעד חזרה או אישור מחיקה.
     const returnParam = returnTarget ? `&return=${returnTarget}` : '';
     const deletionParam = confirmedBotCount ? `&confirmedBotCount=${confirmedBotCount}` : '';
     // משתמש מחובר ממשיך לעמוד התשלום עם מזהה המסלול והמחיר.
@@ -70,6 +74,7 @@ document.getElementById('confirm-plan-change').addEventListener('click', () => {
   const selection = pendingPlanSelection;
   pendingPlanSelection = null;
   planChangeDialog.close();
+  // ממשיכים רק אם נשמרה בחירה; סגירה ללא בחירה אינה מפעילה ניווט.
   if (selection) continueToPlan(...selection);
 });
 
@@ -96,6 +101,7 @@ planChangeDialog.addEventListener('close', () => {
 function choosePlan(planId, price, planName) {
   // מזהים התחברות וגם האם המשתמש הגיע בעקבות דרישה ליצור בוט.
   const token = localStorage.getItem('token');
+  // דף תמחור שנפתח בגלל מכסת יצירת בוט יחזיר משתמש למסך יצירת הבוט לאחר התשלום.
   const returnToCreate = new URLSearchParams(window.location.search).get('required') === 'bot';
 
   if (token) {
@@ -135,6 +141,7 @@ async function checkPlanChange(planId, price, planName, returnToCreate, currentP
       headers: { 'Authorization': `Bearer ${token || ''}` }
     });
     // משתמשים בתשובת המכסה רק כשהשרת אישר את הבקשה.
+    // שומרים נתוני מכסה רק בתשובת HTTP מוצלחת, אחרת משתמשים בהמשך בגיבוי המקומי.
     if (response.ok) quota = await response.json();
   } catch {
     // במקרה של תקלה בבדיקת המכסה ממשיכים עם מידע ברירת המחדל.
@@ -143,6 +150,7 @@ async function checkPlanChange(planId, price, planName, returnToCreate, currentP
 
   // מעדיפים את המסלול שהשרת מאשר; אחרת נשענים על המסלול המקומי.
   const activePlanId = planNames[quota?.planId] ? quota.planId : currentPlanId;
+  // בחירת אותו מסלול אינה נחשבת לשדרוג, ולכן מסבירים זאת בחלון ללא אפשרות תשלום.
   if (planNames[activePlanId] && activePlanId === planId) {
     // בחירה של אותו מסלול אינה דורשת תשלום; מציגים הסבר בלבד.
     planChangeTitle.textContent = 'את/ה כבר במסלול הזה';
@@ -157,19 +165,24 @@ async function checkPlanChange(planId, price, planName, returnToCreate, currentP
   // מחשבים אם המעבר משנה מסלול והאם הוא מחייב הסרת בוטים מעבר למכסה.
   const botsToDelete = quota?.botsToDelete || 0;
   const isPlanChange = Boolean(planNames[activePlanId] && activePlanId !== planId);
+  // נדרשת תיבת אישור כאשר זו החלפת מסלול או כשהשרת מצא בוטים מעבר למכסה.
   if (isPlanChange || botsToDelete > 0) {
     // בונים הודעת אישור בהתאם למעבר ולמחיקות שהשרת חישב.
     const nextPlanName = planNames[planId] || planName;
     const messages = [];
 
     if (isPlanChange) {
+      // במקרה של שינוי מסלול, מציגים את המסלול הקיים ואת זה שהמשתמש ביקש.
       messages.push(`האם את/ה בטוח/ה שברצונך לעבור מ-${planNames[activePlanId]} ל-${nextPlanName}?`);
     } else {
+      // במסלול חדש ללא שינוי קיים מסבירים שהפעלתו תתרחש לאחר התשלום.
       messages.push(`המסלול ${nextPlanName} יופעל לאחר אישור התשלום.`);
     }
     if (botsToDelete > 0) {
+      // מפרטים את המכסה ואת מספר הבוטים הישנים שיוסרו, כדי שהמשתמש ידע את השלכות האישור.
       messages.push(`המכסה במסלול היא ${quota.targetBotLimit} בוטים. ${botsToDelete} הבוטים הוותיקים ביותר יימחקו לצמיתות.`);
     }
+    // מוסיפים שאלת אישור לסיום ההודעה שמורכבת מהשלכות המעבר.
     messages.push('המשך לתשלום?');
 
     // מציגים את ההשלכות ושומרים את הפרטים עד שהמשתמש יאשר או יבטל.
@@ -187,5 +200,5 @@ async function checkPlanChange(planId, price, planName, returnToCreate, currentP
   continueToPlan(planId, price, planName, returnToCreate);
 }
 
-// חושפים פונקציה זו משום שכפתורי בחירת המסלול ב-HTML מפעילים אותה.
+// חושפים את פונקציית הבחירה כגלובלית כדי שכפתורי המסלול שב-HTML יוכלו להפעיל אותה.
 window.choosePlan = choosePlan;

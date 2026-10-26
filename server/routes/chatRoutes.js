@@ -23,24 +23,31 @@ router.get('/user-chats/:userId', validateRequest(chatSchemas.userId, 'params'),
 
 // מביא את הודעות השיחה בסדר כרונולוגי כדי לשחזר את רצף הדיאלוג.
 router.get('/messages/:chatId', validateRequest(chatSchemas.chatId, 'params'), async (req, res) => {
+  // מסננים לפי מזהה השיחה וממיינים מההודעה הראשונה לאחרונה.
   const messages = await Message.find({ chatId: req.params.chatId }).sort({ createdAt: 1 });
+  // מחזירים את כל הודעות השיחה לאחר שהשאילתה הושלמה.
   return res.json({ success: true, messages });
 });
 
 // מאפשר חיפוש הודעות לפי שם לקוח, ללא תווים שמרחיבים את ביטוי החיפוש.
 router.get('/admin/search', validateRequest(chatSchemas.adminSearch, 'query'), async (req, res) => {
+  // משתמשים רק בערך שעבר ניקוי ואימות מתוך query.
   const { clientName } = req.validatedQuery;
   const query = clientName
     // בריחה של תווים מיוחדים הופכת את החיפוש לטקסט מילולי ולא לביטוי רגולרי חופשי.
     ? { clientName: { $regex: clientName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' } }
     : {};
+  // שאילתה ללא שם מחזירה את כלל ההודעות; אחרת החיפוש אינו תלוי ברישיות.
   const messages = await Message.find(query).sort({ createdAt: -1 });
+  // מחזירים את התוצאות לממשק הניהול.
   return res.json({ success: true, messages });
 });
 
 // שומר הודעה חדשה לאחר שסכמת הקלט בדקה את המשתמש, השולח והתוכן.
 router.post('/message', validateRequest(chatSchemas.createMessage), async (req, res) => {
+  // יוצר מסמך חדש מתוך שדות הבקשה שאומתו ונורמלו.
   const message = await Message.create(req.body);
+  // מחזיר את הרשומה שנוצרה, כולל המזהה והתאריכים שהמסד הוסיף.
   return res.json({ success: true, message });
 });
 

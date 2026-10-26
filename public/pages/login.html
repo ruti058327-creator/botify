@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <script src="../js/session-manager.js"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Botify - התחברות</title>
-  <link rel="icon" type="image/png" href="../images/pic.png">
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/login.css">
-  <style>
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- דף הכניסה אוסף פרטי הזדהות ומאפשר לשלוח אותם למנגנון האימות. -->
+  <!-- הקובץ ../js/session-manager.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. מקור הקובץ הוא ../js/session-manager.js. --><script src="../js/session-manager.js"></script>
+  <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+  <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>Botify - התחברות</title>
+  <!-- הקישור למשאב ../images/pic.png מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. הסוג הוא image/png; כתובת היעד הוא ../images/pic.png. --><link rel="icon" type="image/png" href="../images/pic.png">
+  <!-- הקישור למשאב ../css/global.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/global.css. --><link rel="stylesheet" href="../css/global.css">
+  <!-- הקישור למשאב ../css/login.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/login.css. --><link rel="stylesheet" href="../css/login.css">
+  <!-- תג style מכיל כללי CSS לעיצוב הדף; הוא נפרד מתוכן ה־HTML ואין להוסיף בו הערות HTML. --><style>
     .login-wrapper {
       min-height: calc(100vh - 160px);
       display: flex;
@@ -104,86 +104,86 @@
     }
   </style>
 </head>
-<body>
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. --><body>
 
   <!-- סרגל ניווט עליון -->
-  <header>
-    <nav class="navbar">
-      <a href="../index.html" class="logo" title="חזרה לדף הבית">
-        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+  <!-- אזור header מציג תוכן פתיחה או כותרת של הדף/החלק. --><header>
+    <!-- אזור nav מרכז קישורי ניווט בין דפים או אזורים באתר. מחלקות העיצוב הוא navbar. --><nav class="navbar">
+      <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא logo; כתובת היעד הוא ../index.html. --><a href="../index.html" class="logo" title="חזרה לדף הבית">
+        <!-- התמונה img מציגה קובץ שמוגדר ב־src; alt מספק תיאור חלופי לקוראי מסך או כשהתמונה אינה נטענת. מחלקות העיצוב הוא logo-img; מקור הקובץ הוא ../images/pic2.png. --><img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
 
-      <ul class="nav-links">
-        <li><a href="../index.html">בית</a></li>
-        <li><a href="about.html">אודות</a></li>
-        <li><a href="pricing.html">מחירון</a></li>
-        <li><a href="contact.html">צור קשר</a></li>
+      <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא nav-links. --><ul class="nav-links">
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא ../index.html. --><a href="../index.html">בית</a></li>
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא about.html. --><a href="about.html">אודות</a></li>
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא pricing.html. --><a href="pricing.html">מחירון</a></li>
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא contact.html. --><a href="contact.html">צור קשר</a></li>
       </ul>
 
-      <div class="auth-buttons" id="nav-auth-container">
-        <a href="register.html" class="btn-primary">הרשמה</a>
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא nav-auth-container; מחלקות העיצוב הוא auth-buttons. --><div class="auth-buttons" id="nav-auth-container">
+        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-primary; כתובת היעד הוא register.html. --><a href="register.html" class="btn-primary">הרשמה</a>
       </div>
     </nav>
   </header>
 
   <!-- כרטיס התחברות -->
-  <main class="login-wrapper">
-    <div class="login-card">
-      <h2>התחברות ל-Botify</h2>
+  <!-- אזור main מכיל את התוכן המרכזי והייחודי של הדף. מחלקות העיצוב הוא login-wrapper. --><main class="login-wrapper">
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא login-card. --><div class="login-card">
+      <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. --><h2>התחברות ל-Botify</h2>
 
-      <div id="login-error" class="error-msg" role="alert" aria-live="polite"></div>
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא login-error; מחלקות העיצוב הוא error-msg; התפקיד הסמנטי הוא alert. --><div id="login-error" class="error-msg" role="alert" aria-live="polite"></div>
 
-      <form id="login-form">
-        <div class="form-group" id="group-username">
-          <input type="text" id="username" placeholder="שם משתמש / אימייל" aria-label="שם משתמש או אימייל" autocomplete="username" required>
+      <!-- הטופס form מאגד שדות ופקדי שליחה. action ו־method, אם קיימים, מגדירים יעד ואופן שליחה; לעיתים JavaScript מטפל בשליחה. המזהה הוא login-form. --><form id="login-form">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא group-username; מחלקות העיצוב הוא form-group. --><div class="form-group" id="group-username">
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא username; הסוג הוא text; תווית נגישה הוא שם משתמש או אימייל. --><input type="text" id="username" placeholder="שם משתמש / אימייל" aria-label="שם משתמש או אימייל" autocomplete="username" required>
         </div>
 
-        <div class="form-group" id="group-password">
-          <input type="password" id="password" placeholder="סיסמה" aria-label="סיסמה" autocomplete="current-password" required>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא group-password; מחלקות העיצוב הוא form-group. --><div class="form-group" id="group-password">
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא password; הסוג הוא password; תווית נגישה הוא סיסמה. --><input type="password" id="password" placeholder="סיסמה" aria-label="סיסמה" autocomplete="current-password" required>
         </div>
-        <a href="#password-reset" class="forgot-password" id="forgot-password-link">שכחת סיסמה?</a>
+        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. המזהה הוא forgot-password-link; מחלקות העיצוב הוא forgot-password; כתובת היעד הוא #password-reset. --><a href="#password-reset" class="forgot-password" id="forgot-password-link">שכחת סיסמה?</a>
 
         <!-- שדה קוד אימות שיופיע אוטומטית בשלב השני -->
-        <div class="form-group" id="group-otp" style="display: none;">
-          <input type="text" id="otpCode" placeholder="הכנס קוד אימות בן 6 ספרות" aria-label="קוד אימות בן 6 ספרות" inputmode="numeric" maxlength="6" disabled required style="text-align: center; font-size: 18px; letter-spacing: 4px;">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא group-otp; מחלקות העיצוב הוא form-group. --><div class="form-group" id="group-otp" style="display: none;">
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא otpCode; הסוג הוא text; תווית נגישה הוא קוד אימות בן 6 ספרות. --><input type="text" id="otpCode" placeholder="הכנס קוד אימות בן 6 ספרות" aria-label="קוד אימות בן 6 ספרות" inputmode="numeric" maxlength="6" disabled required style="text-align: center; font-size: 18px; letter-spacing: 4px;">
         </div>
 
-        <button type="submit" class="btn-primary btn-submit" id="btn-login">התחבר</button>
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא btn-login; מחלקות העיצוב הוא btn-primary btn-submit; הסוג הוא submit. --><button type="submit" class="btn-primary btn-submit" id="btn-login">התחבר</button>
       </form>
 
-      <form id="password-reset-form" class="reset-panel" style="display: none;" novalidate>
-        <h3>יצירת סיסמה חדשה</h3>
-        <p id="reset-description">אם שם המשתמש קיים, יישלח קוד לכתובת האימייל המשויכת לחשבון.</p>
-        <div class="form-group" id="reset-username-group">
-          <input type="text" id="reset-username" placeholder="שם משתמש" aria-label="שם משתמש לאיפוס סיסמה" autocomplete="username">
+      <!-- הטופס form מאגד שדות ופקדי שליחה. action ו־method, אם קיימים, מגדירים יעד ואופן שליחה; לעיתים JavaScript מטפל בשליחה. המזהה הוא password-reset-form; מחלקות העיצוב הוא reset-panel. --><form id="password-reset-form" class="reset-panel" style="display: none;" novalidate>
+        <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>יצירת סיסמה חדשה</h3>
+        <!-- האלמנט p מציג פסקה של טקסט רגיל. המזהה הוא reset-description. --><p id="reset-description">אם שם המשתמש קיים, יישלח קוד לכתובת האימייל המשויכת לחשבון.</p>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא reset-username-group; מחלקות העיצוב הוא form-group. --><div class="form-group" id="reset-username-group">
+          <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא reset-username; הסוג הוא text; תווית נגישה הוא שם משתמש לאיפוס סיסמה. --><input type="text" id="reset-username" placeholder="שם משתמש" aria-label="שם משתמש לאיפוס סיסמה" autocomplete="username">
         </div>
-        <div id="reset-confirmation-fields" style="display: none;">
-          <div class="form-group">
-            <input type="text" id="reset-code" placeholder="קוד אימות בן 6 ספרות" aria-label="קוד איפוס סיסמה" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא reset-confirmation-fields. --><div id="reset-confirmation-fields" style="display: none;">
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+            <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא reset-code; הסוג הוא text; תווית נגישה הוא קוד איפוס סיסמה. --><input type="text" id="reset-code" placeholder="קוד אימות בן 6 ספרות" aria-label="קוד איפוס סיסמה" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
           </div>
-          <div class="form-group">
-            <input type="password" id="new-password" placeholder="סיסמה חדשה" aria-label="סיסמה חדשה" minlength="8" maxlength="128" autocomplete="new-password">
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+            <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא new-password; הסוג הוא password; תווית נגישה הוא סיסמה חדשה. --><input type="password" id="new-password" placeholder="סיסמה חדשה" aria-label="סיסמה חדשה" minlength="8" maxlength="128" autocomplete="new-password">
           </div>
-          <div class="form-group">
-            <input type="password" id="confirm-password" placeholder="אימות סיסמה חדשה" aria-label="אימות סיסמה חדשה" minlength="8" maxlength="128" autocomplete="new-password">
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא form-group. --><div class="form-group">
+            <!-- השדה input אוסף ערך מהמשתמש; type קובע סוג שדה, name/id מזהים אותו, ו־required/placeholder עשויים להגדיר חובה או רמז. המזהה הוא confirm-password; הסוג הוא password; תווית נגישה הוא אימות סיסמה חדשה. --><input type="password" id="confirm-password" placeholder="אימות סיסמה חדשה" aria-label="אימות סיסמה חדשה" minlength="8" maxlength="128" autocomplete="new-password">
           </div>
         </div>
-        <button type="submit" class="btn-primary btn-submit" id="reset-submit">שליחת קוד</button>
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא reset-submit; מחלקות העיצוב הוא btn-primary btn-submit; הסוג הוא submit. --><button type="submit" class="btn-primary btn-submit" id="reset-submit">שליחת קוד</button>
       </form>
 
-      <div class="login-links">
-        <span>עדיין אין לך חשבון? <a href="register.html" id="register-link">הרשמה מהירה</a></span>
-        <a href="../index.html" class="back-home-link">➔ חזרה לדף הבית</a>
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא login-links. --><div class="login-links">
+        <span>עדיין אין לך חשבון? <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. המזהה הוא register-link; כתובת היעד הוא register.html. --><a href="register.html" id="register-link">הרשמה מהירה</a></span>
+        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא back-home-link; כתובת היעד הוא ../index.html. --><a href="../index.html" class="back-home-link">➔ חזרה לדף הבית</a>
       </div>
     </div>
   </main>
 
   <!-- פוטר -->
-  <footer>
-    <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+  <!-- אזור footer מציג מידע מסכם, קישורים או פרטי זכויות יוצרים בתחתית הדף/החלק. --><footer>
+    <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
   </footer>
 
-  <script type="module" src="../js/login.js"></script>
-  <script type="module" src="../js/navbar-auth.js"></script>
+  <!-- הקובץ ../js/login.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ../js/login.js. --><script type="module" src="../js/login.js"></script>
+  <!-- הקובץ ../js/navbar-auth.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ../js/navbar-auth.js. --><script type="module" src="../js/navbar-auth.js"></script>
 </body>
 </html>

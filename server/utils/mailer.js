@@ -7,11 +7,14 @@ import httpError from './httpError.js';
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
+    // מזהה החשבון משמש את ספק הדוא"ל כאמצעי ההתחברות.
     user: process.env.EMAIL_USER,
+    // הסיסמה היא סוד ספק הדוא"ל ואינה נכתבת לתוך הקוד.
     pass: process.env.EMAIL_PASS
   }
 });
 
+// שולחת הודעה לפי הפרטים שסופקו, ומאפשרת שם שולח ברירת מחדל.
 export async function sendEmail({ to, subject, html, text, fromName = 'Botify Security' }) {
   // מדווחים על שירות לא זמין במקום לנסות לשלוח עם פרטי התחברות חסרים.
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
@@ -20,6 +23,7 @@ export async function sendEmail({ to, subject, html, text, fromName = 'Botify Se
 
   // מעבירים לספק את הנמען, הכותרת וגוף הטקסט או ה-HTML כפי שסופקו.
   return transporter.sendMail({
+    // מציגים שם קריא יחד עם כתובת החשבון המורשה לשולח.
     from: `"${fromName}" <${process.env.EMAIL_USER}>`,
     to,
     subject,
@@ -28,4 +32,5 @@ export async function sendEmail({ to, subject, html, text, fromName = 'Botify Se
   });
 }
 
+// מייצא גם כאובייקט למודולים שמעדיפים ייבוא ברירת מחדל.
 export default { sendEmail };

@@ -2,179 +2,298 @@
    עיצוב ייעודי לעמוד אודות (about.css)
    ========================================== */
 
+/* מטרה: המכל המרכזי שמרכז ומגביל את תוכן עמוד האודות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-container {
+  /* max-width: מגביל את הרוחב ל-1100px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 1100px;
+  /* margin: יוצר מרווח אנכי 40px וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 40px auto;
+  /* padding: מוסיף ריווח פנימי 0 למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 0 20px;
+  /* flex: מאפשר לפריט לגדול ולמלא את המקום הפנוי בפריסת Flex. */
   flex: 1;
 }
 
+/* מטרה: אזור ההיכרות הראשי בעמוד האודות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-hero {
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-light. */
   background: var(--bg-light);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius-card). */
   border-radius: var(--radius-card);
+  /* padding: מוסיף ריווח פנימי 50px למעלה ולמטה ו-40px מימין ומשמאל. */
   padding: 50px 40px;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-card); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-card);
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* margin-bottom: מוסיף שוליים של 40px מתחת לרכיב. */
   margin-bottom: 40px;
 }
 
+/* מטרה: אודות אזור פתיחה כותרת ראשית. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-hero h1 {
+  /* font-size: קובע גודל טקסט 2.5rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.5rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
 }
 
+/* מטרה: אודות אזור פתיחה פסקה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-hero p {
+  /* font-size: קובע גודל טקסט 1.2rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.2rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* max-width: מגביל את הרוחב ל-750px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 750px;
+  /* margin: יוצר מרווח אנכי 0 וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 0 auto;
+  /* line-height: קובע גובה שורה 1.7 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.7;
 }
 
-/* סקציית סטטיסטיקות */
+/* מטרה: רשת כרטיסי הנתונים הסטטיסטיים. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .stats-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מתאים אוטומטית את מספר העמודות לרוחב הזמין; כל עמודה תהיה ברוחב מזערי 200px. */
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* gap: קובע מרווח של 20px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 20px;
+  /* margin-bottom: מוסיף שוליים של 40px מתחת לרכיב. */
   margin-bottom: 40px;
 }
 
+/* מטרה: כרטיס יחיד המציג נתון סטטיסטי. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .stat-card {
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-light. */
   background: var(--bg-light);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius). */
   border-radius: var(--radius);
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 25px. */
   padding: 25px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-card); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-card);
 }
 
+/* מטרה: המספר המוצג בכרטיס הנתון. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .stat-number {
+  /* font-size: קובע גודל טקסט 2.2rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2.2rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color);
+  /* margin-bottom: מוסיף שוליים של 5px מתחת לרכיב. */
   margin-bottom: 5px;
 }
 
+/* מטרה: תווית המסבירה את הנתון הסטטיסטי. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .stat-label {
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* font-weight: קובע משקל גופן 500, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 500;
 }
 
+/* מטרה: כותרת אזור תוכן בעמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .section-title {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* font-size: קובע גודל טקסט 1.8rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.8rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* margin-bottom: מוסיף שוליים של 30px מתחת לרכיב. */
   margin-bottom: 30px;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
 }
 
-/* ערכים ויתרונות */
+/* מטרה: רשת כרטיסי היתרונות בעמוד האודות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-features-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מתאים אוטומטית את מספר העמודות לרוחב הזמין; כל עמודה תהיה ברוחב מזערי 280px. */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* gap: קובע מרווח של 25px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 25px;
+  /* margin-bottom: מוסיף שוליים של 50px מתחת לרכיב. */
   margin-bottom: 50px;
 }
 
+/* מטרה: כרטיס המציג יתרון של השירות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-feature-card {
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-light. */
   background: var(--bg-light);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius). */
   border-radius: var(--radius);
+  /* padding: מוסיף ריווח פנימי 30px למעלה ולמטה ו-25px מימין ומשמאל. */
   padding: 30px 25px;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-card); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-card);
+  /* transition: מחליק שינוי במאפיינים var(--transition) במקום להציג קפיצה מיידית. */
   transition: var(--transition);
 }
 
+/* מטרה: אודות יתרון כרטיס בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-feature-card:hover {
+  /* transform: מזיז את הרכיב אנכית לפי translateY(-5px); ערך שלילי מעלה אותו. */
   transform: translateY(-5px);
+  /* box-shadow: מוסיף צל בערכים var(--shadow-hover); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-hover);
+  /* border-color: קובע את צבע המסגרת ל-var(--primary-color). */
   border-color: var(--primary-color);
 }
 
+/* מטרה: אודות יתרון כרטיס כותרת סעיף. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-feature-card h3 {
+  /* font-size: קובע גודל טקסט 1.3rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.3rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-dark. */
   color: var(--text-dark);
+  /* margin-bottom: מוסיף שוליים של 10px מתחת לרכיב. */
   margin-bottom: 10px;
 }
 
+/* מטרה: אודות יתרון כרטיס פסקה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .about-feature-card p {
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
+  /* line-height: קובע גובה שורה 1.6 ומסדיר את המרווח האנכי בין שורות. */
   line-height: 1.6;
 }
 
-/* סקציית חוות דעת לקוחות */
+/* מטרה: אזור המלצות הלקוחות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .testimonials-section {
+  /* margin-bottom: מוסיף שוליים של 50px מתחת לרכיב. */
   margin-bottom: 50px;
 }
 
+/* מטרה: רשת כרטיסי המלצות הלקוחות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .testimonials-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מתאים אוטומטית את מספר העמודות לרוחב הזמין; כל עמודה תהיה ברוחב מזערי 280px. */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* gap: קובע מרווח של 25px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 25px;
 }
 
+/* מטרה: כרטיס המלצת לקוח. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .testimonial-card {
+  /* background: ממלא את הרקע ב-משתנה הצבע --bg-light. */
   background: var(--bg-light);
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע var(--border-color). */
   border: 1px solid var(--border-color);
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius). */
   border-radius: var(--radius);
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 25px. */
   padding: 25px;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-card); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-card);
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
 }
 
+/* מטרה: נוסח המלצת הלקוח. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .testimonial-text {
+  /* font-style: מציג את הטקסט בסגנון italic. */
   font-style: italic;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
 }
 
+/* מטרה: שם כותב ההמלצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .testimonial-author {
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color);
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
 }
 
+/* מטרה: תפקיד כותב ההמלצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .testimonial-role {
+  /* font-size: קובע גודל טקסט 0.8rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.8rem;
+  /* color: צובע את הטקסט ב-משתנה הצבע --text-muted. */
   color: var(--text-muted);
 }
 
-/* הנעה לפעולה בתחתית */
+/* מטרה: תיבת הקריאה לפעולה בסוף העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .cta-box {
+  /* background: יוצר רקע מדורג לפי linear-gradient(135deg, var(--primary-color), var(--primary-hover)), כולל הזווית והצבעים שנקבעו. */
   background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  /* color: צובע את הטקסט ב-white. */
   color: white;
+  /* border-radius: מעגל את הפינות ברדיוס var(--radius-card). */
   border-radius: var(--radius-card);
+  /* padding: מוסיף ריווח פנימי 40px למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 40px 20px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* box-shadow: מוסיף צל בערכים var(--shadow-hover); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: var(--shadow-hover);
 }
 
+/* מטרה: קריאה לפעולה תיבה כותרת משנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .cta-box h2 {
+  /* font-size: קובע גודל טקסט 2rem ביחס לגודל הגופן הבסיסי. */
   font-size: 2rem;
+  /* margin-bottom: מוסיף שוליים של 10px מתחת לרכיב. */
   margin-bottom: 10px;
 }
 
+/* מטרה: קריאה לפעולה תיבה פסקה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .cta-box p {
+  /* font-size: קובע גודל טקסט 1.1rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.1rem;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
+  /* opacity: קובע אטימות 0.9; ערך קטן מ-1 מאפשר לרקע שמאחורי הרכיב להיראות. */
   opacity: 0.9;
 }
 
+/* מטרה: קריאה לפעולה תיבה כפתור משני. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .cta-box .btn-secondary {
+  /* background-color: צובע את הרקע ב-white. */
   background-color: white !important;
+  /* color: צובע את הטקסט ב-משתנה הצבע --primary-color. */
   color: var(--primary-color) !important;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* font-weight: קובע משקל גופן 700, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 700;
 }
 
+/* מטרה: קריאה לפעולה תיבה כפתור משני בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .cta-box .btn-secondary:hover {
+  /* background-color: צובע את הרקע ב-משתנה הצבע --secondary-color. */
   background-color: var(--secondary-color) !important;
 }

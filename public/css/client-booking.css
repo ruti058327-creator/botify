@@ -1,290 +1,493 @@
+/* מטרה: גוף העמוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 body {
+  /* font-family: בוחר בגופן Arial, sans-serif; הגופנים שאחריו משמשים חלופות אם הראשון אינו זמין. */
   font-family: Arial, sans-serif;
+  /* background-color: צובע את הרקע ב-#f1f5f9. */
   background-color: #f1f5f9;
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 20px. */
   padding: 20px;
 }
 
+/* מטרה: טופס הזמנת התור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .booking-container {
+  /* max-width: מגביל את הרוחב ל-850px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 850px;
+  /* margin: יוצר מרווח אנכי 30px וממרכז את המכל אופקית באמצעות שוליים אוטומטיים. */
   margin: 30px auto;
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 30px. */
   padding: 30px;
+  /* border-radius: מעגל את הפינות ברדיוס 16px. */
   border-radius: 16px;
+  /* box-shadow: מוסיף צל בערכים 0 10px 25px rgba(0, 0, 0, 0.08); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
+/* מטרה: כותרת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .header {
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
 }
 
+/* מטרה: כותרת העמוד באזור התוכן. הסלקטור מזהה רכיב זה בממשק. */
 .header h1 {
+  /* color: צובע את הטקסט ב-#0f172a. */
   color: #0f172a;
+  /* margin-bottom: מוסיף שוליים של 5px מתחת לרכיב. */
   margin-bottom: 5px;
+  /* font-size: קובע גודל טקסט 24px. */
   font-size: 24px;
 }
 
+/* מטרה: כותרת פסקה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .header p {
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
 }
 
+/* מטרה: טופס קבוצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .form-group {
+  /* margin-bottom: מוסיף שוליים של 18px מתחת לרכיב. */
   margin-bottom: 18px;
 }
 
+/* מטרה: תווית שדה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 label {
+  /* display: מציג את הרכיב כבלוק נפרד שתופס שורה. */
   display: block;
+  /* margin-bottom: מוסיף שוליים של 6px מתחת לרכיב. */
   margin-bottom: 6px;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
 }
 
+/* מטרה: שדה קלט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 input {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 12px. */
   padding: 12px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* box-sizing: כולל ריווח ומסגרת בתוך הרוחב והגובה, כך שהמידות נשארות צפויות. */
   box-sizing: border-box;
+  /* font-size: קובע גודל טקסט 15px. */
   font-size: 15px;
+  /* background-color: צובע את הרקע ב-#f8fafc. */
   background-color: #f8fafc;
 }
 
+/* מטרה: input:focus כאשר הרכיב במיקוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 input:focus {
+  /* outline: מסיר את קו המתאר ברירת המחדל. */
   outline: none;
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
+  /* background-color: צובע את הרקע ב-#ffffff. */
   background-color: #ffffff;
+  /* box-shadow: מוסיף צל בערכים 0 0 0 3px rgba(37, 99, 235, 0.15); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
+/* מטרה: ראשי כפתור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .primary-btn {
+  /* background: ממלא את הרקע ב-#2563eb. */
   background: #2563eb;
+  /* color: צובע את הטקסט ב-white. */
   color: white;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 14px. */
   padding: 14px;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* font-size: קובע גודל טקסט 16px. */
   font-size: 16px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* transition: מחליק שינוי במאפיינים background-color 0.2s במקום להציג קפיצה מיידית. */
   transition: background-color 0.2s;
+  /* margin-top: מוסיף שוליים של 10px מעל הרכיב. */
   margin-top: 10px;
 }
 
+/* מטרה: ראשי כפתור בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .primary-btn:hover:not(:disabled) {
+  /* background: ממלא את הרקע ב-#1d4ed8. */
   background: #1d4ed8;
 }
 
+/* מטרה: ראשי כפתור כאשר הרכיב מושבת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .primary-btn:disabled {
+  /* background: ממלא את הרקע ב-#94a3b8. */
   background: #94a3b8;
+  /* cursor: מציג סמן פעולה אסורה כדי לציין שהרכיב מושבת. */
   cursor: not-allowed;
 }
 
-/* שלב 2: גריד לוח שנה ושעות */
+/* מטרה: step2 כותרת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .step2-header {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* margin-bottom: מוסיף שוליים של 20px מתחת לרכיב. */
   margin-bottom: 20px;
 }
 
+/* מטרה: קישור חזרה לעמוד הקודם. הסלקטור מזהה רכיב זה בממשק. */
 .back-link {
+  /* background: ממלא את הרקע ב-none. */
   background: none;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* color: צובע את הטקסט ב-#2563eb. */
   color: #2563eb;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
 }
 
+/* מטרה: רשת בחירת תאריך ומשבצת שעה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-booking-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
-  grid-template-columns: 1fr 1fr; /* לוח שנה מימין, שעות משמאל בסדר כתיבה עברית */
+  /* grid-template-columns: מחלק את האזור לשתי עמודות שוות. */
+  grid-template-columns: 1fr 1fr;
+  /* gap: קובע מרווח של 30px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 30px;
+  /* background: ממלא את הרקע ב-#f8fafc. */
   background: #f8fafc;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 20px. */
   padding: 20px;
+  /* border-radius: מעגל את הפינות ברדיוס 12px. */
   border-radius: 12px;
+  /* direction: מגדיר ערך rtl, אשר קובע כיצד הרכיב מעוצב. */
   direction: rtl;
 }
 
-/* צד שמאל: שעות */
+/* מטרה: אזור בחירת השעות הזמינות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .slots-section {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
 }
 
+/* מטרה: רשת כפתורי השעות הזמינות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .slots-container {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מגדיר את עמודות הרשת לפי repeat(2, 1fr). */
   grid-template-columns: repeat(2, 1fr);
+  /* gap: קובע מרווח של 10px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 10px;
+  /* margin-top: מוסיף שוליים של 10px מעל הרכיב. */
   margin-top: 10px;
+  /* max-height: מגביל את הגובה ל-280px, כדי שתוכן ארוך יגלול או ייחתך לפי overflow. */
   max-height: 280px;
+  /* overflow-y: מוסיף פס גלילה אנכי רק כשהתוכן חורג. */
   overflow-y: auto;
 }
 
+/* מטרה: כפתור בחירת שעת תור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .time-slot-btn {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 10px. */
   padding: 10px;
+  /* border-radius: מעגל את הפינות ברדיוס 20px. */
   border-radius: 20px;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* color: צובע את הטקסט ב-#334155. */
   color: #334155;
+  /* transition: מחליק שינוי במאפיינים all 0.2s במקום להציג קפיצה מיידית. */
   transition: all 0.2s;
 }
 
+/* מטרה: שעה משבצת זמן כפתור בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .time-slot-btn:hover {
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
+  /* color: צובע את הטקסט ב-#2563eb. */
   color: #2563eb;
 }
 
+/* מטרה: שעה משבצת זמן כפתור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .time-slot-btn.active {
+  /* background: ממלא את הרקע ב-#2563eb. */
   background: #2563eb;
+  /* color: צובע את הטקסט ב-white. */
   color: white;
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
 }
 
+/* מטרה: טקסט עזר טקסט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .placeholder-text {
+  /* color: צובע את הטקסט ב-#94a3b8. */
   color: #94a3b8;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* grid-column: ממקם את הרכיב בעמודות span 2. */
   grid-column: span 2;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 20px. */
   padding: 20px;
 }
 
-/* צד ימין: לוח שנה */
+/* מטרה: אזור לוח הפגישות של הבוט. הסלקטור מזהה רכיב זה בממשק. */
 .calendar-section {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 15px. */
   padding: 15px;
+  /* border-radius: מעגל את הפינות ברדיוס 10px. */
   border-radius: 10px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
 }
 
+/* מטרה: לוח שנה ניווט. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-nav {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* margin-bottom: מוסיף שוליים של 5px מתחת לרכיב. */
   margin-bottom: 5px;
 }
 
+/* מטרה: כפתור מעבר לחודש אחר בלוח השנה. הסלקטור מזהה רכיב זה בממשק. */
 .calendar-nav button {
+  /* background: ממלא את הרקע ב-none. */
   background: none;
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* font-size: קובע גודל טקסט 16px. */
   font-size: 16px;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* color: צובע את הטקסט ב-#2563eb. */
   color: #2563eb;
 }
 
+/* מטרה: החודש והשנה המוצגים בלוח השנה. הסלקטור מזהה רכיב זה בממשק. */
 .calendar-nav h3 {
+  /* margin: יוצר שוליים חיצוניים של 0 מכל הצדדים. */
   margin: 0;
+  /* font-size: קובע גודל טקסט 16px. */
   font-size: 16px;
+  /* color: צובע את הטקסט ב-#1e293b. */
   color: #1e293b;
 }
 
+/* מטרה: לוח שנה רשת. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-grid {
+  /* display: מסדר את הילדים ברשת CSS של שורות ועמודות. */
   display: grid;
+  /* grid-template-columns: מחלק את לוח השנה לשבע עמודות שוות לימי השבוע. */
   grid-template-columns: repeat(7, 1fr);
+  /* gap: קובע מרווח של 5px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 5px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
 }
 
+/* מטרה: שם יום השבוע בכותרת לוח השנה. הסלקטור מזהה רכיב זה בממשק. */
 .day-name {
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* font-size: קובע גודל טקסט 12px. */
   font-size: 12px;
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b;
+  /* padding-bottom: מרחיק את התוכן מהמסגרת התחתונה ב-5px. */
   padding-bottom: 5px;
 }
 
+/* מטרה: תא של יום בלוח השנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-day {
+  /* background: ממלא את הרקע ב-#f8fafc. */
   background: #f8fafc;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
+  /* padding: מוסיף ריווח פנימי 8px למעלה ולמטה ו-2px מימין ומשמאל. */
   padding: 8px 2px;
+  /* cursor: מציג סמן יד כדי לרמוז שהרכיב לחיץ. */
   cursor: pointer;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* transition: מחליק שינוי במאפיינים 0.2s במקום להציג קפיצה מיידית. */
   transition: 0.2s;
 }
 
+/* מטרה: לוח שנה יום בעת מעבר עכבר. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-day:hover:not(.disabled):not(.empty) {
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
+  /* background: ממלא את הרקע ב-#eff6ff. */
   background: #eff6ff;
 }
 
+/* מטרה: יום שנבחר בלוח השנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-day.selected {
+  /* background: ממלא את הרקע ב-#2563eb. */
   background: #2563eb;
+  /* color: צובע את הטקסט ב-white. */
   color: white;
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
 }
 
+/* מטרה: יום שאינו זמין לבחירה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-day.disabled {
+  /* border-color: קובע את צבע המסגרת ל-#d1d5db. */
   border-color: #d1d5db;
+  /* color: צובע את הטקסט ב-#6b7280. */
   color: #6b7280;
+  /* cursor: מציג סמן פעולה אסורה כדי לציין שהרכיב מושבת. */
   cursor: not-allowed;
+  /* background: ממלא את הרקע ב-#e5e7eb. */
   background: #e5e7eb;
 }
 
+/* מטרה: תא ריק המשמש ליישור לוח השנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-day.empty {
+  /* border: מסיר את המסגרת כדי למנוע מסגרת ברירת מחדל. */
   border: none;
+  /* background: ממלא את הרקע ב-none. */
   background: none;
+  /* cursor: מציג סמן default. */
   cursor: default;
 }
 
+/* מטרה: מספר היום בלוח השנה הגרגוריאני. הסלקטור מזהה רכיב זה בממשק. */
 .greg-day {
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
 }
 
+/* מטרה: הודעת שגיאה באזור לוח השנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .calendar-error {
+  /* color: צובע את הטקסט ב-#991b1b. */
   color: #991b1b;
+  /* font-size: קובע גודל טקסט 14px. */
   font-size: 14px;
+  /* grid-column: מותח את הרכיב על פני כל עמודות הרשת. */
   grid-column: 1 / -1;
+  /* padding: מוסיף ריווח פנימי 20px למעלה ולמטה ו-0 מימין ומשמאל. */
   padding: 20px 0;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
 }
 
-/* תיבת אישור סופית */
+/* מטרה: אזור אישור פרטי ההזמנה לפני שליחה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .final-approval-box {
+  /* margin-top: מוסיף שוליים של 20px מעל הרכיב. */
   margin-top: 20px;
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* gap: קובע מרווח של 15px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 15px;
 }
 
+/* מטרה: שורת סיכום מחיר התור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .price-summary {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: מפזר פריטים בציר הראשי והצמדת הראשון והאחרון לקצוות. */
   justify-content: space-between;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* background: ממלא את הרקע ב-#eff6ff. */
   background: #eff6ff;
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-16px מימין ומשמאל. */
   padding: 12px 16px;
+  /* border-radius: מעגל את הפינות ברדיוס 8px. */
   border-radius: 8px;
+  /* color: צובע את הטקסט ב-#1e40af. */
   color: #1e40af;
+  /* font-size: קובע גודל טקסט 16px. */
   font-size: 16px;
 }
 
+/* מטרה: סכום המחיר המודגש בסיכום ההזמנה. הסלקטור מזהה רכיב זה בממשק. */
 .price-summary strong {
+  /* font-size: קובע גודל טקסט 20px. */
   font-size: 20px;
+  /* color: צובע את הטקסט ב-#1d4ed8. */
   color: #1d4ed8;
 }
 
+/* מטרה: אזור הודעה על תוצאת הזמנת התור. הסלקטור מזהה רכיב זה בממשק. */
 #bookingMessage {
+  /* margin-top: מוסיף שוליים של 15px מעל הרכיב. */
   margin-top: 15px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
+  /* font-weight: קובע משקל גופן bold, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: bold;
+  /* font-size: קובע גודל טקסט 15px. */
   font-size: 15px;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 10px. */
   padding: 10px;
+  /* border-radius: מעגל את הפינות ברדיוס 6px. */
   border-radius: 6px;
 }
 
+/* מטרה: האזור המזוהה #bookingMessage.success. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 #bookingMessage.success {
+  /* background-color: צובע את הרקע ב-#dcfce7. */
   background-color: #dcfce7;
+  /* color: צובע את הטקסט ב-#166534. */
   color: #166534;
 }
 
+/* מטרה: האזור המזוהה #bookingMessage.error. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 #bookingMessage.error {
+  /* background-color: צובע את הרקע ב-#fee2e2. */
   background-color: #fee2e2;
+  /* color: צובע את הטקסט ב-#991b1b. */
   color: #991b1b;
 }

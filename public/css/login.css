@@ -1,84 +1,141 @@
-/* ==========================================
-   Login Page Styling
-   ========================================== */
 
+
+/* מטרה: מעטפת מרכזית לעמוד ההתחברות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .login-wrapper {
+  /* min-height: מבטיח גובה מזערי של calc(100vh - 160px) גם כשהתוכן קצר. */
   min-height: calc(100vh - 160px);
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* justify-content: ממרכז את הפריטים בציר הראשי. */
   justify-content: center;
+  /* align-items: ממרכז פריטים בציר הניצב לציר הראשי. */
   align-items: center;
+  /* padding: מוסיף ריווח פנימי 30px למעלה ולמטה ו-20px מימין ומשמאל. */
   padding: 30px 20px;
 }
 
+/* מטרה: כרטיס טופס ההתחברות. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .login-card {
+  /* background: ממלא את הרקע ב-#ffffff. */
   background: #ffffff;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #e2e8f0. */
   border: 1px solid #e2e8f0;
+  /* border-radius: מעגל את הפינות ברדיוס 20px. */
   border-radius: 20px;
+  /* box-shadow: מוסיף צל בערכים 0 10px 30px rgba(0, 0, 0, 0.05); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  /* padding: מוסיף ריווח פנימי 40px למעלה ולמטה ו-35px מימין ומשמאל. */
   padding: 40px 35px;
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* max-width: מגביל את הרוחב ל-420px לכל היותר; תוכן רחב יותר נשאר בתוך מסגרת קריאה ואינו נמתח. */
   max-width: 420px;
+  /* text-align: מיישר טקסט למרכז בתוך הרכיב. */
   text-align: center;
 }
 
+/* מטרה: התחברות כרטיס כותרת משנה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .login-card h2 {
+  /* font-size: קובע גודל טקסט 1.8rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.8rem;
+  /* font-weight: קובע משקל גופן 800, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 800;
+  /* color: צובע את הטקסט ב-#0f172a. */
   color: #0f172a;
+  /* margin-bottom: מוסיף שוליים של 25px מתחת לרכיב. */
   margin-bottom: 25px;
 }
 
+/* מטרה: טופס קבוצה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .form-group {
+  /* margin-bottom: מוסיף שוליים של 18px מתחת לרכיב. */
   margin-bottom: 18px;
+  /* text-align: מיישר טקסט לימין בתוך הרכיב. */
   text-align: right;
 }
 
+/* מטרה: שדה להזנת ערך בטופס. הסלקטור מזהה רכיב זה בממשק. */
 .form-group input {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מוסיף ריווח פנימי 12px למעלה ולמטה ו-14px מימין ומשמאל. */
   padding: 12px 14px;
+  /* border-radius: מעגל את הפינות ברדיוס 10px. */
   border-radius: 10px;
+  /* border: מצייר מסגרת בעובי 1px, בסגנון solid ובצבע #cbd5e1. */
   border: 1px solid #cbd5e1;
+  /* font-size: קובע גודל טקסט 0.95rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.95rem;
+  /* outline: מסיר את קו המתאר ברירת המחדל. */
   outline: none;
+  /* transition: מחליק שינוי במאפיינים border-color 0.2s ease, box-shadow 0.2s ease במקום להציג קפיצה מיידית. */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* מטרה: טופס קבוצה input:focus כאשר הרכיב במיקוד. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .form-group input:focus {
+  /* border-color: קובע את צבע המסגרת ל-#2563eb. */
   border-color: #2563eb;
+  /* box-shadow: מוסיף צל בערכים 0 0 0 3px rgba(37, 99, 235, 0.12); הטשטוש והשקיפות יוצרים עומק בלי לשנות את הפריסה. */
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
+/* מטרה: כפתור שליחה. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .btn-submit {
+  /* width: מותח את הרכיב לרוחב המלא של המכל ההורי. */
   width: 100%;
+  /* padding: מרחיק את התוכן מהמסגרת בריווח פנימי של 12px. */
   padding: 12px;
+  /* font-size: קובע גודל טקסט 1.05rem ביחס לגודל הגופן הבסיסי. */
   font-size: 1.05rem;
+  /* margin-top: מוסיף שוליים של 10px מעל הרכיב. */
   margin-top: 10px;
+  /* margin-bottom: מוסיף שוליים של 20px מתחת לרכיב. */
   margin-bottom: 20px;
 }
 
+/* מטרה: התחברות links. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .login-links {
+  /* display: מסדר את הילדים בפריסת Flex לשליטה בכיוון, ביישור ובמרווח ביניהם. */
   display: flex;
+  /* flex-direction: מסדר את הפריטים בטור מלמעלה למטה. */
   flex-direction: column;
+  /* gap: קובע מרווח של 10px בין פריטי הפריסה, בלי להוסיף שוליים לכל פריט. */
   gap: 10px;
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* border-top: מצייר מסגרת עליונה בערכים 1px solid #f1f5f9. */
   border-top: 1px solid #f1f5f9;
+  /* padding-top: מרחיק את התוכן מהמסגרת העליונה ב-18px. */
   padding-top: 18px;
 }
 
+/* מטרה: התחברות links קישור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .login-links a {
+  /* color: צובע את הטקסט ב-#2563eb. */
   color: #2563eb;
+  /* text-decoration: מסיר עיטור ברירת מחדל, כגון קו תחתון של קישור. */
   text-decoration: none;
+  /* font-weight: קובע משקל גופן 600, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 600;
 }
 
+/* מטרה: חזרה דף הבית קישור. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .back-home-link {
+  /* color: צובע את הטקסט ב-#64748b. */
   color: #64748b !important;
+  /* font-weight: קובע משקל גופן 500 !important, ומדגיש את הטקסט בהתאם לערך. */
   font-weight: 500 !important;
 }
 
+/* מטרה: שגיאה msg. הסלקטור בוחר רכיב בעל תפקיד זה בממשק. */
 .error-msg {
+  /* color: צובע את הטקסט ב-#ef4444. */
   color: #ef4444;
+  /* font-size: קובע גודל טקסט 0.9rem ביחס לגודל הגופן הבסיסי. */
   font-size: 0.9rem;
+  /* margin-bottom: מוסיף שוליים של 15px מתחת לרכיב. */
   margin-bottom: 15px;
+  /* display: מסתיר את הרכיב ואינו משאיר לו מקום בפריסה. */
   display: none;
 }

@@ -187,48 +187,69 @@ export const chatSchemas = {
   }).unknown(true)
 };
 
+// מזהה בוט המזכירה מכיל רק אותיות לטיניות, ספרות ומקפים ונשמר ללא רווחים.
 const botUrlKey = Joi.string().trim().pattern(/^[a-zA-Z0-9-]+$/).min(1).max(100);
+// תאריך נדרש בפורמט ISO; הבדיקה הנוספת שוללת תאריכים לא קיימים כמו 31 בפברואר.
 const dateString = Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/).custom((value, helpers) => {
+  // מפרקים את השנה, החודש והיום כדי לבנות תאריך להשוואה.
   const [year, month, day] = value.split('-').map(Number);
+  // שנים קצרות נדחות כדי למנוע פרשנות לא צפויה של Date.
   if (year < 100) return helpers.error('date.invalid');
+  // UTC מונע מהבדיקה להיות תלויה באזור הזמן המקומי של השרת.
   const date = new Date(Date.UTC(year, month - 1, day));
+  // אם המרה חזרה שונה מהמקור, התאריך אינו תקין בלוח השנה.
   if (date.toISOString().slice(0, 10) !== value) return helpers.error('date.invalid');
+  // משאירים את המחרוזת המקורית לאחר שעברה את בדיקות התאריך.
   return value;
 }).messages({
   'string.pattern.base': 'יש להזין תאריך בפורמט YYYY-MM-DD',
   'date.invalid': 'יש להזין תאריך לועזי תקין'
 });
+// זמן חייב להיות בפורמט 24 שעות HH:MM, עם שעה ודקה בתוך הטווח האפשרי.
 const timeString = Joi.string().pattern(/^([01]\d|2[0-3]):[0-5]\d$/);
+// כללים משותפים לשדות הגדרות המזכירה כדי לשמור התנהגות אחידה ביצירה ובעדכון.
 const secretarySettings = {
+  // יום החופש הוא אחד מימי השבוע; שבת מנוהלת בנפרד כחג.
   dayOff: Joi.string().valid('ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי').messages({
     'any.only': 'יש לבחור יום חופש תקין'
   }),
+  // שעות פתיחה וסגירה חייבות לעמוד בתבנית השעה שנקבעה.
   openTime: timeString.messages({ 'string.pattern.base': 'יש להזין שעת פתיחה תקינה' }),
   closeTime: timeString.messages({ 'string.pattern.base': 'יש להזין שעת סגירה תקינה' }),
+  // מחיר יכול להיות אפס או מספר חיובי.
   defaultPrice: Joi.number().min(0).messages({ 'number.min': 'המחיר חייב להיות אפס או יותר' }),
+  // משך פגישה נמדד בדקות ונדרש להיות מספר שלם שאינו קצר מחמש דקות.
   appointmentDurationMinutes: Joi.number().integer().min(5).messages({
     'number.base': 'משך התור חייב להיות מספר שלם',
     'number.min': 'משך התור חייב להיות לפחות 5 דקות'
   }),
+  // גם ההפסקה בין תורים היא מספר שלם של דקות, ומותר לה להיות אפס.
   breakDurationMinutes: Joi.number().integer().min(0).messages({
     'number.base': 'משך ההפסקה חייב להיות מספר שלם',
     'number.min': 'משך ההפסקה אינו יכול להיות שלילי'
   })
 };
+// מוסיף לכל סכמת שעות בדיקה ששעת הסגירה מאוחרת משעת הפתיחה.
 const withValidSecretaryHours = schema => schema.custom((value, helpers) => {
+  // מבצעים את בדיקת הסדר רק כאשר שתי השעות נמסרו ונבדקו.
   if (value.openTime && value.closeTime && value.openTime >= value.closeTime) {
     return helpers.error('settings.timeRange');
   }
+  // מחזירים את הערכים המקוריים כדי להמשיך ולבצע את שאר בדיקות Joi.
   return value;
 }).messages({
   'settings.timeRange': 'שעת הסגירה חייבת להיות מאוחרת משעת הפתיחה'
 });
 
+// סכמות הנתיבים של המזכירה כוללות קלט ציבורי, קביעת תור וניהול העסק.
 export const secretarySchemas = {
+  // בדיקת מזהה בוט בנתיב לפני גישה למסמך לפי מפתח זה.
   botParams: Joi.object({ botUrlKey: botUrlKey.required() }).unknown(true),
+  // אסימון אישור הוא מחרוזת הקסדצימלית באורך קבוע שנוצרה בשרת.
   tokenParams: Joi.object({
     token: Joi.string().hex().length(40).required()
   }).unknown(true),
+  // בהקמה נדרשים יום ושעות, בעוד מחיר ומשך מקבלים ערכי ברירת מחדל.
   setup: withValidSecretaryHours(Joi.object({
     botUrlKey: botUrlKey.required(),
     ...secretarySettings,
@@ -239,6 +260,7 @@ export const secretarySchemas = {
     appointmentDurationMinutes: secretarySettings.appointmentDurationMinutes.default(30),
     breakDurationMinutes: secretarySettings.breakDurationMinutes.default(10)
   }).unknown(true)),
+  // בעדכון ניתן לשלוח כל תת-קבוצה לא ריקה של הגדרות.
   settings: withValidSecretaryHours(Joi.object({
     botUrlKey: botUrlKey.optional(),
     ...secretarySettings
@@ -251,6 +273,7 @@ export const secretarySchemas = {
     'appointmentDurationMinutes',
     'breakDurationMinutes'
   ).unknown(true)),
+  // הזמנת תור דורשת פרטי קשר ותאריך/שעה תקינים; מספר הזהות אופציונלי.
   booking: Joi.object({
     clientName: Joi.string().trim().min(1).max(150).required(),
     phone: Joi.string().trim().min(1).max(30).required(),
@@ -261,15 +284,19 @@ export const secretarySchemas = {
       'string.pattern.base': 'מספר תעודת הזהות חייב להכיל 9 ספרות'
     })
   }).unknown(true),
+  // בדיקת יום בודד מקבלת תאריך מחייב בפורמט ISO תקין.
   dateQuery: Joi.object({ date: dateString.required() }).unknown(true),
+  // לוח חודשי דורש שנה וחודש בתחומים המספריים האפשריים.
   calendarQuery: Joi.object({
     year: Joi.number().integer().min(100).max(9999).required(),
     month: Joi.number().integer().min(1).max(12).required()
   }).unknown(true),
+  // סינון לפי שנה וחודש אפשרי רק כאשר שני הערכים נשלחים יחד.
   appointmentQuery: Joi.object({
     year: Joi.number().integer().min(100).max(9999),
     month: Joi.number().integer().min(1).max(12)
   }).with('year', 'month').with('month', 'year').unknown(true),
+  // בקשת חופשה דורשת תאריך והודעה קצרה מספיק לשליחה ללקוחות.
   emergencyVacation: Joi.object({
     vacationDate: dateString.required(),
     customMessage: Joi.string().trim().min(1).max(1000).required().messages({
@@ -277,7 +304,9 @@ export const secretarySchemas = {
       'string.max': 'ההודעה יכולה להכיל עד 1000 תווים'
     })
   }).unknown(true),
+  // פרמטר הזמן משמש להמרה לדקות.
   timeQuery: Joi.object({ time: timeString.required() }).unknown(true),
+  // מספר הדקות חייב להיות בטווח של יום אחד, מאפס ועד 23:59.
   minutesQuery: Joi.object({
     minutes: Joi.number().integer().min(0).max(1439).required()
   }).unknown(true)

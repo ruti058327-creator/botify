@@ -1,125 +1,125 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Botify - מחירון ומסלולים</title>
+<html lang="he" dir="rtl"><!-- אלמנט השורש מכיל את כל מסמך ה־HTML; lang מציין את שפת התוכן ו־dir קובע את כיווניות הכתיבה. -->
+<!-- האזור head מכיל הגדרות מסמך, כותרת וקישורים לקובצי עיצוב או סקריפטים; הוא אינו מוצג כתוכן הדף. --><head><!-- דף המחירים משווה בין תוכניות השירות ומכוון לבחירת תוכנית מתאימה. -->
+  <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. --><meta charset="UTF-8">
+  <!-- תג meta מספק הגדרות מסמך לדפדפן; charset מגדיר קידוד תווים ו־viewport תומך בפריסה מותאמת למסכים שונים. שם השדה הוא viewport. --><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- הכותרת title מופיעה בלשונית הדפדפן ומשמשת גם לזיהוי הדף בתוצאות חיפוש. --><title>Botify - מחירון ומסלולים</title>
   
-  <link rel="icon" type="image/png" href="../images/pic.png">
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/pricing.css">
-  <script src="../js/session-manager.js"></script>
+  <!-- הקישור למשאב ../images/pic.png מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. הסוג הוא image/png; כתובת היעד הוא ../images/pic.png. --><link rel="icon" type="image/png" href="../images/pic.png">
+  <!-- הקישור למשאב ../css/global.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/global.css. --><link rel="stylesheet" href="../css/global.css">
+  <!-- הקישור למשאב ../css/pricing.css מחבר עיצוב, סמל אתר או משאב מסמך לפי rel. כתובת היעד הוא ../css/pricing.css. --><link rel="stylesheet" href="../css/pricing.css">
+  <!-- הקובץ ../js/session-manager.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. מקור הקובץ הוא ../js/session-manager.js. --><script src="../js/session-manager.js"></script>
 </head>
-<body>
+<!-- האזור body מכיל את התוכן והפקדים שמוצגים למשתמש בדף. --><body>
 
-  <header>
-    <nav class="navbar">
-      <a href="../index.html" class="logo" title="Botify - חזרה לדף הבית">
-        <img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
+  <!-- אזור header מציג תוכן פתיחה או כותרת של הדף/החלק. --><header>
+    <!-- אזור nav מרכז קישורי ניווט בין דפים או אזורים באתר. מחלקות העיצוב הוא navbar. --><nav class="navbar">
+      <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא logo; כתובת היעד הוא ../index.html. --><a href="../index.html" class="logo" title="Botify - חזרה לדף הבית">
+        <!-- התמונה img מציגה קובץ שמוגדר ב־src; alt מספק תיאור חלופי לקוראי מסך או כשהתמונה אינה נטענת. מחלקות העיצוב הוא logo-img; מקור הקובץ הוא ../images/pic2.png. --><img src="../images/pic2.png" alt="Botify - בינה שמבינה" class="logo-img">
       </a>
-      <ul class="nav-links">
-        <li><a href="../index.html">בית</a></li>
-        <li><a href="about.html">אודות</a></li>
-        <li><a href="pricing.html" class="active">מחירון</a></li>
-        <li><a href="contact.html">צור קשר</a></li>
+      <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא nav-links. --><ul class="nav-links">
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא ../index.html. --><a href="../index.html">בית</a></li>
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא about.html. --><a href="about.html">אודות</a></li>
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא active; כתובת היעד הוא pricing.html. --><a href="pricing.html" class="active">מחירון</a></li>
+        <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא contact.html. --><a href="contact.html">צור קשר</a></li>
       </ul>
       <!-- הוספנו את ה-id החסר -->
-      <div class="auth-buttons" id="nav-auth-container">
-        <a href="login.html" class="btn-secondary">התחברות</a>
-        <a href="register.html" class="btn-primary">הרשמה</a>
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. המזהה הוא nav-auth-container; מחלקות העיצוב הוא auth-buttons. --><div class="auth-buttons" id="nav-auth-container">
+        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-secondary; כתובת היעד הוא login.html. --><a href="login.html" class="btn-secondary">התחברות</a>
+        <!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. מחלקות העיצוב הוא btn-primary; כתובת היעד הוא register.html. --><a href="register.html" class="btn-primary">הרשמה</a>
       </div>
     </nav>
   </header>
 
-  <main class="pricing-container">
-    <div class="pricing-header">
-      <h1>בחרו את התוכנית המושלמת לעסק שלכם</h1>
-      <p>שדרגו את שירות הלקוחות והמכירות בעזרת בוטים חכמים בהתאמה אישית</p>
+  <!-- אזור main מכיל את התוכן המרכזי והייחודי של הדף. מחלקות העיצוב הוא pricing-container. --><main class="pricing-container">
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-header. --><div class="pricing-header">
+      <!-- כותרת h1 מציינת את הנושא הראשי של הדף; משתמשים בדרך כלל בכותרת ראשית אחת. --><h1>בחרו את התוכנית המושלמת לעסק שלכם</h1>
+      <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>שדרגו את שירות הלקוחות והמכירות בעזרת בוטים חכמים בהתאמה אישית</p>
     </div>
 
-    <div class="pricing-grid">
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-grid. --><div class="pricing-grid">
 
-      <div class="pricing-card" data-plan="starter">
-        <div class="card-header">
-          <h3>מסלול Starter בתשלום</h3>
-          <p class="desc">מתאים לעסקים קטנים בתחילת הדרך</p>
-          <div class="price">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card. --><div class="pricing-card" data-plan="starter">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא card-header. --><div class="card-header">
+          <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>מסלול Starter בתשלום</h3>
+          <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">מתאים לעסקים קטנים בתחילת הדרך</p>
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא price. --><div class="price">
             <span class="currency">₪</span>
             <span class="amount">49</span>
             <span class="period">/ חודש</span>
           </div>
         </div>
-        <ul class="features-list">
-          <li>✓ עד 2 בוטים פעילים (כולל הבוט החינמי)</li>
-          <li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
-          <li>✓ הנחיות מותאמות לכל בוט</li>
-          <li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
+        <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא features-list. --><ul class="features-list">
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ עד 2 בוטים פעילים (כולל הבוט החינמי)</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ הנחיות מותאמות לכל בוט</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
         </ul>
-        <button class="btn-select-plan btn-secondary" onclick="choosePlan('starter', 49, 'Starter בתשלום')">
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. מחלקות העיצוב הוא btn-select-plan btn-secondary. --><button class="btn-select-plan btn-secondary" onclick="choosePlan('starter', 49, 'Starter בתשלום')">
           בחירת מסלול
         </button>
       </div>
 
-      <div class="pricing-card popular" data-plan="pro">
-        <div class="badge-popular">הכי פופולרי 🔥</div>
-        <div class="card-header">
-          <h3>בוט מקצועי (Pro)</h3>
-          <p class="desc">לעסקים בצמיחה שרוצים לאסוף לידים</p>
-          <div class="price">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card popular. --><div class="pricing-card popular" data-plan="pro">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא badge-popular. --><div class="badge-popular">הכי פופולרי 🔥</div>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא card-header. --><div class="card-header">
+          <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>בוט מקצועי (Pro)</h3>
+          <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">לעסקים בצמיחה שרוצים לאסוף לידים</p>
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא price. --><div class="price">
             <span class="currency">₪</span>
             <span class="amount">149</span>
             <span class="period">/ חודש</span>
           </div>
         </div>
-        <ul class="features-list">
-          <li>✓ עד 3 בוטים פעילים</li>
-          <li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
-          <li>✓ הנחיות מותאמות לכל בוט</li>
-          <li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
+        <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא features-list. --><ul class="features-list">
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ עד 3 בוטים פעילים</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ הנחיות מותאמות לכל בוט</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
         </ul>
-        <button class="btn-select-plan btn-primary" onclick="choosePlan('pro', 149, 'בוט מקצועי')">
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. מחלקות העיצוב הוא btn-select-plan btn-primary. --><button class="btn-select-plan btn-primary" onclick="choosePlan('pro', 149, 'בוט מקצועי')">
           בחירת מסלול
         </button>
       </div>
 
-      <div class="pricing-card" data-plan="business">
-        <div class="card-header">
-          <h3>בוט עסקי (Business)</h3>
-          <p class="desc">מתאים לחברות ולחנויות דיגיטליות</p>
-          <div class="price">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card. --><div class="pricing-card" data-plan="business">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא card-header. --><div class="card-header">
+          <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>בוט עסקי (Business)</h3>
+          <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">מתאים לחברות ולחנויות דיגיטליות</p>
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא price. --><div class="price">
             <span class="currency">₪</span>
             <span class="amount">299</span>
             <span class="period">/ חודש</span>
           </div>
         </div>
-        <ul class="features-list">
-          <li>✓ עד 10 בוטים פעילים</li>
-          <li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
-          <li>✓ הנחיות מותאמות לכל בוט</li>
-          <li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
+        <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא features-list. --><ul class="features-list">
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ עד 10 בוטים פעילים</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ הנחיות מותאמות לכל בוט</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
         </ul>
-        <button class="btn-select-plan btn-secondary" onclick="choosePlan('business', 299, 'בוט עסקי')">
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. מחלקות העיצוב הוא btn-select-plan btn-secondary. --><button class="btn-select-plan btn-secondary" onclick="choosePlan('business', 299, 'בוט עסקי')">
           בחירת מסלול
         </button>
       </div>
 
-      <div class="pricing-card" data-plan="enterprise">
-        <div class="card-header">
-          <h3>בוט ארגוני (Enterprise)</h3>
-          <p class="desc">פתרון בהתאמה אישית מלאה לארגונים</p>
-          <div class="price">
+      <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא pricing-card. --><div class="pricing-card" data-plan="enterprise">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא card-header. --><div class="card-header">
+          <!-- כותרת h3 מציגה תת־נושא בתוך אזור או פרק. --><h3>בוט ארגוני (Enterprise)</h3>
+          <!-- האלמנט p מציג פסקה של טקסט רגיל. מחלקות העיצוב הוא desc. --><p class="desc">פתרון בהתאמה אישית מלאה לארגונים</p>
+          <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא price. --><div class="price">
             <span class="currency">₪</span>
             <span class="amount">599</span>
             <span class="period">/ חודש</span>
           </div>
         </div>
-        <ul class="features-list">
-          <li>✓ מספר בוטים ללא הגבלה</li>
-          <li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
-          <li>✓ הנחיות מותאמות לכל בוט</li>
-          <li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
+        <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא features-list. --><ul class="features-list">
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ מספר בוטים ללא הגבלה</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ סריקת אתר ותשובות על בסיס התוכן</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ הנחיות מותאמות לכל בוט</li>
+          <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li>✓ ניהול ועריכת הבוטים מהאזור האישי</li>
         </ul>
-        <button class="btn-select-plan btn-secondary" onclick="choosePlan('enterprise', 599, 'בוט ארגוני')">
+        <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. מחלקות העיצוב הוא btn-select-plan btn-secondary. --><button class="btn-select-plan btn-secondary" onclick="choosePlan('enterprise', 599, 'בוט ארגוני')">
           בחירת מסלול
         </button>
       </div>
@@ -128,28 +128,28 @@
   </main>
 
   <dialog class="plan-change-dialog" id="plan-change-dialog" aria-labelledby="plan-change-title" aria-describedby="plan-change-message">
-    <h2 id="plan-change-title">אישור החלפת מסלול</h2>
-    <p id="plan-change-message"></p>
-    <div class="plan-dialog-actions">
-      <button type="button" class="plan-dialog-cancel" id="cancel-plan-change">ביטול</button>
-      <button type="button" class="plan-dialog-confirm" id="confirm-plan-change">המשך לתשלום</button>
+    <!-- כותרת h2 מציגה נושא מרכזי בתוך הדף ומסייעת לבנות היררכיית תוכן. המזהה הוא plan-change-title. --><h2 id="plan-change-title">אישור החלפת מסלול</h2>
+    <!-- האלמנט p מציג פסקה של טקסט רגיל. המזהה הוא plan-change-message. --><p id="plan-change-message"></p>
+    <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא plan-dialog-actions. --><div class="plan-dialog-actions">
+      <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא cancel-plan-change; מחלקות העיצוב הוא plan-dialog-cancel; הסוג הוא button. --><button type="button" class="plan-dialog-cancel" id="cancel-plan-change">ביטול</button>
+      <!-- הכפתור button מפעיל פעולה או שולח טופס; type, id ו־class עשויים לקבוע את אופן הפעולה והעיצוב. המזהה הוא confirm-plan-change; מחלקות העיצוב הוא plan-dialog-confirm; הסוג הוא button. --><button type="button" class="plan-dialog-confirm" id="confirm-plan-change">המשך לתשלום</button>
     </div>
   </dialog>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <ul class="footer-links">
-                <li><a href="/terms.html">תנאי שימוש</a></li>
-                <li><a href="/privacy.html">מדיניות פרטיות</a></li>
-                <li><a href="/accessibility.html">הצהרת נגישות</a></li>
+    <!-- אזור footer מציג מידע מסכם, קישורים או פרטי זכויות יוצרים בתחתית הדף/החלק. מחלקות העיצוב הוא site-footer. --><footer class="site-footer">
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא footer-container. --><div class="footer-container">
+            <!-- הרשימה ul מציגה פריטים ללא סדר מחייב. מחלקות העיצוב הוא footer-links. --><ul class="footer-links">
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא /terms.html. --><a href="/terms.html">תנאי שימוש</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא /privacy.html. --><a href="/privacy.html">מדיניות פרטיות</a></li>
+                <!-- הפריט li הוא פריט יחיד בתוך רשימה. --><li><!-- הקישור a מוביל לכתובת שב־href או מפעיל ניווט; הטקסט שבתוכו מתאר למשתמש את יעד הקישור. כתובת היעד הוא /accessibility.html. --><a href="/accessibility.html">הצהרת נגישות</a></li>
             </ul>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
+        <!-- האלמנט div הוא מכל כללי לארגון תוכן; class משמש בדרך כלל לעיצוב משותף ו־id מזהה רכיב יחיד עבור CSS או JavaScript. מחלקות העיצוב הוא footer-bottom. --><div class="footer-bottom">
+            <!-- האלמנט p מציג פסקה של טקסט רגיל. --><p>&copy; 2026 Botify. כל הזכויות שמורות.</p>
         </div>
     </footer>
 
-  <script type="module" src="../js/pricing.js"></script>
-  <script type="module" src="../js/navbar-auth.js"></script>
+  <!-- הקובץ ../js/pricing.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ../js/pricing.js. --><script type="module" src="../js/pricing.js"></script>
+  <!-- הקובץ ../js/navbar-auth.js מחבר JavaScript לדף; הקוד שבו מוסיף את התנהגות הדף. הסוג הוא module; מקור הקובץ הוא ../js/navbar-auth.js. --><script type="module" src="../js/navbar-auth.js"></script>
 </body>
 </html>

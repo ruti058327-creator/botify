@@ -19,6 +19,7 @@ export default function errorHandler(error, req, res, next) {
       ? 409
       : error.statusCode
         || (error.name === 'SyntaxError' ? 400 : 500);
+  // מתרגם פרטי שגיאה פנימיים להודעה ציבורית ברורה בלי לחשוף מידע בשגיאות שרת.
   const message = error.code === 'LIMIT_FILE_SIZE'
     ? 'הקובץ גדול מדי (מקסימום 5MB)'
     : error.code === 11000

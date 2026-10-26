@@ -321,45 +321,58 @@ async function loadOwnedBots() {
         }
 
         // מציגים גם את בוטי המזכירה ברשימת הבוטים הפעילים באזור האישי.
+        // מוסיפים בנפרד את בוטי המזכירה, שאינם נכללים ברשימת הבוטים הרגילים.
         for (const bot of secretaryData.bots || []) {
+            // כל בוט מקבל שורה עצמאית עם שם הבוט ופעולות הניהול שלו.
             const row = document.createElement('div');
             row.className = 'owned-bot-row';
 
+            // מציגים את המפתח הציבורי של בוט המזכירה בכותרת השורה.
             const title = document.createElement('strong');
             title.className = 'owned-bot-title';
             title.textContent = `בוט מזכירה: ${bot.botUrlKey}`;
 
+            // מרכזים קישור עריכה וכפתור מחיקה באזור פעולות אחד.
             const actions = document.createElement('div');
             actions.className = 'owned-bot-actions';
 
+            // קישור העריכה פותח את הגדרת בוט המזכירה לפי המפתח שלו.
             const editLink = document.createElement('a');
             editLink.className = 'owned-bot-action';
             editLink.href = `secretary-bots.html?bot=${encodeURIComponent(bot.botUrlKey)}`;
             editLink.textContent = 'עריכה';
 
+            // כפתור המחיקה מאפשר להסיר את הבוט ואת יומן התורים המשויך אליו.
             const deleteButton = document.createElement('button');
             deleteButton.className = 'owned-bot-action owned-bot-action-delete';
             deleteButton.type = 'button';
             deleteButton.textContent = 'מחיקה';
             deleteButton.addEventListener('click', async () => {
+                // דורשים אישור מפורש לפני מחיקת הבוט והנתונים ההיסטוריים שלו.
                 if (!window.confirm(`למחוק את בוט המזכירה "${bot.botUrlKey}" ואת יומן התורים שלו?`)) return;
+                // מונעים בקשות מחיקה חוזרות בזמן שהפעולה הנוכחית מתבצעת.
                 deleteButton.disabled = true;
                 try {
+                    // שולחים את מזהה הבוט והכותרות המשותפות, כולל אסימון האימות.
                     const deleteResponse = await ApiService.request(
                         `/api/secretary/${encodeURIComponent(bot.botUrlKey)}`,
                         { method: 'DELETE', headers }
                     );
+                    // קוראים את תוצאת השרת כדי לבדוק גם סטטוס וגם הצלחה מפורשת.
                     const deleteData = await deleteResponse.json();
                     if (!deleteResponse.ok || !deleteData.success) {
                         throw new Error(deleteData.message || 'לא ניתן למחוק את בוט המזכירה');
                     }
+                    // מרעננים את שתי רשימות הבוטים ואת המכסה לאחר מחיקה שאושרה.
                     await loadOwnedBots();
                 } catch (error) {
+                    // מציגים את סיבת הכישלון ומאפשרים ניסיון נוסף לאחר שחרור הכפתור.
                     alert(error.message || 'שגיאה במחיקת בוט המזכירה');
                     deleteButton.disabled = false;
                 }
             });
 
+            // מחברים את פעולות העריכה והמחיקה לשורה ומוסיפים אותה למיכל.
             actions.append(editLink, deleteButton);
             row.append(title, actions);
             container.appendChild(row);
@@ -448,6 +461,7 @@ function renderCurrentChatWindow() {
     // מציגים הודעות מהישנה לחדשה לפי מועד יצירתן.
     chatMessages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     
+    // ממירים כל הודעה לבועה המתאימה ומחברים את כל הבועות ברצף אחד.
     container.innerHTML = chatMessages.map(
         /**
          * ממירה הודעה אחת לבועת צ׳אט בהתאם לזהות השולח.
@@ -529,6 +543,7 @@ window.sendMessageFromDashboard = async function() {
     if (!text) return;
 
     // מבטיחים שלכל הודעה יהיה מזהה שיחה ושומרים אותו לפני שליחתה.
+    // מייצרים מזהה שיחה אם עדיין אין שיחה פעילה שאפשר לצרף אליה את ההודעה.
     if (!currentChatId) {
         currentChatId = 'chat_' + Date.now();
         localStorage.setItem('currentChatId', currentChatId);
@@ -556,6 +571,7 @@ window.sendMessageFromDashboard = async function() {
 
         // מפענחים את תוצאת השליחה כדי להציג כישלון או לרענן את התצוגה.
         const data = await response.json();
+        // מקבלים הצלחה אם השרת אישר אותה בגוף התשובה או בסטטוס ה-HTTP.
         if (response.ok || data.success) {
             // לאחר הצלחה מנקים את שדה הטקסט ומשחזרים את השיחה שנשלחה אליה ההודעה.
             input.value = ''; 
