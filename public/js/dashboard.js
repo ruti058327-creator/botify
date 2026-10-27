@@ -59,18 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
              */
             profileImageInput?.addEventListener('change', async () => {
                 // משתמשים בקובץ הראשון שנבחר; ללא קובץ אין מה להעלות.
+                // אם המשתמש ביטל את בחירת הקובץ, אין צורך להמשיך.
                 const file = profileImageInput.files?.[0];
                 if (!file) return;
 
                 // מעדכנים סטטוס ויוצרים FormData כדי לשלוח את הקובץ כמולטימדיה.
                 profileImageStatus.textContent = 'מעלה תמונה...';
                 const formData = new FormData();
+                // מוסיפים את הקובץ שנבחר לשדה המתאים ב-FormData כדי שהשרת יזהה אותו.
                 formData.append('profileImage', file);
 
                 try {
                     // מעלים את התמונה לשרת תחת שם שדה ה-API ומוסיפים אסימון אימות.
                     const response = await ApiService.request('/api/users/me/profile-image', {
                         method: 'POST',
+                        // מוסיפים את אסימון המשתמש כדי שהשרת יאמת את הבקשה.
+                        // אם אין אסימון, שולחים מחרוזת ריקה כדי למנוע שגיאת undefined.
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` },
                         body: formData
                     });
@@ -120,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     : '';
                 // מעדכנים את הודעת התשלום ומציגים אותה לאחר בניית הטקסט.
                 paymentNotice.textContent = `התשלום נקלט והמסלול ${planName} הופעל.${removalNotice}`;
+       
                 paymentNotice.hidden = false;
             }
 
@@ -172,6 +177,7 @@ async function loadUserMessages(username) {
     try {
         // מבקשים הודעות המשויכות לשם המשתמש ומעבירים אסימון אימות.
         const token = localStorage.getItem('token');
+        // בקשה זו מחזירה את כל ההודעות של המשתמש, כולל מזהי השיחות.
         const response = await ApiService.request(`/api/user-messages?username=${encodeURIComponent(username)}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -205,7 +211,10 @@ async function loadOwnedBots() {
     try {
         // טוענים יחד את רשימת הבוטים ואת המכסה כדי להציג נתונים תואמים.
         const token = localStorage.getItem('token');
+        // שולחים את אסימון המשתמש כדי שהשרת יאמת את הבקשה.
         const headers = { 'Authorization': `Bearer ${token || ''}` };
+        // שולחים את שלוש הבקשות במקביל כדי לייעל את זמן הטעינה.
+        // Promise.all מאפשר לנו לחכות לכל התשובות יחד במקום לחכות אחת אחרי השנייה.
         const [response, quotaResponse, secretaryResponse] = await Promise.all([
             ApiService.request('/api/bots', { headers }),
             ApiService.request('/api/bots/quota', { headers }),

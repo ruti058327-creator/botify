@@ -1,36 +1,33 @@
-// טוען את פרטי החשבון לפני יצירת חיבור לספק הדוא"ל.
 import '../config/env.js';
-import nodemailer from 'nodemailer';
 import httpError from './httpError.js';
 
-// מגדיר את Nodemailer לשליחה דרך Gmail עם פרטי החשבון מהסביבה.
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    // מזהה החשבון משמש את ספק הדוא"ל כאמצעי ההתחברות.
-    user: process.env.EMAIL_USER,
-    // הסיסמה היא סוד ספק הדוא"ל ואינה נכתבת לתוך הקוד.
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// שולחת הודעה לפי הפרטים שסופקו, ומאפשרת שם שולח ברירת מחדל.
 export async function sendEmail({ to, subject, html, text, fromName = 'Botify Security' }) {
-  // מדווחים על שירות לא זמין במקום לנסות לשלוח עם פרטי התחברות חסרים.
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+  if (!process.env.BREVO_API_KEY || !process.env.EMAIL_USER) {
     throw httpError(503, 'שירות שליחת האימייל אינו זמין כרגע');
   }
 
-  // מעבירים לספק את הנמען, הכותרת וגוף הטקסט או ה-HTML כפי שסופקו.
-  return transporter.sendMail({
-    // מציגים שם קריא יחד עם כתובת החשבון המורשה לשולח.
-    from: `"${fromName}" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html,
-    text
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY,
+      'Content-Type': 'application/json',
+      accept: 'application/json'
+    },
+    body: JSON.stringify({
+      sender: { name: fromName, email: process.env.EMAIL_USER },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+      textContent: text
+    })
   });
+
+  if (!response.ok) {
+    console.error('Brevo error:', response.status, await response.text());
+    throw httpError(502, 'שליחת האימייל נכשלה');
+  }
+
+  return response.json();
 }
 
-// מייצא גם כאובייקט למודולים שמעדיפים ייבוא ברירת מחדל.
 export default { sendEmail };
